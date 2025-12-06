@@ -361,3 +361,79 @@
         return {
           ...entry,
           title: entry.filename,
+          description: ""
+        };
+      }
+    }
+
+    function renderTiles(items) {
+      tilesContainer.innerHTML = "";
+      if (!items.length) {
+        tilesContainer.style.display = "none";
+        emptyState.style.display = "block";
+        fileCount.textContent = "0 files";
+        return;
+      }
+
+      tilesContainer.style.display = "grid";
+      emptyState.style.display = "none";
+
+      for (const item of items) {
+        const a = document.createElement("a");
+        a.className = "tile";
+        a.href = item.path;
+        a.target = "_blank";
+        a.rel = "noopener";
+
+        a.innerHTML = `
+          <div class="tile-header">
+            <p class="tile-title">${truncate(item.title || item.filename, 80)}</p>
+            <span class="tile-tag">HTML</span>
+          </div>
+          <p class="tile-desc">${truncate(item.description || "", 120)}</p>
+          <div class="tile-footer">
+            <span class="filename" title="${item.filename}">${item.filename}</span>
+            <span class="open-pill">
+              <span>⤴</span>
+              <span>Open</span>
+            </span>
+          </div>
+        `;
+
+        tilesContainer.appendChild(a);
+      }
+
+      fileCount.textContent =
+        items.length === 1 ? "1 file indexed" : `${items.length} files indexed`;
+    }
+
+    async function initNotebook() {
+      try {
+        const res = await fetch("manifest.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const manifest = await res.json();
+
+        if (!Array.isArray(manifest) || !manifest.length) {
+          renderTiles([]);
+          return;
+        }
+
+        const enriched = [];
+        for (const entry of manifest) {
+          const meta = await fetchMetadata(entry);
+          enriched.push(meta);
+        }
+
+        // Sort alphabetically by title for display
+        enriched.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+        renderTiles(enriched);
+      } catch (err) {
+        console.error("Failed to load manifest.json", err);
+        renderTiles([]);
+      }
+    }
+
+    initNotebook();
+  </script>
+</body>
+</html>
