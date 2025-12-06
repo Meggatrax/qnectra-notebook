@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eric Discovery Meeting - Visual Planner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .timer-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .timer {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .timer-controls button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        .btn-start {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-pause {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-reset {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .timer-controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .phase-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            border-left: 6px solid #667eea;
+        }
+        
+        .phase-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .phase-card.active {
+            border-left-color: #27ae60;
+            background: #e8f8f5;
+        }
+        
+        .phase-card.completed {
+            border-left-color: #95a5a6;
+            opacity: 0.7;
+        }
+        
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .phase-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .phase-card.active .phase-number {
+            background: #27ae60;
+        }
+        
+        .phase-card.completed .phase-number {
+            background: #95a5a6;
+        }
+        
+        .phase-title {
+            flex-grow: 1;
+            margin-left: 15px;
+        }
+        
+        .phase-title h2 {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        
+        .phase-duration {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .phase-content {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #ecf0f1;
+        }
+        
+        .phase-card.expanded .phase-content {
+            display: block;
+        }
+        
+        .question-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .question-list li {
+            padding: 10px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .question-list li:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .question-list li.asked {
+            background: #d4edda;
+            border-left-color: #28a745;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        
+        .key-points {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .key-points h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .script-box {
+            background: #d1ecf1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #17a2b8;
+            font-style: italic;
+        }
+        
+        .objection-handler {
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .objection-handler h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+        }
+        
+        .notes-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .notes-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .notes-section textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .notes-section textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .save-notes-btn {
+            margin-top: 10px;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        .save-notes-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .checklist-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .checklist-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .checklist-item:hover {
+            background: #e9ecef;
+        }
+        
+        .checklist-item.checked {
+            background: #d4edda;
+        }
+        
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #667eea;
+            border-radius: 4px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .checklist-item.checked .checkbox {
+            background: #28a745;
+            border-color: #28a745;
+        }
+        
+        .checkbox::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .checklist-item.checked .checkbox::after {
+            display: block;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .expand-icon {
+            font-size: 1.5em;
+            color: #667eea;
+            transition: transform 0.3s;
+        }
+        
+        .phase-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎯 Eric Discovery Meeting</h1>
+            <p class="subtitle">Structured 45-Minute Discovery Framework - Stay in Control, Lead with Confidence</p>
+        </div>
+        
+        <!-- Timer Section -->
+        <div class="timer-section">
+            <div>
+                <strong>Meeting Timer:</strong>
+                <div class="timer" id="timer">00:00</div>
+            </div>
+            <div class="timer-controls">
+                <button class="btn-start" onclick="startTimer()">Start</button>
+                <button class="btn-pause" onclick="pauseTimer()">Pause</button>
+                <button class="btn-reset" onclick="resetTimer()">Reset</button>
+            </div>
+        </div>
+        
+        
+        <!-- Meeting Flow -->
+        <div class="flow-container">
+            <!-- Phase 1: Opening & Framing -->
+            <div class="phase-card" onclick="togglePhase(event, this)">
+                <div class="phase-header">
+                    <div class="phase-number">1</div>
+                    <div class="phase-title">
+                        <h2>Opening & Framing</h2>
+                        <span class="phase-duration">3 minutes</span>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="phase-content">
+                    <div class="key-points">
+                        <h4>Goal:</h4>
+                        <p>Establish control + calm his pricing anxiety</p>
+                    </div>
+                    <div class="script-box">
+                        <strong>Opening Script:</strong>
+                        <p>"Eric, great to reconnect. Here's how I'd like to run our time today. I'll start by asking some deeper questions about your business and what you're building—specifically around your team structure, your revenue goals, where your systems and workflows stand today, and your upcoming marketing push timing. That way I can get a clear picture of exactly what you need. After that, I'll share my recommendation, what the engagement would look like, and the pricing so you have all the details. Does that work for you?"</p>
+                    </div>
+                    <div class="key-points">
+                        <h4>Why This Works:</h4>
+                        <p>This tells him he will get pricing, so he stops thinking about "the number" and participates in discovery.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Phase 2: Deep Discovery -->
+            <div class="phase-card" onclick="togglePhase(event, this)">
+                <div class="phase-header">
+                    <div class="phase-number">2</div>
+                    <div class="phase-title">
+                        <h2>Deep Discovery</h2>
+                        <span class="phase-duration">20 minutes (flexible - drop questions if needed)</span>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="phase-content">
+                    <div class="key-points">
+                        <h4>Focus Areas:</h4>
+                        <p>Team & Roles • Revenue & Goals • Tech Stack & Systems • Marketing Push Timing • Bottlenecks & What's Missing • Budget Ranges</p>
+                    </div>
+                    
+                    <h4 style="margin-top: 20px; color: #2c3e50;">A. Team, Roles & Capacity</h4>
+                    <ul class="question-list">
+                        <li onclick="markAsked(event, this)">"Walk me through who's currently on your team and what each person is responsible for."</li>
+                        <li onclick="markAsked(event, this)">"What is your assistant doing today that wasn't originally part of her role?"</li>
+                        <li onclick="markAsked(event, this)">"What does your IT/tech contractor own, and what's not getting covered?"</li>
+                        <li onclick="markAsked(event, this)">"How are the marketing teams plugged into your operations right now?"</li>
+                        <li onclick="markAsked(event, this)">"Where do you feel the biggest leadership or ownership gap is?"</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 20px; color: #2c3e50;">B. Revenue, Goals & Targets</h4>
+                    <ul class="question-list">
+                        <li onclick="markAsked(event, this)">"Where did you end revenue-wise this year?"</li>
+                        <li onclick="markAsked(event, this)">"What revenue target or client volume are you aiming for in the next 12 months?"</li>
+                        <li onclick="markAsked(event, this)">"What would 'a great year' look like for you?"</li>
+                        <li onclick="markAsked(event, this)">"How fast do you want to scale your coaching program?"</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 20px; color: #2c3e50;">C. Systems, Tools & Workflows</h4>
+                    <ul class="question-list">
+                        <li onclick="markAsked(event, this)">"What tools are you using today to run the business?"</li>
+                        <li onclick="markAsked(event, this)">"What parts of your workflow feel the most manual or unclear?"</li>
+                        <li onclick="markAsked(event, this)">"If you could wave a wand, what parts of the business would feel more structured or predictable?"</li>
+                        <li onclick="markAsked(event, this)">"What information lives in your head today that you wish lived in a system?"</li>
+                        <li onclick="markAsked(event, this)">"How ready do you feel your CRM and workflows are for growth?"</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 20px; color: #2c3e50;">D. Marketing Push & Readiness for Scale</h4>
+                    <ul class="question-list">
+                        <li onclick="markAsked(event, this)">"Tell me more about the marketing push you have planned."</li>
+                        <li onclick="markAsked(event, this)">"What needs to be in place operationally before that campaign hits?"</li>
+                        <li onclick="markAsked(event, this)">"If 20 new clients signed up next month, what parts of your current setup would break?"</li>
+                        <li onclick="markAsked(event, this)">"What gives you the most concern about scaling quickly?"</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 20px; color: #2c3e50;">E. Bottlenecks & Pain Points</h4>
+                    <ul class="question-list">
+                        <li onclick="markAsked(event, this)">"What are the biggest bottlenecks in your day-to-day operations right now?"</li>
+                        <li onclick="markAsked(event, this)">"What slows you down the most?"</li>
+                        <li onclick="markAsked(event, this)">"Where do things fall through the cracks?"</li>
+                        <li onclick="markAsked(event, this)">"What feels heavy, confusing, or inconsistent for you?"</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 20px; color: #2c3e50;">F. Budget Alignment (Critical!)</h4>
+                    <ul class="question-list">
+                        <li onclick="markAsked(event, this)">"To get a sense of where you're investing: what's your monthly budget for marketing right now?"</li>
+                        <li onclick="markAsked(event, this)">"How about for sales?"</li>
+                        <li onclick="markAsked(event, this)">"For technology — including systems, operations, and implementation — what range are you comfortable with?"</li>
+                        <li onclick="markAsked(event, this)">If unclear: "Under $1k? Around $5k? More like $10k+? Just trying to understand your comfort zone."</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 20px; color: #2c3e50;">G. Impact & Urgency</h4>
+                    <ul class="question-list">
+                        <li onclick="markAsked(event, this)">"What happens if these systems aren't in place before January?"</li>
+                        <li onclick="markAsked(event, this)">"How is this lack of structure affecting you now?"</li>
+                        <li onclick="markAsked(event, this)">"What would it free up for you if this were solved?"</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: 20px; color: #2c3e50;">H. Vision & Success</h4>
+                    <ul class="question-list">
+                        <li onclick="markAsked(event, this)">"Where do you want CTC Pathways to be 12 months from now?"</li>
+                        <li onclick="markAsked(event, this)">"What does success look like for you next year?"</li>
+                        <li onclick="markAsked(event, this)">"If we're looking back in six months, what needs to be true for you to feel this investment paid off?"</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Phase 3: Problem Reframe -->
+            <div class="phase-card" onclick="togglePhase(event, this)">
+                <div class="phase-header">
+                    <div class="phase-number">3</div>
+                    <div class="phase-title">
+                        <h2>Problem Reframe</h2>
+                        <span class="phase-duration">4 minutes</span>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="phase-content">
+                    <div class="key-points">
+                        <h4>Goal:</h4>
+                        <p>Reflect back what you heard and frame the gap between current state and desired state</p>
+                    </div>
+                    <div class="script-box">
+                        <strong>Reframe Script:</strong>
+                        <p>"Eric, based on everything you've shared, here's what I'm hearing. You're building something with a lot of potential, and the vision is clear. But the gap between where you are today and where you want to be in the next 6–12 months comes down to a few things:</p>
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li>You don't yet have a defined operating system behind the business.</li>
+                            <li>Systems and workflows are still in your head instead of in a repeatable structure.</li>
+                            <li>Your assistant, IT support, and marketing teams are doing what they can, but no one is leading or owning the full operational picture.</li>
+                            <li>And with a major marketing push coming, the current setup won't support rapid client growth without creating friction for you.</li>
+                        </ul>
+                        <p style="margin-top: 10px;">In other words, the issue isn't effort — it's structure and leadership. What you need is someone who can take what's in your head and turn it into a clear, scalable operating system you can run and eventually delegate."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Phase 4: Recommend Solution -->
+            <div class="phase-card" onclick="togglePhase(event, this)">
+                <div class="phase-header">
+                    <div class="phase-number">4</div>
+                    <div class="phase-title">
+                        <h2>Recommend Solution</h2>
+                        <span class="phase-duration">4 minutes</span>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="phase-content">
+                    <div class="key-points">
+                        <h4>What You Would Own:</h4>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Build his operating system</li>
+                            <li>Design workflows + client journey</li>
+                            <li>Guide team members</li>
+                            <li>Ensure system readiness before the marketing push</li>
+                            <li>Act as his long-term strategic partner</li>
+                        </ul>
+                    </div>
+                    <div class="script-box">
+                        <strong>Recommendation Script:</strong>
+                        <p>"Here's what I would own: I'd come in as your fractional operations partner and build out the full operating system for CTC Pathways. That includes designing your workflows, mapping the client journey, getting your team aligned, and making sure everything is ready to scale before your marketing push hits. You'd have a strategic partner who takes what's in your head and turns it into a repeatable, scalable structure."</p>
+                    </div>
+                    <div class="key-points">
+                        <h4>6-Month View:</h4>
+                        <p>Describe the transformation timeline at a high level - from operational chaos to systematic excellence.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Phase 5: Present Pricing -->
+            <div class="phase-card" onclick="togglePhase(event, this)">
+                <div class="phase-header">
+                    <div class="phase-number">5</div>
+                    <div class="phase-title">
+                        <h2>Present Pricing</h2>
+                        <span class="phase-duration">2 minutes</span>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="phase-content">
+                    <div class="script-box">
+                        <strong>Pricing Delivery (Say it clearly, then STOP):</strong>
+                        <p style="font-size: 1.2em; margin: 20px 0;">"Your monthly investment for that partnership would be $10,000."</p>
+                        <p style="color: #dc3545; font-weight: bold; font-size: 1.1em;">⚠️ THEN GO SILENT. LET HIM SPEAK FIRST.</p>
+                    </div>
+                    <div class="key-points">
+                        <h4>Critical Reminder:</h4>
+                        <p>The pause is where he processes. Resist the urge to fill the silence. This is where the sale happens.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Phase 6: Handle Reaction -->
+            <div class="phase-card" onclick="togglePhase(event, this)">
+                <div class="phase-header">
+                    <div class="phase-number">6</div>
+                    <div class="phase-title">
+                        <h2>Handle Reaction</h2>
+                        <span class="phase-duration">9 minutes</span>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="phase-content">
+                    <div class="objection-handler">
+                        <h4>If he says: "That's more than I expected"</h4>
+                        <p><strong>Response:</strong> "Totally understandable. What range were you hoping for?"</p>
+                        <p style="margin-top: 10px;">(Then let him answer and listen.)</p>
+                    </div>
+                    
+                    <div class="objection-handler">
+                        <h4>If he gives a lower number (ex: $4-6k)</h4>
+                        <p><strong>Response:</strong> "That makes sense. There are two ways we can structure this depending on the pace you want:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Faster pace:</strong> $10k/month for 3 months — we move quickly and handle everything end-to-end.</li>
+                            <li><strong>Slower pace:</strong> $5k/month for 6 months — same total investment, but spread out over more time so we move at a more deliberate pace.</li>
+                        </ul>
+                        <p style="margin-top: 10px;">Either approach gets you to the same outcome — the difference is speed and depth of engagement."</p>
+                    </div>
+                    
+                    <div class="objection-handler">
+                        <h4>If he says: "Let me think about it"</h4>
+                        <p><strong>Response:</strong> "Of course. What part do you feel you need clarity on before making the decision?"</p>
+                        <p style="margin-top: 10px;">(If it's still timing or money): "Why don't we set up a short call on Friday so we can finalize once you've had a chance to reflect?"</p>
+                    </div>
+                    
+                    <div class="objection-handler">
+                        <h4>If he asks for a discount</h4>
+                        <p><strong>Response:</strong> "I don't discount the work because the outcomes remain the same, but the slower-paced 6-month option gives you flexibility without changing the investment."</p>
+                    </div>
+                    
+                    <div class="key-points">
+                        <h4>If he says YES:</h4>
+                        <p>Don't finalize on this call! Move to Phase 7 and book a follow-up to walk through the agreement.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Phase 7: Close & Next Steps -->
+            <div class="phase-card" onclick="togglePhase(event, this)">
+                <div class="phase-header">
+                    <div class="phase-number">7</div>
+                    <div class="phase-title">
+                        <h2>Close & Next Steps</h2>
+                        <span class="phase-duration">3 minutes</span>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="phase-content">
+                    <div class="key-points">
+                        <h4>Important:</h4>
+                        <p>Even if he says yes, don't finalize on this call. This prevents rushed commitments and keeps control.</p>
+                    </div>
+                    <div class="script-box">
+                        <strong>Closing Script:</strong>
+                        <p>"Let's meet Friday to walk through the agreement and finalize the details. That gives you time to reflect and ensures we're both clear on everything before we move forward."</p>
+                    </div>
+                    <div class="key-points">
+                        <h4>Action Items:</h4>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Book Friday follow-up call</li>
+                            <li>Align on start date</li>
+                            <li>Send meeting recap email</li>
+                            <li>Prepare agreement document</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    </div>
+    
+    <script>
+        let timerInterval;
+        let seconds = 0;
+        let isRunning = false;
+        
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    updateTimerDisplay();
+                }, 1000);
+            }
+        }
+        
+        function pauseTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+        }
+        
+        function resetTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            seconds = 0;
+            updateTimerDisplay();
+        }
+        
+        function updateTimerDisplay() {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById('timer').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function togglePhase(event, element) {
+            // Stop propagation to prevent issues with nested clicks
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            // If clicking on a question list item, don't toggle the phase
+            if (event && (event.target.tagName === 'LI' || event.target.closest('.question-list'))) {
+                return;
+            }
+            
+            const wasExpanded = element.classList.contains('expanded');
+            
+            // Close all phases
+            document.querySelectorAll('.phase-card').forEach(card => {
+                card.classList.remove('expanded');
+            });
+            
+            // If this phase wasn't expanded, expand it
+            if (!wasExpanded) {
+                element.classList.add('expanded');
+            }
+        }
+        
+        function markAsked(event, element) {
+            // Prevent the phase from collapsing
+            if (event) {
+                event.stopPropagation();
+            }
+            element.classList.toggle('asked');
+        }
+    </script>
+</body>
+</html>

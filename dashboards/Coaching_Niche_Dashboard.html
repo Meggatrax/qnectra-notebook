@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coaching Niche Analysis - Qnèctra Strategic Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2d2d 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(220, 38, 38, 0.5) 35px, rgba(220, 38, 38, 0.5) 36px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 15px;
+            border: 2px solid #dc2626;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #dc2626;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 1.1em;
+        }
+        
+        .recommendation-banner {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(220, 38, 38, 0.3);
+        }
+        
+        .recommendation-banner h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation-banner p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
+        }
+        
+        .card-title {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            color: #aaa;
+        }
+        
+        .metric-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #dc2626;
+        }
+        
+        .large-number {
+            font-size: 3em;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: #dc2626;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th {
+            background: rgba(220, 38, 38, 0.2);
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #dc2626;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .winner {
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .mixed {
+            color: #f59e0b;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #dc2626 0%, #991b1b 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .phase-tracker {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .phase {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid rgba(220, 38, 38, 0.3);
+            position: relative;
+        }
+        
+        .phase.active {
+            border-color: #dc2626;
+            background: rgba(220, 38, 38, 0.1);
+        }
+        
+        .phase-number {
+            width: 60px;
+            height: 60px;
+            background: #dc2626;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+        
+        .phase h3 {
+            margin-bottom: 10px;
+        }
+        
+        .checklist {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .checklist-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #dc2626;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .checkbox.checked {
+            background: #dc2626;
+        }
+        
+        .pain-point {
+            background: rgba(220, 38, 38, 0.1);
+            border-left: 4px solid #dc2626;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .pain-point h4 {
+            color: #dc2626;
+            margin-bottom: 10px;
+        }
+        
+        .icon {
+            font-size: 1.5em;
+        }
+        
+        .risk-level {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .risk-critical {
+            background: #dc2626;
+        }
+        
+        .risk-important {
+            background: #f59e0b;
+        }
+        
+        .risk-moderate {
+            background: #10b981;
+        }
+        
+        .decision-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(220, 38, 38, 0.5);
+        }
+        
+        .decision-box h3 {
+            color: #dc2626;
+            margin-bottom: 15px;
+        }
+        
+        .decision-box.green {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+        
+        .decision-box.green h3 {
+            color: #10b981;
+        }
+        
+        .decision-box.yellow {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.05);
+        }
+        
+        .decision-box.yellow h3 {
+            color: #f59e0b;
+        }
+        
+        .decision-box.red {
+            border-color: #dc2626;
+            background: rgba(220, 38, 38, 0.05);
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(220, 38, 38, 0.2);
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .phase-tracker {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Coaching Business Niche Analysis</h1>
+            <p class="subtitle">Strategic Market Assessment for Qnèctra LLC</p>
+            <p class="subtitle">December 6, 2025</p>
+        </header>
+
+        <div class="recommendation-banner">
+            <h2>✅ RECOMMENDATION: PIVOT TO COACHING BUSINESSES</h2>
+            <p>90-day "dating period" with clear metrics. Market is larger ($16-20B), pain points clearer, and you have validation (2 proposals already). Lower sales complexity, better referral potential, perfect fit for your Functional Technology Framework®.</p>
+        </div>
+
+        <h2 style="margin: 40px 0 20px 0; font-size: 2em;">📊 Market Comparison: Coaching vs. RBF/Lending</h2>
+        
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Factor</th>
+                        <th>Coaching Businesses</th>
+                        <th>RBF/MCA Lenders</th>
+                        <th>Winner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Market Size</strong></td>
+                        <td>$16-20B</td>
+                        <td>$3-5B</td>
+                        <td class="winner">🟢 Coaching</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Addressable Mid-Market</strong></td>
+                        <td>15,000-25,000</td>
+                        <td>500-1,000</td>
+                        <td class="winner">🟢 Coaching</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sales Cycle</strong></td>
+                        <td>30-60 days</td>
+                        <td>90-180 days</td>
+                        <td class="winner">🟢 Coaching</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Budget Levels</strong></td>
+                        <td>$5K-30K</td>
+                        <td>$30K-100K+</td>
+                        <td class="mixed">🟡 Mixed</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pain Point Clarity</strong></td>
+                        <td>Very High</td>
+                        <td>Medium</td>
+                        <td class="winner">🟢 Coaching</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Current Validation</strong></td>
+                        <td>2 proposals</td>
+                        <td>0 active</td>
+                        <td class="winner">🟢 Coaching</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Referral Potential</strong></td>
+                        <td>High (networked)</td>
+                        <td>Medium</td>
+                        <td class="winner">🟢 Coaching</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 style="margin: 40px 0 20px 0; font-size: 2em;">💰 Market Opportunity</h2>
+        
+        <div class="grid">
+            <div class="card">
+                <div class="card-title"><span class="icon">📈</span> Market Size</div>
+                <div class="large-number">$16-20B</div>
+                <p style="text-align: center; color: #aaa;">US Coaching Market (2025)</p>
+                <div class="metric">
+                    <span class="metric-label">Growth Rate</span>
+                    <span class="metric-value">4-7% CAGR</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Active Coaches</span>
+                    <span class="metric-value">232,000+</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">🎯</span> Your Sweet Spot</div>
+                <div class="large-number">8,352</div>
+                <p style="text-align: center; color: #aaa;">Addressable Businesses</p>
+                <div class="metric">
+                    <span class="metric-label">Revenue Range</span>
+                    <span class="metric-value">$250K-$1.5M</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Target Capture</span>
+                    <span class="metric-value">0.5% = 42 clients</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="icon">💵</span> Revenue Potential</div>
+                <div class="large-number">$300K-600K</div>
+                <p style="text-align: center; color: #aaa;">Annual Revenue (Moderate Scenario)</p>
+                <div class="metric">
+                    <span class="metric-label">Active Clients</span>
+                    <span class="metric-value">6-10</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Avg Client Value</span>
+                    <span class="metric-value">$50K/year</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin: 40px 0 20px 0; font-size: 2em;">👤 Refined Ideal Client Profile</h2>
+        
+        <div class="card" style="margin-bottom: 30px;">
+            <div class="card-title"><span class="icon">🎯</span> "Sarah the Scaling Coach"</div>
+            
+            <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+                <div>
+                    <h4 style="color: #dc2626; margin: 15px 0 10px 0;">Demographics</h4>
+                    <div class="metric">
+                        <span class="metric-label">Revenue</span>
+                        <span class="metric-value">$250K-$1.5M</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Team Size</span>
+                        <span class="metric-value">2-10 people</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Client Base</span>
+                        <span class="metric-value">30-150 clients</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Tech Stack</span>
+                        <span class="metric-value">3-7 tools</span>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 style="color: #dc2626; margin: 15px 0 10px 0;">Business Model</h4>
+                    <span class="tag">1:1 Coaching</span>
+                    <span class="tag">Group Programs</span>
+                    <span class="tag">Digital Products</span>
+                    <span class="tag">High-Ticket ($2K-20K+)</span>
+                    <span class="tag">Hybrid Delivery</span>
+                    <span class="tag">Multi-Revenue Stream</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin: 40px 0 20px 0; font-size: 2em;">🔴 Primary Pain Points</h2>
+        
+        <div class="pain-point">
+            <h4><span class="risk-level risk-critical">CRITICAL</span> 1. Administrative Overwhelm</h4>
+            <p><strong>Symptoms:</strong> 15-20 hours/week on scheduling, invoicing, client management. Back-and-forth email chains. Manual payment collection.</p>
+            <p><strong>Impact:</strong> Can only serve 20-30 clients before hitting capacity wall. 25-30% of time on non-coaching activities.</p>
+            <p><strong>Your Solution:</strong> Automated scheduling + payment. Client portal. CRM with lifecycle view.</p>
+        </div>
+
+        <div class="pain-point">
+            <h4><span class="risk-level risk-critical">CRITICAL</span> 2. Technology Fragmentation</h4>
+            <p><strong>Symptoms:</strong> 5-10 disconnected tools. Data in silos. No single source of truth.</p>
+            <p><strong>Impact:</strong> 5-8 hours/week lost to data entry. Inconsistent client experience.</p>
+            <p><strong>Your Solution:</strong> Integrated platform. API connections. Unified dashboard.</p>
+        </div>
+
+        <div class="pain-point">
+            <h4><span class="risk-level risk-critical">CRITICAL</span> 3. Scalability Bottlenecks</h4>
+            <p><strong>Symptoms:</strong> 1:1 model doesn't scale. No infrastructure for group coaching. Can't delegate.</p>
+            <p><strong>Impact:</strong> Stuck at $200K-$400K ceiling. Working 50-60 hours/week.</p>
+            <p><strong>Your Solution:</strong> Multi-tier service model. Delegation frameworks. Automated onboarding.</p>
+        </div>
+
+        <h2 style="margin: 40px 0 20px 0; font-size: 2em;">🗓️ 90-Day "Dating the Niche" Framework</h2>
+        
+        <div class="phase-tracker">
+            <div class="phase active">
+                <div class="phase-number">1</div>
+                <h3>Validation</h3>
+                <p>Days 1-30</p>
+                <p style="margin-top: 10px; color: #aaa;">Confirm interest, refine messaging, secure 1-2 audits</p>
+            </div>
+            
+            <div class="phase">
+                <div class="phase-number">2</div>
+                <h3>Refinement</h3>
+                <p>Days 31-60</p>
+                <p style="margin-top: 10px; color: #aaa;">Deliver value, create case study, 1 implementation client</p>
+            </div>
+            
+            <div class="phase">
+                <div class="phase-number">3</div>
+                <h3>Scale Decision</h3>
+                <p>Days 61-90</p>
+                <p style="margin-top: 10px; color: #aaa;">Content strategy, partnerships, formal niche commitment</p>
+            </div>
+        </div>
+
+        <h2 style="margin: 40px 0 20px 0; font-size: 2em;">✅ Immediate Actions (This Week)</h2>
+        
+        <div class="checklist">
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="checkbox"></div>
+                <span>Update ICP document to "Sarah the Scaling Coach"</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="checkbox"></div>
+                <span>Revise LinkedIn profile with coaching-specific positioning</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="checkbox"></div>
+                <span>Create "3-Minute Coaching Ops Audit" framework</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="checkbox"></div>
+                <span>Identify 50 target coaching businesses ($250K-$1.5M)</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="checkbox"></div>
+                <span>Draft coaching-specific value proposition</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="checkbox"></div>
+                <span>Adapt workshop content for coaching audience</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="checkbox"></div>
+                <span>Create simple landing page (CoachingOpsAudit.com)</span>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="checkbox"></div>
+                <span>Launch validation outreach campaign</span>
+            </div>
+        </div>
+
+        <h2 style="margin: 40px 0 20px 0; font-size: 2em;">🎯 90-Day Success Metrics</h2>
+        
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">Discovery Calls</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%">0 / 10</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Audit Engagements</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%">0 / 3</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Implementation Clients</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%">0 / 2</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Revenue Generated</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%">$0 / $30K</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin: 40px 0 20px 0; font-size: 2em;">🚦 Decision Framework (After 90 Days)</h2>
+        
+        <div class="decision-box green">
+            <h3>✅ GREEN LIGHT: Commit to Coaching as Primary Niche</h3>
+            <p><strong>Conditions:</strong></p>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                <li>2+ paying clients secured</li>
+                <li>$15K+ revenue in 90 days</li>
+                <li>5+ qualified opportunities in pipeline</li>
+                <li>High personal energy and alignment</li>
+                <li>Clear path to $300K+ annual run rate</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong>Action:</strong> Make coaching businesses 80% of focus, maintain RBF as 20% secondary</p>
+        </div>
+
+        <div class="decision-box yellow">
+            <h3>🟡 YELLOW LIGHT: Continue Testing with Adjustments</h3>
+            <p><strong>Conditions:</strong></p>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                <li>1 paying client secured</li>
+                <li>$5K-15K revenue</li>
+                <li>Moderate interest but needs refinement</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong>Action:</strong> Extend testing period 60 days with refined approach</p>
+        </div>
+
+        <div class="decision-box red">
+            <h3>🔴 RED LIGHT: Pivot Back or Try Different Sub-Niche</h3>
+            <p><strong>Conditions:</strong></p>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                <li>0 paying clients</li>
+                <li><$5K revenue</li>
+                <li>Low interest/engagement</li>
+                <li>Low personal energy</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong>Action:</strong> Return to RBF niche or test different segment</p>
+        </div>
+
+        <h2 style="margin: 40px 0 20px 0; font-size: 2em;">💬 Core Messaging</h2>
+        
+        <div class="card" style="margin-bottom: 30px;">
+            <div class="card-title">Value Proposition</div>
+            <div style="background: rgba(220, 38, 38, 0.1); padding: 20px; border-radius: 10px; margin: 15px 0;">
+                <h3 style="color: #dc2626; margin-bottom: 10px;">Problem</h3>
+                <p>"You're an expert coach stuck doing $200K worth of admin work in a $500K+ business. Your time is spent on scheduling, invoicing, and juggling 7 different tools instead of coaching clients."</p>
+            </div>
+            
+            <div style="background: rgba(220, 38, 38, 0.1); padding: 20px; border-radius: 10px; margin: 15px 0;">
+                <h3 style="color: #dc2626; margin-bottom: 10px;">Solution</h3>
+                <p>"I turn founder-dependent coaching businesses into scalable operations. Using my Functional Technology Framework®, I build the AI-powered backbone that lets you serve 3x the clients without working 3x the hours."</p>
+            </div>
+            
+            <div style="background: rgba(220, 38, 38, 0.1); padding: 20px; border-radius: 10px; margin: 15px 0;">
+                <h3 style="color: #dc2626; margin-bottom: 10px;">Differentiation</h3>
+                <p><strong>vs. Generic Business Coaches:</strong> "I don't teach coaching strategies—I build the operational infrastructure that lets your coaching scale."</p>
+                <p style="margin-top: 10px;"><strong>vs. Platform Vendors:</strong> "I don't just sell you software—I architect your entire operational system and implement it with you."</p>
+            </div>
+        </div>
+
+        <div style="background: rgba(220, 38, 38, 0.1); border-radius: 15px; padding: 30px; margin: 40px 0; text-align: center;">
+            <h2 style="margin-bottom: 15px;">🎯 Next Review Date</h2>
+            <div class="large-number" style="font-size: 2em;">March 6, 2026</div>
+            <p style="color: #aaa;">Post-90-Day Test Evaluation</p>
+        </div>
+
+        <footer style="text-align: center; margin-top: 50px; padding: 30px; color: #666;">
+            <p>Qnèctra LLC | Strategic Niche Analysis Dashboard</p>
+            <p>Version 1.0 | December 6, 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleCheck(item) {
+            const checkbox = item.querySelector('.checkbox');
+            checkbox.classList.toggle('checked');
+            
+            if (checkbox.classList.contains('checked')) {
+                checkbox.textContent = '✓';
+            } else {
+                checkbox.textContent = '';
+            }
+            
+            // Save state to localStorage
+            const text = item.querySelector('span').textContent;
+            const isChecked = checkbox.classList.contains('checked');
+            localStorage.setItem('checklist_' + text, isChecked);
+        }
+        
+        // Load saved checklist state
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                const text = item.querySelector('span').textContent;
+                const isChecked = localStorage.getItem('checklist_' + text) === 'true';
+                if (isChecked) {
+                    const checkbox = item.querySelector('.checkbox');
+                    checkbox.classList.add('checked');
+                    checkbox.textContent = '✓';
+                }
+            });
+        });
+        
+        // Add click handlers for progress bars (for future updates)
+        document.querySelectorAll('.progress-bar').forEach(bar => {
+            bar.style.cursor = 'pointer';
+            bar.addEventListener('click', function() {
+                alert('Track progress by updating metrics as you complete each phase of the 90-day test.');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOFU Visibility OS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 40px 0 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 0 40px 0 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .tab-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+        .tab-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .tab-button.active {
+            background: white;
+            color: #667eea;
+        }
+        .tab-content {
+            display: none;
+            padding: 40px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .north-star {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        .north-star strong {
+            color: #856404;
+            font-size: 1.2em;
+        }
+        .section {
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+        }
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h2::before {
+            content: "→";
+            font-size: 1.2em;
+        }
+        .subsection {
+            margin: 20px 0 20px 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #764ba2;
+        }
+        .subsection h3 {
+            color: #764ba2;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+        ul {
+            margin: 15px 0 15px 30px;
+        }
+        li {
+            margin: 10px 0;
+            line-height: 1.7;
+        }
+        strong {
+            color: #667eea;
+        }
+        .highlight {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .metric {
+            display: inline-block;
+            background: #d1f2eb;
+            color: #0c5e48;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 5px 5px 5px 0;
+            font-size: 0.9em;
+        }
+        .cta-box {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .week-plan {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .day-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-top: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .day-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .copy-block {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+        .pill-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .pill {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Top-of-Funnel (TOFU) Visibility OS</h1>
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('visibility')">Visibility Stack</button>
+                <button class="tab-button" onclick="switchTab('messaging')">Core Messaging & POV</button>
+                <button class="tab-button" onclick="switchTab('calendar')">Content Calendar</button>
+            </div>
+        </div>
+        
+        <!-- TAB 1: VISIBILITY STACK -->
+        <div id="visibility" class="tab-content active">
+            <div class="north-star">
+                <h2>🌟 North Star</h2>
+                <p><strong>"Ops is the product. Cycle time is the KPI. AI is the accelerator, not the starting point."</strong></p>
+                <p style="margin-top: 10px;">Every asset you ship should reinforce that.</p>
+            </div>
+
+            <div class="section">
+                <h2>1. The Visibility Stack</h2>
+                
+                <div class="subsection">
+                    <h3>A) LinkedIn OS (your core)</h3>
+                    
+                    <div class="highlight">
+                        <strong>Profile foundations (one-time, quick):</strong>
+                        <ul>
+                            <li><strong>Banner:</strong> "Cut lending cycle time 30%+ | CRM cleanup • AI-in-ops • Data trust"</li>
+                            <li><strong>Featured:</strong> 1) 3-Minute Ops Audit, 2) One-page Case Snapshot, 3) Book a Diagnostic (15 min)</li>
+                        </ul>
+                    </div>
+
+                    <strong>Weekly cadence (3 posts + 15 comments/day):</strong>
+                    <ul>
+                        <li><strong>Mon:</strong> Education (ops teardown, CRM debt, data trust mini-lesson)</li>
+                        <li><strong>Wed:</strong> Story (short Numerix/turnaround anecdote → 1 concrete lesson)</li>
+                        <li><strong>Fri:</strong> CTA (book a 15-min diagnostic, or "free Ops Clinic" slot)</li>
+                        <li><strong>Monthly:</strong> 1 carousel (your 4 pillars, data trust, CRM debt clinic)</li>
+                        <li><strong>Quarterly:</strong> 1 LinkedIn Newsletter issue summarizing the best posts + a mini-case</li>
+                    </ul>
+
+                    <strong>Comment engine (20 minutes/day):</strong>
+                    <ul>
+                        <li>Build a "Sphere of 30" (founders, RevOps, fractional CFOs, Salesforce partners, fintech VCs)</li>
+                        <li>Comment ladder formula: <strong>Affirm (1 line) → Add (1 line of insight) → Ask (tight question)</strong></li>
+                        <li>Goal: 15 meaningful comments/day. That's your reach multiplier.</li>
+                    </ul>
+
+                    <strong>Connection flow (50/wk):</strong>
+                    <ul>
+                        <li>25 founders/COOs, 15 RevOps/SFDC leaders, 10 fractional CFOs/CPAs</li>
+                        <li>Track acceptance rate; aim ≥35%. Unconnect spray-and-pray; precision beats volume.</li>
+                    </ul>
+
+                    <div class="cta-box">
+                        <strong>DM value drops (not pitches):</strong>
+                        <ul style="margin-top: 10px;">
+                            <li>"Here's a 6-step checklist I use to spot CRM debt in 10 minutes—want it?"</li>
+                            <li>"Quick question—if you had to pick one ops metric to cut by 30% this quarter, which is it? I'll share a one-pager on how I'd approach it."</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>B) Partnerships (your fastest warm visibility)</h3>
+                    <p>Create a <strong>Referral Guild (12 people)</strong>: 4 fractional CFOs, 4 Salesforce/RevOps partners, 2 fintech lawyers, 2 boutique VCs/PE ops.</p>
+                    <ul>
+                        <li><strong>Offer:</strong> You run a free 30-min Ops Clinic for their clients/portfolio each month; they get a light co-brand slide and referral credit.</li>
+                        <li><strong>Output:</strong> 1 warm intro/week, 1 co-hosted webinar/month.</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>C) Earned media (lightweight)</h3>
+                    <ul>
+                        <li><strong>Podcast guesting engine:</strong> target 10 fintech/ops/RevOps shows; pitch 3 topics</li>
+                        <li><strong>Guest posts</strong> on partner blogs (RevOps, SFDC consultancies): one 800-word teardown each month</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>D) Minimal viable SEO</h3>
+                    <ul>
+                        <li>One landing page per offer (Diagnostic, Q-Consult™, Q-Advise™) with a 200-word POV and a single CTA</li>
+                        <li>Install your pixels/UTMs; all roads lead here from socials/DMs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>2. The Content Engine</h2>
+                
+                <div class="pill-grid">
+                    <div class="pill">Cycle-Time Surgery</div>
+                    <div class="pill">CRM Debt Clinic</div>
+                    <div class="pill">Data Trust Lessons</div>
+                    <div class="pill">AI For Ops</div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Repeating series you can run for months</h3>
+                    <ul>
+                        <li><strong>"Ops Unclogged"</strong> (before/after mini-cases; one chart or checklist)</li>
+                        <li><strong>"One Broken Definition"</strong> (how it skews reporting; how you fix it)</li>
+                        <li><strong>"15-Minute Teardown"</strong> (choose a common workflow and show 3 concrete fixes)</li>
+                        <li><strong>"AI Last, Not First"</strong> (a tiny process standardization → big AI win)</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>Post formats</h3>
+                    
+                    <div class="copy-block">
+                        <strong>Educational post (Problem → Pattern → Playbook → CTA)</strong><br>
+                        Hook: "Dashboards lie when definitions drift."<br>
+                        Body: 1) What drifts 2) The pattern you see 3) Your 3-step fix 4) Result type<br>
+                        CTA: "I keep a 10-point 'Data Trust' check. Comment 'checklist' and I'll share it."
+                    </div>
+
+                    <div class="copy-block">
+                        <strong>Story post (Moment → Mistake → Move → Moral)</strong><br>
+                        Hook: "When we merged 3 orgs, 'active customer' broke the reports in 24 hours."<br>
+                        Close with a single lesson + soft CTA.
+                    </div>
+
+                    <div class="copy-block">
+                        <strong>Carousel outline (8–10 slides)</strong><br>
+                        1: Title (e.g., "Cycle-Time Surgery: 3 Moves")<br>
+                        2: The cost of delay<br>
+                        3–7: Move #1–3 with a 2-step how-to<br>
+                        8: Small case metric<br>
+                        9: CTA
+                    </div>
+
+                    <div class="copy-block">
+                        <strong>Poll (every 2 weeks)</strong><br>
+                        "Where's your cycle time worst right now?"<br>
+                        Options: Intake | Underwriting handoffs | Docs/Compliance | Payout<br>
+                        Follow with a post unpacking the results → DM each voter a 1-pager.
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>3. Weekly Execution Plan</h2>
+                <p style="margin-bottom: 20px;"><em>(90-minute blocks + daily 20)</em></p>
+                
+                <div class="week-plan">
+                    <div class="day-card">
+                        <h4>Monday</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>45 min: Write educational post + schedule</li>
+                            <li>45 min: Draft 1 carousel slide per day</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card">
+                        <h4>Wednesday</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>45 min: Story post</li>
+                            <li>45 min: Outreach—send 10 "value drop" DMs</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card">
+                        <h4>Friday</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>30 min: CTA post (Diagnostic slots)</li>
+                            <li>30 min: Comment sprint</li>
+                            <li>30 min: Review metrics + choose next topic</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card">
+                        <h4>Daily (20–30 min)</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>15 comments (Sphere of 30)</li>
+                            <li>5 targeted connection invites</li>
+                            <li>3 DM follow-ups (send a resource)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>4. Conversion CTAs</h2>
+                <div class="cta-box">
+                    <ul>
+                        <li><strong>Diagnostic (free, 15 min):</strong> "I'll mark 2 bottlenecks that are adding delay or rework."</li>
+                        <li><strong>Q-Consult™ (paid, 2–4 weeks):</strong> "In 10 business days, you'll get a sequenced plan to cut cycle time 30% and standardize CRM."</li>
+                        <li><strong>Q-Advise™ (retainer):</strong> "Govern the new habits + embed AI assists."</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>5. Metrics That Matter</h2>
+                <div class="highlight">
+                    <div class="metric">Connection acceptance ≥ 35%</div>
+                    <div class="metric">Comment-to-profile-views ratio ≥ 1:3</div>
+                    <div class="metric">Post CTR to landing page 1–3%</div>
+                    <div class="metric">Diagnostic bookings: 2–4/week after week 4</div>
+                    <div class="metric">Q-Consult conversion: 25–40%</div>
+                </div>
+                <p style="margin-top: 15px;">Instrument with UTMs + tags in GHL. Each post gets one UTM'd link to the Diagnostic page.</p>
+            </div>
+
+            <div class="section">
+                <h2>6. Partnership Playbook</h2>
+                <p><em>(month 1–2)</em></p>
+                <ul>
+                    <li>Build your <strong>Referral Guild</strong>: aim for 12 names</li>
+                    <li>Offer them: "Quarterly Ops Clinic" for their clients; ask for <strong>one intro/month</strong></li>
+                    <li>Co-create: one 45-min webinar/month—topic from your four pillars</li>
+                    <li>After each webinar: send a 1-page "Quick Wins" PDF → book 15-min diagnostics</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>7. Podcast Guesting</h2>
+                <p><em>(month 2)</em></p>
+                
+                <div class="subsection">
+                    <h3>3 pitch abstracts</h3>
+                    <ul>
+                        <li><strong>"AI Last, Not First"</strong> — Why ops sequence beats tooling every time</li>
+                        <li><strong>"CRM Debt Is Quietly Taxing Your P&L"</strong> — definitions, dedupe, stage discipline</li>
+                        <li><strong>"Cycle-Time Surgery"</strong> — three handoffs that kill lending speed (and how to fix them)</li>
+                    </ul>
+                </div>
+
+                <p><strong>60-sec reel system:</strong> After each guest spot, cut one clip → post Wed the following week with a CTA.</p>
+            </div>
+
+            <div class="section">
+                <h2>8. Ready-to-use Copy</h2>
+                
+                <div class="copy-block">
+                    <strong>Connection note:</strong><br>
+                    "Saw your post on payout delays—spot on. Sharing a tiny checklist we use to find cycle-time leaks in 10 minutes. Want it?"
+                </div>
+
+                <div class="copy-block">
+                    <strong>DM follow-up after a comment:</strong><br>
+                    "Appreciated your point on underwriting handoffs. If helpful, can share a 2-step handoff pattern that cut rework 28% last quarter."
+                </div>
+
+                <div class="copy-block">
+                    <strong>CTA line (soft):</strong><br>
+                    "Running 3 free 15-min Diagnostics next week. Two bottlenecks, zero fluff. Want a slot?"
+                </div>
+
+                <div class="copy-block">
+                    <strong>Comment that starts conversations:</strong><br>
+                    "Great take. One thing that's often missed: reporting definitions drift silently. Fixing that alone can cut 'phantom' churn. Curious—who owns definitions in your org right now?"
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>9. 30-Day Content Map</h2>
+                <ul>
+                    <li><strong>Week 1:</strong> Data Trust (Mon post + Fri CTA)</li>
+                    <li><strong>Week 2:</strong> CRM Debt (Mon post + Wed story)</li>
+                    <li><strong>Week 3:</strong> Cycle-Time Surgery (Mon post + Fri CTA)</li>
+                    <li><strong>Week 4:</strong> AI in Ops (Mon post + Wed story)</li>
+                    <li><strong>Monthly carousel:</strong> "The 4 Pillars of Operational Excellence" (ship last Thursday)</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>10. What to Prepare This Week</h2>
+                <div class="cta-box">
+                    <ol style="margin-left: 30px;">
+                        <li>Draft the <strong>10-point Data Trust checklist</strong> (one page, PDF)</li>
+                        <li>Build the <strong>Diagnostic landing page</strong> + Calendly/GHL link</li>
+                        <li>List your <strong>Sphere of 30</strong> and <strong>Referral Guild (12)</strong></li>
+                        <li>Write next Monday's post using the Educational scaffold</li>
+                        <li>Start the carousel: title + three moves; finish by Friday</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: MESSAGING & POV -->
+        <div id="messaging" class="tab-content">
+            <div class="north-star">
+                <h2>🔹 Your Core Narrative</h2>
+                <p><strong>"Ops is the product. Cycle time is the KPI. AI is the accelerator."</strong></p>
+                <p style="margin-top: 10px;">That becomes your North Star. You'll use it to:</p>
+                <ul style="margin-left: 30px; margin-top: 10px;">
+                    <li>Anchor <strong>messaging</strong> (why you exist)</li>
+                    <li>Shape <strong>offers</strong> (what you sell)</li>
+                    <li>Drive <strong>content</strong> (how you teach)</li>
+                    <li>Guide <strong>client outcomes</strong> (how you measure success)</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>1. The Messaging Pyramid</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Layer</th>
+                            <th>Message</th>
+                            <th>Emotional Trigger</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Vision</strong></td>
+                            <td>Modern companies don't win because of software—they win because of speed.</td>
+                            <td>FOMO — "We're slow."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Core Truth</strong></td>
+                            <td>Ops <em>is</em> the product. Every process is a customer experience.</td>
+                            <td>Clarity — "We're selling friction."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Metric</strong></td>
+                            <td>Cycle time is the ultimate efficiency KPI. If you can't measure it, you can't scale it.</td>
+                            <td>Accountability — "We need to see it."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Method</strong></td>
+                            <td>Fix the flow → clean the data → automate → then add AI.</td>
+                            <td>Logic — "That makes sense."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Promise</strong></td>
+                            <td>I help fintech operators cut cycle time 30%+ by cleaning, standardizing, and automating their ops—before AI ever touches it.</td>
+                            <td>Relief — "Finally, someone who gets it."</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>2. Your POV in Plain English</h2>
+                <p style="margin-bottom: 15px;"><em>When someone asks, "What do you do?"</em></p>
+                <div class="highlight">
+                    <p>"I help fintech teams speed up their operations.<br>
+                    Most think they need more automation or AI, but what they really need is clean, standardized workflows.<br>
+                    Ops is the product — cycle time is the KPI — AI just makes the engine go faster once it's built right."</p>
+                </div>
+                <p style="margin-top: 15px;">That line is short enough for conversation, and powerful enough for content.</p>
+            </div>
+
+            <div class="section">
+                <h2>3. How to Express the POV Across Touchpoints</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Channel</th>
+                            <th>Expression Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>LinkedIn Banner</strong></td>
+                            <td>"Ops is the Product. Cycle Time is the KPI. AI is the Accelerator."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Headline</strong></td>
+                            <td>Fractional COO for Fintech Lenders ⚙️ I cut cycle times 30%+ by fixing ops debt before AI deployment</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Content Hooks</strong></td>
+                            <td>"You can't automate chaos." / "AI doesn't fix broken processes." / "If your ops are slow, your revenue is capped."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Carousels</strong></td>
+                            <td><em>Slide 1:</em> "Ops is the Product."<br><em>Slide 2:</em> "Cycle Time is How You Measure It."<br><em>Slide 3:</em> "AI is How You Accelerate It."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Diagnostic Offer</strong></td>
+                            <td>"In 15 minutes, I'll show you where cycle time, rework, or CRM drift is costing you scale."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Website Intro</strong></td>
+                            <td>"Every day you lose to slow operations is a day a faster competitor wins. Qnèctra builds the systems that make speed sustainable."</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>4. Language Field Guide</h2>
+                <p style="margin-bottom: 15px;"><em>Your brand vocabulary:</em></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Words / Phrases</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Ops Friction</strong></td>
+                            <td>bottlenecks, ops debt, handoff delays, rework loops, hidden lag</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Value Metrics</strong></td>
+                            <td>cycle time, time-to-payout, time-to-underwrite, time-to-renew, throughput</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Transformation</strong></td>
+                            <td>unclog, streamline, standardize, simplify, accelerate</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AI Framing</strong></td>
+                            <td>augment, assist, co-pilot, intelligent automation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Philosophy</strong></td>
+                            <td>"Ops before AI." "Speed is a system." "AI magnifies what's already there — fix it first."</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>5. How This POV Feeds Your Funnel</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Funnel Stage</th>
+                            <th>Goal</th>
+                            <th>Message Alignment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Top (Visibility)</strong></td>
+                            <td>Attract leaders who resonate with <em>speed as strategy</em></td>
+                            <td>"Ops is the product" content hooks</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Middle (Education)</strong></td>
+                            <td>Build trust with process frameworks</td>
+                            <td>"Cycle time as KPI" diagnostic posts</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bottom (Conversion)</strong></td>
+                            <td>Drive to diagnostic and paid consults</td>
+                            <td>"AI is the accelerator" as next step once ops debt is fixed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>6. Your Signature Content Angles</h2>
+                <ul>
+                    <li><strong>Ops before AI</strong> – "Most teams automate chaos."</li>
+                    <li><strong>Cycle Time as Strategy</strong> – "Every 10% reduction compounds your valuation."</li>
+                    <li><strong>CRM Debt is Real</strong> – "The hidden cost of bad definitions."</li>
+                    <li><strong>Data Trust</strong> – "If you can't trust your data, you can't trust your AI."</li>
+                    <li><strong>Speed as the Ultimate Moat</strong> – "When you're faster, everything compounds: decisions, deals, renewals."</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>7. Example 3-Post Sequence</h2>
+                <p style="margin-bottom: 20px;"><em>(You can publish next week)</em></p>
+                
+                <div class="subsection">
+                    <h3>Post 1 (Monday)</h3>
+                    <p><strong>Hook:</strong> "Ops is your real product. Not the app, not the feature — the system that delivers it."</p>
+                    <p><strong>Body:</strong> Explain how slow onboarding or handoffs kills growth.</p>
+                    <p><strong>CTA:</strong> "I built a 10-point checklist to spot cycle-time leaks. Want it?"</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Post 2 (Wednesday)</h3>
+                    <p><strong>Hook:</strong> "AI doesn't fix slow operations — it amplifies them."</p>
+                    <p><strong>Body:</strong> One short story (e.g. client automated an unstandardized CRM and chaos doubled).</p>
+                    <p><strong>CTA:</strong> "Fix it before you feed it to AI."</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Post 3 (Friday)</h3>
+                    <p><strong>Hook:</strong> "Cycle time is the KPI nobody tracks — but it tells you everything about your scalability."</p>
+                    <p><strong>Body:</strong> Talk about why measuring time between key stages exposes revenue leaks.</p>
+                    <p><strong>CTA:</strong> "If you want to see where your cycle time hides, book a 15-min Diagnostic. I'll mark the two biggest bottlenecks."</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Operationalizing Your Core Narrative</h2>
+                
+                <div class="subsection">
+                    <h3>1. Anchor it in your identity</h3>
+                    <ul>
+                        <li>Put it in your <strong>banner</strong> and <strong>headline</strong>:<br>
+                        "Ops is the Product. Cycle Time is the KPI. AI is the Accelerator."<br>
+                        "Fractional COO | I help fintech operators cut cycle time 30%+ by fixing ops debt before adding AI."</li>
+                        <li>Start every call, bio, or deck with that idea in one line.</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>2. Let it drive your content</h3>
+                    <p style="margin-bottom: 15px;">Each post should teach, prove, or illustrate one of the three parts.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Theme</th>
+                                <th>Sample Hook</th>
+                                <th>Takeaway</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Ops is the product</strong></td>
+                                <td>"Every customer feels your ops before they feel your product."</td>
+                                <td>Speed and reliability <em>are</em> the experience.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cycle time is the KPI</strong></td>
+                                <td>"Cycle time is your silent balance sheet."</td>
+                                <td>Track it → fix it → profit.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AI is the accelerator</strong></td>
+                                <td>"AI doesn't fix slow ops; it makes them faster – or faster broken."</td>
+                                <td>AI adds leverage <em>after</em> clarity.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 15px;">Use these as recurring series headers: <em>Ops Unclogged</em>, <em>Cycle-Time Surgery</em>, <em>AI Last, Not First.</em></p>
+                </div>
+
+                <div class="subsection">
+                    <h3>3. Embed it in offers</h3>
+                    <ul>
+                        <li><strong>Diagnostic CTA:</strong> "Find the two biggest cycle-time leaks in 15 minutes."</li>
+                        <li><strong>Q-Consult™:</strong> "A 10-day sprint to cut cycle time 30% by cleaning and standardizing workflows."</li>
+                        <li><strong>Q-Advise™:</strong> "Govern the new habits and layer in AI accelerators."</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>4. Repeat it everywhere</h3>
+                    <p>LinkedIn banner → carousel slides → website hero → intro line on calls.<br>
+                    You want prospects repeating it back to you.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: CONTENT CALENDAR -->
+        <div id="calendar" class="tab-content">
+            <div class="north-star">
+                <h2>🧭 North Star Message</h2>
+                <p><strong>Ops is the Product. Cycle Time is the KPI. AI is the Accelerator.</strong></p>
+                <p style="margin-top: 10px;">Qnèctra helps FinTech and RBF lenders cut cycle times 30%+ by fixing ops debt and unifying systems before automation.</p>
+                <p style="margin-top: 15px;">Everything we publish should tie back to one of these three pillars:</p>
+                <ol style="margin-left: 30px; margin-top: 10px;">
+                    <li><strong>Ops as Product</strong> → Operational clarity & structure</li>
+                    <li><strong>Cycle Time as KPI</strong> → Measurable speed & throughput</li>
+                    <li><strong>AI as Accelerator</strong> → Smart enablement after cleanup</li>
+                </ol>
+            </div>
+
+            <div class="section">
+                <h2>🗓️ 4-Week Content Calendar</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Week</th>
+                            <th>Theme</th>
+                            <th>Purpose</th>
+                            <th>Post Types</th>
+                            <th>Key CTA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Week 1</strong></td>
+                            <td><strong>Ops as the Product</strong></td>
+                            <td>Re-educate audience: the real product is operations</td>
+                            <td>① Educational ② Story ③ Carousel ④ CTA</td>
+                            <td>"Book a 15-min Diagnostic to uncover 2 ops bottlenecks."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Week 2</strong></td>
+                            <td><strong>Cycle-Time Mastery</strong></td>
+                            <td>Introduce cycle time as the CEO metric</td>
+                            <td>① Data/Insight ② Story ③ Poll ④ CTA</td>
+                            <td>"Want a Cycle-Time Audit? Comment or DM 'audit'."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Week 3</strong></td>
+                            <td><strong>AI as Accelerator (Not Band-Aid)</strong></td>
+                            <td>Show discipline—AI after clarity</td>
+                            <td>① Educational ② Story ③ Case-style ④ CTA</td>
+                            <td>"Download the AI-Powered Ops Playbook."</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Week 4</strong></td>
+                            <td><strong>Proof + Authority</strong></td>
+                            <td>Bring it together: lessons, frameworks, outcomes</td>
+                            <td>① Thought-leadership ② Mini-case ③ Carousel recap ④ Live Q&A/CTA</td>
+                            <td>"Book your Q-Consult™ diagnostic sprint."</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>🧩 Week-by-Week Detail</h2>
+
+                <div class="subsection">
+                    <h3>Week 1 – Ops Is the Product</h3>
+                    <p><strong>Goal:</strong> Establish your philosophy and attract ops-minded founders.</p>
+                    <table style="margin-top: 15px;">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Type</th>
+                                <th>Hook / Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mon</td>
+                                <td><strong>Educational</strong></td>
+                                <td>"Your product isn't software—it's your system." → outline how ops bottlenecks kill scale.</td>
+                            </tr>
+                            <tr>
+                                <td>Wed</td>
+                                <td><strong>Story</strong></td>
+                                <td>Numerix merger anecdote: 3 teams, 3 definitions of 'active customer.' Lesson: clarity before code.</td>
+                            </tr>
+                            <tr>
+                                <td>Fri</td>
+                                <td><strong>Carousel</strong></td>
+                                <td><em>The 4 Pillars of Operational Excellence.</em></td>
+                            </tr>
+                            <tr>
+                                <td>Sat</td>
+                                <td><strong>CTA post</strong></td>
+                                <td>"Running 3 free Ops Diagnostics next week. Want a slot?"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3>Week 2 – Cycle Time as Strategy</h3>
+                    <p><strong>Goal:</strong> Shift focus from activity to throughput.</p>
+                    <table style="margin-top: 15px;">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Type</th>
+                                <th>Hook / Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mon</td>
+                                <td><strong>Insight</strong></td>
+                                <td>"Cycle time is the KPI that predicts growth." Include a simple metric formula.</td>
+                            </tr>
+                            <tr>
+                                <td>Wed</td>
+                                <td><strong>Story</strong></td>
+                                <td>How one workflow change cut renewal turnaround 35%.</td>
+                            </tr>
+                            <tr>
+                                <td>Thu</td>
+                                <td><strong>Poll</strong></td>
+                                <td>"Where's your cycle-time bottleneck?" (Intake / Underwriting / Docs / Payout).</td>
+                            </tr>
+                            <tr>
+                                <td>Fri</td>
+                                <td><strong>CTA</strong></td>
+                                <td>"Want your cycle time benchmarked? Book a diagnostic."</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3>Week 3 – AI Last, Not First</h3>
+                    <p><strong>Goal:</strong> Reinforce disciplined automation mindset.</p>
+                    <table style="margin-top: 15px;">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Type</th>
+                                <th>Hook / Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mon</td>
+                                <td><strong>Educational</strong></td>
+                                <td>"AI doesn't fix chaos—it accelerates it." Show 3 readiness steps.</td>
+                            </tr>
+                            <tr>
+                                <td>Wed</td>
+                                <td><strong>Mini-Case</strong></td>
+                                <td>CamelotVP example: standardized before automating.</td>
+                            </tr>
+                            <tr>
+                                <td>Fri</td>
+                                <td><strong>Carousel</strong></td>
+                                <td><em>The 4 Phases of Smart AI Implementation</em> (from your Framework PDF).</td>
+                            </tr>
+                            <tr>
+                                <td>Sat</td>
+                                <td><strong>CTA</strong></td>
+                                <td>"Get the AI-Powered Process Optimization Playbook (free)."</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3>Week 4 – Proof, Authority & Wrap-Up</h3>
+                    <p><strong>Goal:</strong> Cement thought leadership and convert attention into conversations.</p>
+                    <table style="margin-top: 15px;">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Type</th>
+                                <th>Hook / Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mon</td>
+                                <td><strong>Thought Leadership</strong></td>
+                                <td>"Speed is the new trust signal." Tie speed to customer retention.</td>
+                            </tr>
+                            <tr>
+                                <td>Wed</td>
+                                <td><strong>Mini-Case / Results</strong></td>
+                                <td>PHEI nonprofit transformation → clarity, compliance, trust.</td>
+                            </tr>
+                            <tr>
+                                <td>Fri</td>
+                                <td><strong>Carousel Recap</strong></td>
+                                <td><em>Ops → Cycle Time → AI: The Compounding Advantage.</em></td>
+                            </tr>
+                            <tr>
+                                <td>Sat</td>
+                                <td><strong>Live / Text CTA</strong></td>
+                                <td>"Let's find your biggest ops bottleneck—book a 15-min diagnostic."</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎯 Visibility Routine</h2>
+                <ul>
+                    <li><strong>Daily (20 min):</strong> Comment on 5 fintech or ops posts (your "Sphere of 30").</li>
+                    <li><strong>Weekly:</strong> DM 5 new founders with a value drop ("Here's a 10-point checklist to spot cycle-time leaks").</li>
+                    <li><strong>Monthly:</strong> Publish a newsletter issue: <em>Ops Accelerated — Lessons from the Field.</em></li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>🧠 Content Mix Target</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>%</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Educational / Framework</td>
+                            <td>35%</td>
+                            <td>Build authority</td>
+                        </tr>
+                        <tr>
+                            <td>Story / Personal</td>
+                            <td>25%</td>
+                            <td>Humanize expertise</td>
+                        </tr>
+                        <tr>
+                            <td>Carousel / Visual</td>
+                            <td>20%</td>
+                            <td>Shareable insight</td>
+                        </tr>
+                        <tr>
+                            <td>Poll / Conversation</td>
+                            <td>10%</td>
+                            <td>Engagement & feedback</td>
+                        </tr>
+                        <tr>
+                            <td>CTA / Offer</td>
+                            <td>10%</td>
+                            <td>Conversion</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script>
+            function switchTab(tabName) {
+                // Hide all tabs
+                const tabs = document.querySelectorAll('.tab-content');
+                tabs.forEach(tab => tab.classList.remove('active'));
+                
+                // Remove active class from all buttons
+                const buttons = document.querySelectorAll('.tab-button');
+                buttons.forEach(btn => btn.classList.remove('active'));
+                
+                // Show selected tab
+                document.getElementById(tabName).classList.add('active');
+                
+                // Activate clicked button
+                event.target.classList.add('active');
+            }
+        </script>
+    </div>
+</body>
+</html>

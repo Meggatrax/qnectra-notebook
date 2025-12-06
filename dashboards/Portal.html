@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Client Portal Blueprint for Eric’s Coaching Practice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background: #0b0b10;
+      color: #f5f5f7;
+    }
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 3rem;
+    }
+    h1, h2, h3, h4 {
+      font-weight: 600;
+      color: #ffffff;
+      margin-top: 1.8rem;
+      margin-bottom: 0.6rem;
+    }
+    h1 {
+      font-size: 2rem;
+      letter-spacing: 0.03em;
+    }
+    h2 {
+      font-size: 1.4rem;
+      border-bottom: 1px solid #272734;
+      padding-bottom: 0.4rem;
+    }
+    h3 {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #d0d0dd;
+      margin-top: 1.4rem;
+    }
+    p {
+      margin: 0.5rem 0;
+      color: #d9d9e3;
+    }
+    .muted {
+      color: #9c9cb0;
+      font-size: 0.92rem;
+    }
+    .pill {
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #191924;
+      color: #c12638;
+      border: 1px solid #2e2e3d;
+      margin-bottom: 0.75rem;
+    }
+    .section {
+      margin-top: 2rem;
+      padding: 1.5rem 1.25rem;
+      border-radius: 1rem;
+      background: radial-gradient(circle at top left, rgba(193,38,56,0.16), transparent 55%),
+                  linear-gradient(145deg, #10101a, #050509);
+      border: 1px solid #232333;
+    }
+    .section.light {
+      background: linear-gradient(145deg, #12121d, #090910);
+      border: 1px solid #24243a;
+    }
+    ul, ol {
+      padding-left: 1.35rem;
+      margin: 0.35rem 0 0.8rem;
+    }
+    li {
+      margin: 0.25rem 0;
+    }
+    .tagline {
+      font-size: 0.95rem;
+      color: #b3b3c4;
+      margin-top: 0.4rem;
+      max-width: 650px;
+    }
+    .two-column {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: 1.5rem;
+      margin-top: 0.75rem;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 0.4rem 0 0.8rem;
+    }
+    .badge {
+      font-size: 0.78rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      background: #161624;
+      color: #b8b8c8;
+      border: 1px solid #2b2b39;
+    }
+    .callout {
+      border-radius: 0.9rem;
+      padding: 0.9rem 0.9rem;
+      background: #141421;
+      border: 1px solid #303045;
+      font-size: 0.9rem;
+      margin: 0.75rem 0 0.3rem;
+    }
+    .callout strong {
+      color: #ffffff;
+    }
+    .number-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      font-size: 0.82rem;
+      background: #c12638;
+      color: #f5f5f7;
+      margin-right: 0.45rem;
+      flex-shrink: 0;
+    }
+    .inline-heading {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.15rem;
+    }
+    .kbd {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.78rem;
+      padding: 0.08rem 0.3rem;
+      border-radius: 0.35rem;
+      background: #191926;
+      border: 1px solid #2c2c3e;
+      color: #e1e1f0;
+    }
+    .footer-note {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #8e8ea2;
+      border-top: 1px dashed #29293a;
+      padding-top: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+      .page {
+        padding: 1.8rem 1.1rem 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <span class="pill">Concept Blueprint · Coaching Client Portal</span>
+    <h1>Client Portal Blueprint for Eric’s Coaching Practice</h1>
+    <p class="tagline">
+      A two-layer architecture that delivers a complete coaching client portal, using Go High Level (GHL) as the operational engine and an optional polished front-end for a premium client experience.
+    </p>
+
+    <div class="section">
+      <h2>1. Purpose & Context</h2>
+      <p>
+        This document outlines a proposed approach to designing and implementing a complete client portal for Eric’s coaching clients.
+        The goal is to:
+      </p>
+      <ul>
+        <li>Increase client engagement and accountability throughout the coaching journey.</li>
+        <li>Centralize communication, resources, and progress tracking in one place.</li>
+        <li>Leverage Eric’s existing investment in Go High Level (GHL) as the operational backend.</li>
+        <li>Provide a clear path to a more polished, branded portal experience over time.</li>
+      </ul>
+      <p class="muted">
+        Note: This is a planning document. It can be adapted into a formal proposal or scope of work if Eric chooses to move forward.
+      </p>
+    </div>
+
+    <div class="section light">
+      <h2>2. What Coaching Clients Need from a Portal</h2>
+      <p>
+        Across coaching businesses (executive, business, and personal development), the most effective portals tend to support a similar
+        lifecycle: <em>onboard → plan → execute → track → adjust → sustain</em>. For Eric’s practice, we can focus on the following core capabilities:
+      </p>
+
+      <h3>2.1 Onboarding & Program Orientation</h3>
+      <ul>
+        <li>Welcome experience and program overview.</li>
+        <li>Intake forms and baseline assessments.</li>
+        <li>Clarity on expectations, cadence, and outcomes.</li>
+      </ul>
+
+      <h3>2.2 Goals & Outcomes Tracking</h3>
+      <ul>
+        <li>Documented goals (business, personal, or leadership outcomes).</li>
+        <li>Milestones and supporting habits or projects.</li>
+        <li>Simple visual indicator of “where I was vs. where I am now.”</li>
+      </ul>
+
+      <h3>2.3 Session Notes & Action Items</h3>
+      <ul>
+        <li>Session summaries available after each call.</li>
+        <li>Clear action items with due dates and status.</li>
+        <li>Ability for the client to check off completed items between sessions.</li>
+      </ul>
+
+      <h3>2.4 Resources Library</h3>
+      <ul>
+        <li>Templates, PDFs, worksheets, and videos.</li>
+        <li>Organized by topic or phase of the engagement.</li>
+        <li>Easy for clients to find what they need without emailing Eric.</li>
+      </ul>
+
+      <h3>2.5 Weekly Check-ins & Reflections</h3>
+      <ul>
+        <li>Short weekly check-in form (wins, challenges, focus).</li>
+        <li>Optional journaling prompts to track mindset shifts.</li>
+        <li>Trend view over time to support deeper coaching conversations.</li>
+      </ul>
+
+      <h3>2.6 Scheduling & Logistics</h3>
+      <ul>
+        <li>Self-service scheduling and rescheduling of coaching sessions.</li>
+        <li>Clear view of upcoming sessions.</li>
+        <li>Email/SMS reminders to reduce no-shows.</li>
+      </ul>
+
+      <h3>2.7 Billing & Account Management</h3>
+      <ul>
+        <li>View invoices and payment history.</li>
+        <li>Manage subscriptions (where applicable).</li>
+        <li>Update payment methods without back-and-forth emails.</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Intentionally excluded:</strong> group/community features (forums, peer chat, group feeds). This allows us to aim for
+        ~100% coverage of the client experience using Go High Level as the core engine.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>3. Overall Architecture</h2>
+      <div class="two-column">
+        <div>
+          <h3>3.1 Backend: Go High Level (GHL)</h3>
+          <p>
+            GHL will serve as the operational backbone of the portal. It already supports the main primitives needed for a coaching practice:
+          </p>
+          <ul>
+            <li>Contacts and custom fields for client data and goals.</li>
+            <li>Pipelines and stages to model the coaching journey.</li>
+            <li>Calendars and booking links for sessions.</li>
+            <li>Forms for intake, check-ins, and reflections.</li>
+            <li>Membership areas for resources and structured content.</li>
+            <li>Automations for reminders, follow-ups, and task creation.</li>
+            <li>Invoices, subscriptions, and payments.</li>
+          </ul>
+          <p>
+            The initial implementation can live entirely inside GHL, providing a “Phase 1” portal without introducing new platforms.
+          </p>
+        </div>
+        <div>
+          <h3>3.2 Optional Front-End Portal</h3>
+          <p>
+            For a more polished client experience, we can later introduce a custom front-end portal that:
+          </p>
+          <ul>
+            <li>Provides a clean, branded dashboard for clients.</li>
+            <li>Surfaces key data from GHL (goals, progress, tasks, sessions, billing) via API.</li>
+            <li>Maintains GHL as the single source of truth and automation engine.</li>
+          </ul>
+          <p>
+            This two-layer approach gives Eric a “best of both worlds” model: operational simplicity with GHL, and high-end UX when he’s ready for it.
+          </p>
+        </div>
+      </div>
+
+      <div class="badge-row">
+        <span class="badge">Phase 1: GHL-Only Portal</span>
+        <span class="badge">Phase 2: Branded Front-End (Optional)</span>
+      </div>
+    </div>
+
+    <div class="section light">
+      <h2>4. Phase 1 – Complete Portal Within Go High Level</h2>
+      <p>
+        Phase 1 focuses on building a complete, fully functional client portal using only GHL features. This minimizes complexity and leverages tools Eric already uses.
+      </p>
+
+      <h3>4.1 Core Components</h3>
+
+      <div class="inline-heading">
+        <span class="number-badge">1</span><h4>Onboarding & Intake</h4>
+      </div>
+      <ul>
+        <li>Dedicated onboarding funnel for new coaching clients.</li>
+        <li>Intake form capturing goals, context, and constraints.</li>
+        <li>Automated welcome email with portal access details.</li>
+        <li>Optional pre-work content delivered via membership area.</li>
+      </ul>
+
+      <div class="inline-heading">
+        <span class="number-badge">2</span><h4>Goals & Progress Tracking</h4>
+      </div>
+      <ul>
+        <li>Custom fields in GHL for key goals and metrics.</li>
+        <li>Pipeline or tags representing major milestones achieved.</li>
+        <li>Simple visual cues inside the portal (e.g., “Current Focus”, “This Month’s Target”).</li>
+      </ul>
+
+      <div class="inline-heading">
+        <span class="number-badge">3</span><h4>Session Notes & Action Items</h4>
+      </div>
+      <ul>
+        <li>Session notes stored per client, accessible through the portal (e.g., via membership content or custom fields surfaced).</li>
+        <li>Action items managed as tasks or structured checklists per client.</li>
+        <li>Automated reminders before/after sessions to confirm and review action items.</li>
+      </ul>
+
+      <div class="inline-heading">
+        <span class="number-badge">4</span><h4>Resources Library</h4>
+      </div>
+      <ul>
+        <li>Use GHL membership areas to organize resources by topic or program.</li>
+        <li>Gate advanced content based on client status or plan level.</li>
+        <li>Ensure a single “Resources” area is visible inside the client portal.</li>
+      </ul>
+
+      <div class="inline-heading">
+        <span class="number-badge">5</span><h4>Weekly Check-ins & Journaling</h4>
+      </div>
+      <ul>
+        <li>Short weekly check-in form (wins, challenges, next focus).</li>
+        <li>Automations to send the form link at a consistent time each week.</li>
+        <li>Field updates or notes created from submissions to support tracking and review.</li>
+      </ul>
+
+      <div class="inline-heading">
+        <span class="number-badge">6</span><h4>Scheduling</h4>
+      </div>
+      <ul>
+        <li>GHL calendars exposed inside the portal for session booking.</li>
+        <li>Automated reminders and follow-up campaigns tied to calendar events.</li>
+      </ul>
+
+      <div class="inline-heading">
+        <span class="number-badge">7</span><h4>Billing & Payment</h4>
+      </div>
+      <ul>
+        <li>Use GHL’s built-in payment features for subscriptions or packages.</li>
+        <li>Allow clients to view invoices and payment history within the portal.</li>
+        <li>Automated notifications for upcoming renewals or failed payments.</li>
+      </ul>
+
+      <h3>4.2 Outcomes of Phase 1</h3>
+      <ul>
+        <li>A single place for Eric’s clients to manage their coaching experience.</li>
+        <li>Increased accountability and follow-through between sessions.</li>
+        <li>Reduced administrative overhead for Eric and his team.</li>
+        <li>Ability to test and refine the portal structure before investing in a custom front end.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>5. Phase 2 – Optional Branded Front-End Portal</h2>
+      <p>
+        Once Phase 1 is stable and Eric has clear proof of value, we can introduce a custom front-end portal to elevate the visual experience
+        while continuing to use GHL as the backend.
+      </p>
+
+      <h3>5.1 Front-End Experience</h3>
+      <ul>
+        <li>Custom-branded login and dashboard for clients.</li>
+        <li>Navigation tailored to Eric’s methodology (e.g., “Start Here”, “Goals”, “Actions”, “Sessions”, “Resources”, “Billing”).</li>
+        <li>Cleaner visualizations for goals, progress, and session history.</li>
+      </ul>
+
+      <h3>5.2 Integration with GHL</h3>
+      <p>The front-end would not replace GHL; it would sit on top of it:</p>
+      <ul>
+        <li>GHL remains the source of truth for contacts, goals, sessions, tasks, and billing.</li>
+        <li>The portal reads and writes data via GHL’s API and webhooks.</li>
+        <li>Forms embedded in the portal submit directly into GHL workflows.</li>
+      </ul>
+
+      <h3>5.3 Benefits of This Two-Layer Model</h3>
+      <ul>
+        <li>High-end, SaaS-like client experience without rebuilding backend logic.</li>
+        <li>Flexibility to evolve the UI over time as Eric’s practice grows or shifts.</li>
+        <li>Clear separation between operations (GHL) and presentation (custom portal).</li>
+      </ul>
+    </div>
+
+    <div class="section light">
+      <h2>6. Suggested Engagement Structure (If Eric Proceeds)</h2>
+
+      <h3>6.1 Phase 1 – GHL Portal Build</h3>
+      <ul>
+        <li>Clarify Eric’s ideal client journey and coaching offer structure.</li>
+        <li>Design the portal information architecture using existing GHL assets where possible.</li>
+        <li>Configure portals, membership areas, forms, calendars, and automations in GHL.</li>
+        <li>Test with a small group of clients and refine based on feedback.</li>
+      </ul>
+
+      <h3>6.2 Phase 2 – Optional Front-End Portal</h3>
+      <ul>
+        <li>Define UX requirements and visual style for a custom portal.</li>
+        <li>Map GHL data structures to front-end components.</li>
+        <li>Implement and test integration with GHL (API/webhooks/forms).</li>
+        <li>Gradually onboard clients from the GHL-native view to the new front end.</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Flexibility:</strong> Phase 2 is optional and can be introduced only if/when Eric wants to elevate the visual experience
+        beyond what GHL offers natively. Phase 1 alone provides a complete, functional portal.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>7. Summary</h2>
+      <p>
+        This blueprint gives Eric a path to a complete coaching client portal that:
+      </p>
+      <ul>
+        <li>Centralizes onboarding, goals, action items, resources, check-ins, scheduling, and billing.</li>
+        <li>Maximizes the value of his existing Go High Level investment.</li>
+        <li>Allows for a clean “Phase 1 now, Phase 2 later” approach to design and development.</li>
+        <li>Improves client accountability, perceived value, and retention.</li>
+      </ul>
+      <p>
+        If Eric chooses to move forward, this document can be converted into a formal proposal and scope of work, with timelines and pricing
+        aligned to the phased approach described above.
+      </p>
+    </div>
+
+    <p class="footer-note">
+      Drafted as a conceptual blueprint. Sections, headings, and language can be adapted directly into a proposal, slide deck, or web page as needed.
+    </p>
+  </div>
+</body>
+</html>

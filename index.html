@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Qnèctra Notebook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-elevated: #020617;
+      --bg-tile: #0b1220;
+      --border-tile: #1f2937;
+      --border-hover: #c12638;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --accent: #c12638;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      padding: 2.5rem clamp(1.5rem, 4vw, 3rem);
+    }
+
+    .shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #020617dd, #020617f5);
+      border-radius: var(--radius-xl);
+      border: 1px solid #111827;
+      box-shadow: var(--shadow);
+      padding: 2rem clamp(1.75rem, 4vw, 3rem);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .title-block {
+      max-width: 520px;
+    }
+
+    h1 {
+      margin: 0 0 0.4rem 0;
+      font-size: clamp(1.9rem, 3vw, 2.4rem);
+      letter-spacing: 0.04em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(193, 38, 56, 0.6);
+      background: radial-gradient(circle at top left, rgba(193, 38, 56, 0.4), transparent 60%);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #fecaca;
+      margin-bottom: 0.5rem;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.9);
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: right;
+      min-width: 180px;
+    }
+
+    .meta strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .grid-wrapper {
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.1rem 1.25rem 1.1rem;
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.12), transparent 55%),
+        radial-gradient(circle at bottom, rgba(193, 38, 56, 0.12), transparent 55%),
+        #020617;
+    }
+
+    .grid-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .grid-title strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    @media (max-width: 1024px) {
+      .tiles {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 800px) {
+      .tiles {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 540px) {
+      body {
+        padding: 1.5rem 1rem;
+      }
+      .shell {
+        padding: 1.5rem 1.25rem;
+      }
+      .tiles {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tile {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      padding: 0.9rem 0.85rem;
+      border-radius: 14px;
+      background: radial-gradient(circle at top left, rgba(15, 118, 110, 0.06), transparent 55%),
+        var(--bg-tile);
+      border: 1px solid var(--border-tile);
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.14s ease, box-shadow 0.14s ease,
+        border-color 0.14s ease, background 0.14s ease;
+    }
+
+    .tile::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: radial-gradient(circle at top right, rgba(193, 38, 56, 0.15), transparent 70%);
+      transition: opacity 0.14s ease;
+      pointer-events: none;
+    }
+
+    .tile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      border-color: var(--border-hover);
+      background: radial-gradient(circle at bottom, rgba(15, 23, 42, 0.4), transparent 65%),
+        #020617;
+    }
+
+    .tile:hover::after {
+      opacity: 1;
+    }
+
+    .tile-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+
+    .tile-tag {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      opacity: 0.95;
+    }
+
+    .tile-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .tile-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 0.1rem 0 0.2rem 0;
+    }
+
+    .tile-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 0.2rem;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+
+    .filename {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .open-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      font-size: 0.7rem;
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.88);
+    }
+
+    .open-pill span {
+      font-size: 0.8rem;
+      line-height: 1;
+    }
+
+    .empty {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 2.5rem 1rem 1.5rem;
+    }
+
+    .empty code {
+      font-size: 0.85rem;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 0.15rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="title-block">
+        <div class="badge">
+          <span class="dot"></span>
+          <span>Qnèctra Notebook</span>
+        </div>
+        <h1>Interactive Research Notebook</h1>
+        <p class="subtitle">
+          A visual shelf for your interactive HTML artifacts—click any tile to open the full notebook in a new tab.
+        </p>
+      </div>
+      <div class="meta">
+        <div><strong>View mode:</strong> HTML tiles</div>
+        <div id="file-count">Loading files…</div>
+      </div>
+    </header>
+
+    <section class="grid-wrapper">
+      <div class="grid-header">
+        <div class="grid-title">
+          <strong>Notebook index</strong><br />
+          Auto-populated from your <code>dashboards/</code> HTML files.
+        </div>
+        <div class="hint">
+          Drop a new HTML into <code>dashboards/</code> and push to GitHub—this index updates automatically.
+        </div>
+      </div>
+
+      <div id="tiles" class="tiles"></div>
+      <div id="empty-state" class="empty" style="display: none;">
+        No HTML notebooks found.<br /><br />
+        Add files into the <code>dashboards/</code> folder and push your changes.
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const tilesContainer = document.getElementById("tiles");
+    const emptyState = document.getElementById("empty-state");
+    const fileCount = document.getElementById("file-count");
+
+    function truncate(text, maxLen) {
+      if (!text) return "";
+      return text.length > maxLen ? text.slice(0, maxLen - 1).trimEnd() + "…" : text;
+    }
+
+    async function fetchMetadata(entry) {
+      try {
+        const response = await fetch(entry.path);
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, "text/html");
+
+        const titleEl = doc.querySelector("title");
+        const title = (titleEl && titleEl.textContent.trim()) || entry.filename;
+
+        const headerEl = doc.querySelector("h1, h2, header h1, header h2");
+        const headerText = headerEl ? headerEl.textContent.trim() : "";
+
+        const metaDesc = doc.querySelector('meta[name="description"]');
+        const desc = metaDesc
+          ? metaDesc.getAttribute("content").trim()
+          : headerText;
+
+        return {
+          ...entry,
+          title,
+          description: desc || ""
+        };
+      } catch (err) {
+        console.warn("Metadata read failed for", entry.path, err);
+        return {
+          ...entry,
+          title: entry.filename,
