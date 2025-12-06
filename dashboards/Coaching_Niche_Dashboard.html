@@ -333,7 +333,6 @@
             <button class="tab-btn active" onclick="openTab('overview')">📊 Overview</button>
             <button class="tab-btn" onclick="openTab('tracking')">📈 Progress Tracking</button>
             <button class="tab-btn" onclick="openTab('timeline')">📅 90-Day Plan</button>
-            <button class="tab-btn" onclick="openTab('checklist')">✅ Checklists</button>
             <button class="tab-btn" onclick="openTab('decision')">🎯 Decision Framework</button>
         </div>
 
@@ -578,93 +577,32 @@
                 </div>
             </div>
 
+            <!-- Phase 1: Validation -->
             <div class="card" style="margin-top: 30px;">
-                <h3 style="color: var(--primary-red); margin-bottom: 20px;">Phase Details</h3>
+                <h3 style="color: var(--primary-red); margin-bottom: 20px;">
+                    <i class="fas fa-search"></i> Phase 1: Validation (Days 1-30)
+                </h3>
                 
-                <div style="margin-bottom: 30px; padding: 20px; background: rgba(220, 38, 38, 0.05); border-radius: 10px; border-left: 4px solid var(--primary-red);">
-                    <h4 style="margin-bottom: 15px; font-size: 1.2em;">Phase 1: Validation (Days 1-30)</h4>
-                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 15px;">
+                <div style="background: rgba(220, 38, 38, 0.05); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 10px;">
                         <strong style="color: var(--primary-red);">Objective:</strong> Confirm interest and refine messaging with real market feedback
                     </p>
-                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 15px;">
-                        <strong style="color: var(--primary-red);">Key Activities:</strong>
-                    </p>
-                    <ul style="color: #aaa; line-height: 1.8; margin-left: 25px;">
-                        <li>Update LinkedIn profile with coaching-specific positioning</li>
-                        <li>Identify 50 target coaching businesses ($250K-$1.5M revenue)</li>
-                        <li>Launch outreach campaign with adapted messaging</li>
-                        <li>Offer free "Coaching Ops Audit" to first 10 respondents</li>
-                        <li>Conduct 5+ discovery calls</li>
-                    </ul>
-                    <p style="color: #aaa; line-height: 1.8; margin-top: 15px;">
+                    <p style="color: #aaa; line-height: 1.8;">
                         <strong style="color: var(--primary-red);">Success Metrics:</strong> 15%+ response rate, 3+ discovery calls booked, 1-2 audit engagements, validated pain points
                     </p>
                 </div>
 
-                <div style="margin-bottom: 30px; padding: 20px; background: rgba(220, 38, 38, 0.05); border-radius: 10px; border-left: 4px solid var(--primary-red);">
-                    <h4 style="margin-bottom: 15px; font-size: 1.2em;">Phase 2: Refinement (Days 31-60)</h4>
-                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 15px;">
-                        <strong style="color: var(--primary-red);">Objective:</strong> Deliver value and create documented case study
-                    </p>
-                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 15px;">
-                        <strong style="color: var(--primary-red);">Key Activities:</strong>
-                    </p>
-                    <ul style="color: #aaa; line-height: 1.8; margin-left: 25px;">
-                        <li>Complete 1-2 paid Coaching Ops Audits</li>
-                        <li>Document specific findings and recommendations</li>
-                        <li>Refine value proposition based on real feedback</li>
-                        <li>Create case study from pilot engagement</li>
-                        <li>Build simple landing page (CoachingOpsAudit.com)</li>
-                        <li>Develop self-serve "Coaching Ops Assessment" tool</li>
-                    </ul>
-                    <p style="color: #aaa; line-height: 1.8; margin-top: 15px;">
-                        <strong style="color: var(--primary-red);">Success Metrics:</strong> 100% audit completion, 8/10+ client satisfaction, clear ROI demonstrated, 1 client converts to implementation
-                    </p>
+                <h4 style="color: var(--primary-red); margin: 20px 0 15px 0;">
+                    <i class="fas fa-tasks"></i> Activities Checklist
+                </h4>
+                
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Update LinkedIn profile with coaching-specific positioning</span>
                 </div>
-
-                <div style="margin-bottom: 30px; padding: 20px; background: rgba(220, 38, 38, 0.05); border-radius: 10px; border-left: 4px solid var(--primary-red);">
-                    <h4 style="margin-bottom: 15px; font-size: 1.2em;">Phase 3: Scale Decision (Days 61-90)</h4>
-                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 15px;">
-                        <strong style="color: var(--primary-red);">Objective:</strong> Determine if this becomes the primary niche
-                    </p>
-                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 15px;">
-                        <strong style="color: var(--primary-red);">Key Activities:</strong>
-                    </p>
-                    <ul style="color: #aaa; line-height: 1.8; margin-left: 25px;">
-                        <li>Launch LinkedIn content strategy (coaching ops tips 3x/week)</li>
-                        <li>Reach out to coaching platform partners (Simply.Coach, Practice)</li>
-                        <li>Present workshop to ICF chapter or coaching community</li>
-                        <li>Analyze full funnel metrics from 90-day period</li>
-                        <li>Make formal niche commitment decision</li>
-                    </ul>
-                    <p style="color: #aaa; line-height: 1.8; margin-top: 15px;">
-                        <strong style="color: var(--primary-red);">Success Metrics:</strong> 2-3 paying clients, $15K-30K revenue secured, 5+ qualified leads in pipeline, high personal energy, clear repeatability
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Checklist Tab -->
-        <div id="checklist" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-tasks"></i> Action Checklists</h2>
-            
-            <div class="card">
-                <h3 style="color: var(--primary-red); margin-bottom: 20px;">Immediate Actions (This Week)</h3>
                 <div class="checklist-item" onclick="toggleCheck(this)">
                     <div class="checkbox"></div>
                     <span>Update ICP document to "Sarah the Scaling Coach"</span>
-                </div>
-                <div class="checklist-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>Revise LinkedIn profile with coaching-specific positioning</span>
-                </div>
-                <div class="checklist-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>Create "3-Minute Coaching Ops Audit" framework</span>
-                </div>
-                <div class="checklist-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>Identify 50 target coaching businesses ($250K-$1.5M)</span>
                 </div>
                 <div class="checklist-item" onclick="toggleCheck(this)">
                     <div class="checkbox"></div>
@@ -672,18 +610,150 @@
                 </div>
                 <div class="checklist-item" onclick="toggleCheck(this)">
                     <div class="checkbox"></div>
+                    <span>Create "3-Minute Coaching Ops Audit" framework</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Identify 50 target coaching businesses ($250K-$1.5M revenue)</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
                     <span>Adapt workshop content for coaching audience</span>
                 </div>
                 <div class="checklist-item" onclick="toggleCheck(this)">
                     <div class="checkbox"></div>
-                    <span>Create landing page (CoachingOpsAudit.com)</span>
+                    <span>Launch outreach campaign with adapted messaging</span>
                 </div>
                 <div class="checklist-item" onclick="toggleCheck(this)">
                     <div class="checkbox"></div>
-                    <span>Launch validation outreach campaign</span>
+                    <span>Offer free "Coaching Ops Audit" to first 10 respondents</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Conduct 5+ discovery calls</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Post first 3 pieces of LinkedIn content</span>
+                </div>
+            </div>
+
+            <!-- Phase 2: Refinement -->
+            <div class="card" style="margin-top: 30px;">
+                <h3 style="color: var(--primary-red); margin-bottom: 20px;">
+                    <i class="fas fa-wrench"></i> Phase 2: Refinement (Days 31-60)
+                </h3>
+                
+                <div style="background: rgba(220, 38, 38, 0.05); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 10px;">
+                        <strong style="color: var(--primary-red);">Objective:</strong> Deliver value and create documented case study
+                    </p>
+                    <p style="color: #aaa; line-height: 1.8;">
+                        <strong style="color: var(--primary-red);">Success Metrics:</strong> 100% audit completion, 8/10+ client satisfaction, clear ROI demonstrated, 1 client converts to implementation
+                    </p>
+                </div>
+
+                <h4 style="color: var(--primary-red); margin: 20px 0 15px 0;">
+                    <i class="fas fa-tasks"></i> Activities Checklist
+                </h4>
+                
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Complete 1-2 paid Coaching Ops Audits</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Document specific findings and recommendations from audits</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Refine value proposition based on real client feedback</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Create detailed case study from pilot engagement (with metrics)</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Build simple landing page (CoachingOpsAudit.com)</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Develop self-serve "Coaching Ops Assessment" tool</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Present implementation proposal to at least 1 audit client</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Continue LinkedIn content (aim for 12 more posts this phase)</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Gather and document client testimonials</span>
+                </div>
+            </div>
+
+            <!-- Phase 3: Scale Decision -->
+            <div class="card" style="margin-top: 30px;">
+                <h3 style="color: var(--primary-red); margin-bottom: 20px;">
+                    <i class="fas fa-rocket"></i> Phase 3: Scale Decision (Days 61-90)
+                </h3>
+                
+                <div style="background: rgba(220, 38, 38, 0.05); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 10px;">
+                        <strong style="color: var(--primary-red);">Objective:</strong> Determine if this becomes the primary niche
+                    </p>
+                    <p style="color: #aaa; line-height: 1.8;">
+                        <strong style="color: var(--primary-red);">Success Metrics:</strong> 2-3 paying clients, $15K-30K revenue secured, 5+ qualified leads in pipeline, high personal energy, clear repeatability
+                    </p>
+                </div>
+
+                <h4 style="color: var(--primary-red); margin: 20px 0 15px 0;">
+                    <i class="fas fa-tasks"></i> Activities Checklist
+                </h4>
+                
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Launch consistent LinkedIn content strategy (3x/week on coaching ops)</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Reach out to coaching platform partners (Simply.Coach, Practice, Satori)</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Present workshop to ICF chapter or coaching community</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Analyze full funnel metrics from entire 90-day period</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Review all success metrics against targets (use Progress Tracking tab)</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Conduct personal energy/alignment assessment</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Document repeatable patterns in problems and solutions</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Make formal niche commitment decision (Green/Yellow/Red)</span>
+                </div>
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <span>Schedule 90-day review meeting (March 6, 2026)</span>
                 </div>
             </div>
         </div>
+
+        <!-- Checklist Tab REMOVED -->
 
         <!-- Decision Framework Tab -->
         <div id="decision" class="tab-content">
