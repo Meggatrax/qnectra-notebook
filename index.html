@@ -423,7 +423,8 @@
         }
 
         // Sort alphabetically by title for display
-        enriched.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+        // Sort newest → oldest
+        enriched.sort((a, b) => new Date(b.modified) - new Date(a.modified));
         renderTiles(enriched);
       } catch (err) {
         console.error("Failed to load manifest.json", err);
