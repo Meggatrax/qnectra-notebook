@@ -13,8 +13,16 @@ def main():
 
     entries = []
     for name in os.listdir(DASH_DIR):
-        if not name.lower().endswith(".html"):
-            continue
+        lower = name.lower()
+
+        # 👉 Support both HTML and PDF
+        if lower.endswith(".html") or lower.endswith(".htm"):
+            file_type = "html"
+        elif lower.endswith(".pdf"):
+            file_type = "pdf"
+        else:
+            continue  # skip anything else
+
         full_path = os.path.join(DASH_DIR, name)
         if not os.path.isfile(full_path):
             continue
@@ -24,6 +32,7 @@ def main():
             {
                 "path": f"dashboards/{name}",
                 "filename": name,
+                "type": file_type,  # 👈 new field
                 "modified": datetime.fromtimestamp(mtime).isoformat(timespec="seconds"),
             }
         )
