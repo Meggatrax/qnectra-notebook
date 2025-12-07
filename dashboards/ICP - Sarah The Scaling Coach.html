@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ICP – Sarah the Scaling Coach | Qnèctra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050509;
+      --bg-alt: #121218;
+      --panel: #181821;
+      --border-subtle: #2a2a38;
+      --accent: #c12638;
+      --accent-soft: rgba(193, 38, 56, 0.12);
+      --text-main: #f5f5fb;
+      --text-muted: #a3a3c0;
+      --chip-bg: #242433;
+      --chip-text: #e8e8ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #151524 0, #050509 55%);
+      color: var(--text-main);
+      padding: 32px 16px 48px;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 18px;
+    }
+
+    .title-block h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .title-block p {
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .tag-block {
+      text-align: right;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .tag-block .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    @media (min-width: 900px) {
+      .grid-2 {
+        grid-template-columns: 1.3fr 1fr;
+      }
+      .grid-3 {
+        grid-template-columns: 1.1fr 1.1fr 1.1fr;
+      }
+    }
+
+    .card {
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 18px 18px 16px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .card-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .pill-small {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--chip-bg);
+      color: var(--chip-text);
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pill-small-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .card-body p {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      background: var(--chip-bg);
+      color: var(--chip-text);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    ul {
+      list-style: none;
+      margin-top: 6px;
+    }
+
+    ul li {
+      position: relative;
+      padding-left: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 5px;
+    }
+
+    ul li::before {
+      content: "•";
+      position: absolute;
+      left: 2px;
+      top: 0;
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin: 26px 0 8px;
+    }
+
+    .highlight {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .quote {
+      font-size: 13px;
+      font-style: italic;
+      margin-top: 4px;
+      color: var(--text-muted);
+    }
+
+    .footer-note {
+      margin-top: 22px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <div class="title-block">
+        <h1>ICP – Sarah the Scaling Coach</h1>
+        <p>Expert-led coaching & education businesses for the Coaching Ops niche exploration.</p>
+      </div>
+      <div class="tag-block">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          Phase 1 – Niche Validation
+        </div>
+        <div style="margin-top:6px;">Qnèctra · Internal ICP Artifact</div>
+      </div>
+    </header>
+
+    <!-- ICP SUMMARY -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">ICP Summary</div>
+          <div class="card-sub">WHO THIS DOCUMENT IS FOR</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p>
+          <span class="highlight">Ideal Client:</span> small-to-mid-sized, expert-led coaching and education
+          businesses generating roughly <strong>$250K–$1.5M</strong> in annual revenue. They sell a mix of group programs,
+          1:1/hybrid offers, and digital products, and are starting to feel the strain of growth.
+        </p>
+        <p style="margin-top:8px;">
+          Their core challenge: the business has outgrown its ad-hoc systems. Delivery is increasingly chaotic,
+          highly manual, and dependent on the founder. They know their backend cannot support more clients without
+          breaking.
+        </p>
+        <p class="quote">Signal: “We’re doing well on revenue, but we’re working way too hard for it.”</p>
+      </div>
+    </div>
+
+    <!-- PERSONA + OPS PROFILE -->
+    <div class="section-label">Persona & Operating Profile</div>
+    <div class="grid grid-2">
+      <!-- Persona -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Sarah the Scaling Coach</div>
+            <div class="card-sub">PERSONA SNAPSHOT</div>
+          </div>
+          <span class="pill-small">
+            <span class="pill-small-dot"></span> Founder-led
+          </span>
+        </div>
+        <div class="card-body">
+          <p>
+            Sarah runs a growing coaching business: a flagship group program, some 1:1 or hybrid offers, a client
+            community, and a small library of digital products. She’s excellent at selling, coaching, and content
+            creation—weak on systems and operational design.
+          </p>
+          <div class="chip-row">
+            <span class="chip">Age 30–52</span>
+            <span class="chip">US-based</span>
+            <span class="chip">Team: 1–5</span>
+            <span class="chip">Multi-offer business</span>
+            <span class="chip">Remote-first</span>
+          </div>
+          <ul>
+            <li>Uses 3–7 tools (Skool, Kajabi, GHL, Zoom, Stripe, etc.).</li>
+            <li>Thinks “a new platform” might fix her backend problems.</li>
+            <li>Motivated by freedom, client impact, and sustainable scale.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Operational Profile -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Operational Profile</div>
+            <div class="card-sub">CURRENT STATE</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>Delivery partially structured, partially chaotic; depends on Sarah’s memory and judgment.</li>
+            <li>Onboarding and access still involve manual steps and one-off emails.</li>
+            <li>Client portal exists but is cluttered, underused, or inconsistent between offers.</li>
+            <li>No reliable way to see who is engaged, behind, or at risk of churn.</li>
+            <li>Scheduling/rescheduling and support questions feel overwhelming.</li>
+            <li>Multiple tools with no coherent operating model or data structure.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAINS & GAPS -->
+    <div class="section-label">Pain Matrix & System Gaps</div>
+    <div class="grid grid-2">
+      <!-- Pains -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Primary Pains</div>
+            <div class="card-sub">WHAT SHE FEELS DAY-TO-DAY</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li><strong>Inconsistent client experience</strong> – some clients get a premium journey, others feel lost.</li>
+            <li><strong>Manual fulfillment load</strong> – repetitive admin tasks eat into coaching and thinking time.</li>
+            <li><strong>Tool friction</strong> – “we have everything, but nothing talks to each other.”</li>
+            <li><strong>Plateaued growth</strong> – more clients means more chaos, not more freedom.</li>
+            <li><strong>Lack of visibility</strong> – no clear view of progress, risk, or overall health of programs.</li>
+            <li><strong>Burnout risk</strong> – Sarah is the bottleneck for every exception and fire.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Gaps -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">System Gaps</div>
+            <div class="card-sub">WHY THE PAIN PERSISTS</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>No standardized, end-to-end onboarding flow across offers.</li>
+            <li>No clearly defined delivery workflows or governance (who does what, when, and how).</li>
+            <li>Client portals are not designed as a structured “home base” for the experience.</li>
+            <li>Data is scattered across tools; no single “source of truth.”</li>
+            <li>Automation attempts sit on top of messy processes, making failures faster.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRIGGERS & VALUES -->
+    <div class="section-label">Buying Triggers & Partner Fit</div>
+    <div class="grid grid-2">
+      <!-- Triggers -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Buying Triggers</div>
+            <div class="card-sub">WHEN SHE LOOKS FOR HELP</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>Multiple launches or offers create delivery strain and frequent mistakes.</li>
+            <li>A major launch or scale push is coming and she fears things will break.</li>
+            <li>Client feedback hints at confusion, missed steps, or inconsistent experience.</li>
+            <li>Team or VA is overwhelmed; quality drops as volume increases.</li>
+            <li>She’s switched platforms (e.g., Skool / Kajabi / GHL) and nothing improved.</li>
+            <li>Revenue stalls despite strong demand and marketing performance.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Values -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">What She Values in Qnèctra</div>
+            <div class="card-sub">WHY SHE SAYS YES</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>Plain-language explanations and a calm guide through complexity.</li>
+            <li>Hands-on partnership, not another course or template pack.</li>
+            <li>Custom-fit systems that respect her brand and delivery style.</li>
+            <li>Focus on client experience quality, not just automation tricks.</li>
+            <li>Foundational fixes that make the business lighter, not heavier.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- RED FLAGS & MESSAGING -->
+    <div class="section-label">Red Flags & Messaging</div>
+    <div class="grid grid-2">
+      <!-- Red Flags -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Red Flags</div>
+            <div class="card-sub">WHO TO AVOID</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>Coaching businesses under ~$150K ARR or still validating their first offer.</li>
+            <li>“Hobby” coaches who don’t see their work as an operation to be designed.</li>
+            <li>Buyers who believe a single tool (e.g., Skool) will fix everything.</li>
+            <li>Heavy DIY personalities seeking templates rather than partnership.</li>
+            <li>Founders unwilling to map workflows or make process changes.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Messaging -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Messaging Notes</div>
+            <div class="card-sub">HOW TO SPEAK TO SARAH</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p><span class="highlight">Core Message:</span> “You don’t need more tools—you need cleaner systems.”</p>
+          <ul style="margin-top:6px;">
+            <li>Emphasize delivery consistency, client experience, and regained time.</li>
+            <li>Highlight the role of a structured client portal as a growth asset.</li>
+            <li>Clarify that automation and AI only work on top of clean processes.</li>
+            <li>Position Qnèctra as the partner that turns her expertise into a scalable engine.</li>
+          </ul>
+          <p class="quote" style="margin-top:8px;">
+            Positioning line: “I help coaching and expert-led businesses eliminate delivery chaos, streamline onboarding,
+            and build scalable operations—without burning out their teams.”
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Working doc for 90-Day Coaching Niche Evaluation · Update as real conversations refine the profile.
+    </div>
+  </div>
+</body>
+</html>
