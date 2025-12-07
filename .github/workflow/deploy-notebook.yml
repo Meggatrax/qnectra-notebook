@@ -1,4 +1,4 @@
-name: Deploy Qnèctra Notebook
+name: pages build and deployment
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: .   # deploy everything from repo root
 
   deploy:
     needs: build
