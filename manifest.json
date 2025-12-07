@@ -1,5 +1,11 @@
 [
   {
+    "path": "dashboards/Coaching Vlaue Proposition.html",
+    "filename": "Coaching Vlaue Proposition.html",
+    "type": "html",
+    "modified": "2025-12-06T22:41:01"
+  },
+  {
     "path": "dashboards/ICP - Sarah The Scaling Coach.html",
     "filename": "ICP - Sarah The Scaling Coach.html",
     "type": "html",
@@ -48,6 +54,12 @@
     "modified": "2025-10-06T15:56:56"
   },
   {
+    "path": "dashboards/CEO Character.pdf",
+    "filename": "CEO Character.pdf",
+    "type": "pdf",
+    "modified": "2025-10-02T12:00:35"
+  },
+  {
     "path": "dashboards/RBF no-cost workshop.html",
     "filename": "RBF no-cost workshop.html",
     "type": "html",
@@ -58,5 +70,11 @@
     "filename": "IPC COO Pitch.html",
     "type": "html",
     "modified": "2025-08-13T14:33:14"
+  },
+  {
+    "path": "dashboards/The True Cost of Operational Debt for RBF Fintechs.html",
+    "filename": "The True Cost of Operational Debt for RBF Fintechs.html",
+    "type": "html",
+    "modified": "2025-07-28T20:51:42"
   }
 ]
