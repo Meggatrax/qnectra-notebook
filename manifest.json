@@ -1,42 +1,62 @@
 [
   {
+    "path": "dashboards/ICP - Sarah The Scaling Coach.html",
+    "filename": "ICP - Sarah The Scaling Coach.html",
+    "type": "html",
+    "modified": "2025-12-06T21:13:13"
+  },
+  {
     "path": "dashboards/Coaching_Niche_Dashboard.html",
     "filename": "Coaching_Niche_Dashboard.html",
-    "modified": "2025-12-06T15:16:47"
+    "type": "html",
+    "modified": "2025-12-06T17:55:26"
   },
   {
     "path": "dashboards/Portal.html",
     "filename": "Portal.html",
+    "type": "html",
     "modified": "2025-12-06T13:20:30"
+  },
+  {
+    "path": "dashboards/session_2025-12-05T17-58.pdf",
+    "filename": "session_2025-12-05T17-58.pdf",
+    "type": "pdf",
+    "modified": "2025-12-05T12:58:24"
   },
   {
     "path": "dashboards/eric_discovery_meeting_canvas.html",
     "filename": "eric_discovery_meeting_canvas.html",
+    "type": "html",
     "modified": "2025-12-02T09:55:09"
   },
   {
     "path": "dashboards/networking-lead-gen-agenda.html",
     "filename": "networking-lead-gen-agenda.html",
+    "type": "html",
     "modified": "2025-11-17T16:33:05"
   },
   {
     "path": "dashboards/B2B Finance Expo Networking Plan.html",
     "filename": "B2B Finance Expo Networking Plan.html",
+    "type": "html",
     "modified": "2025-10-26T15:22:25"
   },
   {
     "path": "dashboards/tofu-visibility-os.html",
     "filename": "tofu-visibility-os.html",
+    "type": "html",
     "modified": "2025-10-06T15:56:56"
   },
   {
     "path": "dashboards/RBF no-cost workshop.html",
     "filename": "RBF no-cost workshop.html",
+    "type": "html",
     "modified": "2025-09-04T10:12:51"
   },
   {
     "path": "dashboards/IPC COO Pitch.html",
     "filename": "IPC COO Pitch.html",
+    "type": "html",
     "modified": "2025-08-13T14:33:14"
   }
 ]
