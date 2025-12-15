@@ -1,191 +1,193 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Coaching Value Proposition | Qnèctra</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #050509;
-      --bg-alt: #121218;
-      --panel: #181821;
-      --border: #2a2a38;
-      --accent: #c12638;
-      --accent-soft: rgba(193, 38, 56, 0.15);
-      --text-main: #f5f5fb;
-      --text-muted: #b0b0cb;
-    }
+<!-- Qnèctra — Coaching Value Proposition Block (drop-in HTML) -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
+  .qnectra-vp {
+    font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: radial-gradient(circle at top left, #1a1a26 0%, #0b0b11 55%);
+    padding: 28px 22px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.10);
+    color: #f4f6ff;
+    max-width: 980px;
+    box-shadow: 0 18px 44px rgba(0,0,0,0.35);
+  }
 
-    body {
-      background: radial-gradient(circle at top left, #151524 0%, #050509 55%);
-      font-family: "Montserrat", sans-serif;
-      color: var(--text-main);
-      padding: 32px 16px 60px;
-    }
+  .qnectra-vp .kicker {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(244,246,255,0.72);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    padding: 6px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
 
-    .page {
-      max-width: 900px;
-      margin: auto;
-    }
+  .qnectra-vp h2 {
+    font-size: 22px;
+    line-height: 1.25;
+    margin: 0 0 10px 0;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+  }
 
-    .card {
-      background: var(--panel);
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      padding: 32px 28px;
-      box-shadow: 0px 22px 42px rgba(0, 0, 0, 0.35);
-      margin-top: 10px;
-    }
+  .qnectra-vp .lead {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(244,246,255,0.82);
+    margin: 0 0 18px 0;
+  }
 
-    h1 {
-      font-size: 26px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
-    }
+  .qnectra-vp .accent {
+    color: #C12638;
+    font-weight: 800;
+  }
 
-    .subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-    }
+  .qnectra-vp .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 14px;
+  }
 
-    .section {
-      margin-top: 22px;
+  @media (min-width: 860px) {
+    .qnectra-vp .grid {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
     }
+  }
 
-    h2 {
-      font-size: 17px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 10px;
-      color: var(--accent);
-    }
+  .qnectra-vp .card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 14px;
+    padding: 16px 16px;
+  }
 
-    p {
-      font-size: 14px;
-      line-height: 1.55;
-      color: var(--text-muted);
-    }
+  .qnectra-vp .card h3 {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(244,246,255,0.75);
+    font-weight: 800;
+  }
 
-    .value-box {
-      margin-top: 14px;
-      padding: 18px 18px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--bg-alt);
-    }
+  .qnectra-vp ul {
+    margin: 0;
+    padding-left: 18px;
+    color: rgba(244,246,255,0.82);
+    font-size: 13px;
+    line-height: 1.55;
+  }
 
-    .value-box p {
-      color: var(--text-main);
-      font-size: 15px;
-      font-weight: 500;
-    }
+  .qnectra-vp li { margin: 7px 0; }
 
-    .highlight {
-      color: var(--accent);
-      font-weight: 600;
-    }
+  .qnectra-vp .note {
+    margin-top: 14px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: rgba(244,246,255,0.70);
+  }
 
-    .quote {
-      margin-top: 12px;
-      font-size: 13px;
-      font-style: italic;
-      color: var(--text-muted);
-    }
+  .qnectra-vp .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+    align-items: center;
+  }
 
-    .footer-note {
-      margin-top: 28px;
-      font-size: 11px;
-      text-align: right;
-      color: var(--text-muted);
-      opacity: 0.7;
-    }
-  </style>
-</head>
+  .qnectra-vp .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 13px;
+    border: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer;
+    user-select: none;
+  }
 
-<body>
-  <div class="page">
+  .qnectra-vp .btn.primary {
+    background: #C12638;
+    color: #fff;
+  }
+
+  .qnectra-vp .btn.ghost {
+    background: rgba(255,255,255,0.06);
+    color: rgba(244,246,255,0.92);
+  }
+
+  .qnectra-vp .micro {
+    font-size: 11px;
+    color: rgba(244,246,255,0.60);
+    margin-left: auto;
+  }
+</style>
+
+<div class="qnectra-vp" role="region" aria-label="Qnèctra Coaching Value Proposition">
+  <div class="kicker">Coaching Niche • Value Proposition (Draft)</div>
+
+  <h2>
+    Qnèctra helps coaching and expert-led businesses turn messy delivery, onboarding, and systems into a clean,
+    scalable operating foundation — <span class="accent">so growth doesn’t depend on the founder doing everything.</span>
+  </h2>
+
+  <p class="lead">
+    Coaching businesses don’t stall because of demand — they stall because delivery and operations don’t scale.
+    We streamline onboarding, standardize program delivery, and unify your systems into a single, reliable backbone
+    that supports a consistent client experience.
+  </p>
+
+  <div class="grid">
     <div class="card">
+      <h3>What This Solves</h3>
+      <ul>
+        <li>Onboarding scattered across email, forms, and DMs</li>
+        <li>Delivery inconsistencies as programs and cohorts grow</li>
+        <li>Tools that don’t talk to each other (and manual workarounds everywhere)</li>
+        <li>Founder-as-the-system bottlenecks that create drag and burnout</li>
+      </ul>
 
-      <h1>Coaching Value Proposition</h1>
-      <div class="subtitle">For Phase 1 – 90-Day Coaching Niche Evaluation</div>
-
-      <!-- CORE VP -->
-      <div class="section">
-        <h2>Core Value Proposition</h2>
-        <div class="value-box">
-          <p>
-            I help coaching and expert-led businesses eliminate delivery chaos, streamline onboarding, and build a
-            consistent client experience — so they can scale smoothly without adding more tools or burning out the team.
-          </p>
-        </div>
+      <div class="note">
+        Guided by <b>The AI Powered Operational Excellence Framework™ (AIPOEF™)</b> — a structured approach to fixing operational debt,
+        simplifying systems, and preparing your business to scale intelligently.
       </div>
+    </div>
 
-      <!-- EXPANDED VP -->
-      <div class="section">
-        <h2>Expanded Description</h2>
-        <p>
-          Using Qnèctra’s <span class="highlight">AI-Powered Operational Excellence Framework™ (AIPOEF™)</span>, we transform
-          messy backend operations into a simple, repeatable, and scalable delivery engine.
-          The result is smoother onboarding, cleaner workflows, and a client experience that feels premium at every step.
-        </p>
-      </div>
+    <div class="card">
+      <h3>Who It’s For</h3>
+      <ul>
+        <li>Coaches with active programs, cohorts, or communities</li>
+        <li>Founder-led teams feeling “growth friction” behind the scenes</li>
+        <li>Operators who want a premium client experience, delivered consistently</li>
+      </ul>
 
-      <!-- POSITIONING -->
-      <div class="section">
-        <h2>Positioning Statement</h2>
-        <p>
-          Qnèctra turns expert-led coaching businesses into operationally sound, scalable companies — where every client
-          gets a consistent, high-quality experience and every workflow just works.
-        </p>
-      </div>
-
-      <!-- CATEGORY -->
-      <div class="section">
-        <h2>Category Narrative</h2>
-        <p>
-          Coaching businesses rarely fail because of weak programs — they fail behind the scenes.
-          Disconnected tools, inconsistent onboarding, and manual fulfillment create friction that caps growth.
-        </p>
-        <p style="margin-top:10px;">
-          Qnèctra fixes the foundation by designing the workflows, systems, and delivery structure that make scale
-          possible — without the founder doing more.
-        </p>
-      </div>
-
-      <!-- DIFFERENTIATION -->
-      <div class="section">
-        <h2>Why Qnèctra (vs Tools)</h2>
-        <p><span class="highlight">Tools consolidate content. Qnèctra organizes the business.</span></p>
-        <p style="margin-top:8px;">
-          Skool, Kajabi, and GHL give you a place to put things — but they don’t give you a structured delivery engine.
-          Qnèctra builds the scalable system underneath the tools so your programs run smoothly and consistently.
-        </p>
-      </div>
-
-      <!-- CTA -->
-      <div class="section">
-        <h2>Call to Action</h2>
-        <p>
-          Let’s turn your coaching business into a smooth, scalable delivery engine that clients love.
-        </p>
-      </div>
-
-      <div class="footer-note">
-        Qnèctra – Internal Artifact · Update as messaging validates in Phase 1
-      </div>
-
+      <h3 style="margin-top:14px;">Not For</h3>
+      <ul>
+        <li>Aspiring/new coaches still validating an offer</li>
+        <li>Agencies/consultants selling marketing, ops, or technical services</li>
+        <li>Anyone looking for funnels, ads, or lead gen</li>
+      </ul>
     </div>
   </div>
-</body>
-</html>
+
+  <div class="cta-row">
+    <!-- Replace hrefs with your dashboard routes if desired -->
+    <a class="btn primary" href="#" onclick="navigator.clipboard.writeText(document.querySelector('.qnectra-vp h2').innerText); this.innerText='Copied ✓'; setTimeout(()=>this.innerText='Copy Core Value Prop',1200); return false;">
+      Copy Core Value Prop
+    </a>
+    <a class="btn ghost" href="#" onclick="navigator.clipboard.writeText(document.querySelector('.qnectra-vp .lead').innerText); this.innerText='Copied ✓'; setTimeout(()=>this.innerText='Copy Expanded Version',1200); return false;">
+      Copy Expanded Version
+    </a>
+    <div class="micro">Internal artifact • iterate as Phase 1 validates</div>
+  </div>
+</div>
