@@ -18,6 +18,7 @@
             --shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
             --radius-lg: 18px;
             --radius-xl: 24px;
+            --sidebar-width: 380px;
         }
 
         * {
@@ -26,41 +27,29 @@
 
         body {
             margin: 0;
-            min-height: 100vh;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-                sans-serif;
-            background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
+            height: 100vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
             color: var(--text-main);
-            padding: 2.5rem clamp(1.5rem, 4vw, 3rem);
-        }
-
-        .shell {
-            max-width: 1280px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, #020617dd, #020617f5);
-            border-radius: var(--radius-xl);
-            border: 1px solid #111827;
-            box-shadow: var(--shadow);
-            padding: 2rem clamp(1.75rem, 4vw, 3rem);
-        }
-
-        header {
+            overflow: hidden;
             display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            align-items: flex-start;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
         }
 
-        .title-block {
-            max-width: 520px;
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(135deg, #020617dd, #020617f5);
+            border-right: 1px solid #111827;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        h1 {
-            margin: 0 0 0.4rem 0;
-            font-size: clamp(1.9rem, 3vw, 2.4rem);
-            letter-spacing: 0.04em;
+        .sidebar-header {
+            padding: 1.5rem 1.25rem 1rem;
+            border-bottom: 1px solid rgba(31, 41, 55, 0.5);
+            flex-shrink: 0;
         }
 
         .badge {
@@ -86,258 +75,296 @@
             box-shadow: 0 0 8px rgba(34, 197, 94, 0.9);
         }
 
-        .subtitle {
+        .sidebar-title {
+            margin: 0 0 0.3rem 0;
+            font-size: 1.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        .sidebar-subtitle {
             margin: 0;
             color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        .meta {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-align: right;
-            min-width: 180px;
-        }
-
-        .meta strong {
-            color: #e5e7eb;
-            font-weight: 500;
-        }
-
-        .grid-wrapper {
-            border-radius: var(--radius-lg);
-            padding: 1.25rem 1.1rem 1.25rem 1.1rem;
-            border: 1px solid rgba(15, 23, 42, 0.9);
-            background: radial-gradient(circle at top, rgba(30, 64, 175, 0.12), transparent 55%),
-                radial-gradient(circle at bottom, rgba(193, 38, 56, 0.12), transparent 55%),
-                #020617;
-        }
-
-        .grid-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .grid-title {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .grid-title strong {
-            color: #e5e7eb;
-            font-weight: 500;
-        }
-
-        .hint {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-align: right;
-        }
-
-        .tiles {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 0.9rem;
-        }
-
-        @media (max-width: 1024px) {
-            .tiles {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 800px) {
-            .tiles {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 540px) {
-            body {
-                padding: 1.5rem 1rem;
-            }
-
-            .shell {
-                padding: 1.5rem 1.25rem;
-            }
-
-            .tiles {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .tile {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-            padding: 0.9rem 0.85rem;
-            border-radius: 14px;
-            background: radial-gradient(circle at top left, rgba(15, 118, 110, 0.06), transparent 55%),
-                var(--bg-tile);
-            border: 1px solid var(--border-tile);
-            text-decoration: none;
-            color: inherit;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.14s ease, box-shadow 0.14s ease,
-                border-color 0.14s ease, background 0.14s ease;
-        }
-
-        .tile::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            background: radial-gradient(circle at top right, rgba(193, 38, 56, 0.15), transparent 70%);
-            transition: opacity 0.14s ease;
-            pointer-events: none;
-        }
-
-        .tile:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-            border-color: var(--border-hover);
-            background: radial-gradient(circle at bottom, rgba(15, 23, 42, 0.4), transparent 65%),
-                #020617;
-        }
-
-        .tile:hover::after {
-            opacity: 1;
-        }
-
-        .tile-header {
-            display: flex;
-            justify-content: space-between;
-            gap: 0.5rem;
-            align-items: flex-start;
-        }
-
-        .tile-tag {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--accent);
-            opacity: 0.95;
-        }
-
-        .tile-title {
-            font-size: 0.95rem;
-            font-weight: 500;
-            margin: 0;
+            font-size: 0.85rem;
             line-height: 1.4;
         }
 
-        .tile-desc {
-            font-size: 0.8rem;
+        .file-count {
+            font-size: 0.75rem;
             color: var(--text-muted);
-            margin: 0.1rem 0 0.2rem 0;
+            margin-top: 0.5rem;
         }
 
-        .tile-footer {
+        .file-count strong {
+            color: #e5e7eb;
+            font-weight: 500;
+        }
+
+        /* File List */
+        .file-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .file-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.75rem 0.85rem;
+            border-radius: 12px;
+            background: var(--bg-tile);
+            border: 1px solid var(--border-tile);
+            cursor: pointer;
+            transition: all 0.14s ease;
+            min-height: 70px;
+        }
+
+        .file-item:hover {
+            border-color: var(--border-hover);
+            background: radial-gradient(circle at bottom, rgba(15, 23, 42, 0.4), transparent 65%), #020617;
+            transform: translateX(3px);
+        }
+
+        .file-item.active {
+            border-color: var(--accent);
+            background: radial-gradient(circle at top left, rgba(193, 38, 56, 0.15), transparent 70%), var(--bg-tile);
+        }
+
+        .file-item.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            background: var(--accent);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .file-item-header {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             gap: 0.5rem;
-            align-items: center;
-            margin-top: 0.2rem;
-            font-size: 0.73rem;
-            color: var(--text-muted);
         }
 
-        .filename {
+        .file-item-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 0;
+            line-height: 1.3;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .file-type-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            opacity: 0.9;
+            flex-shrink: 0;
+        }
+
+        .file-item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        .file-filename {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 100%;
+            flex: 1;
         }
 
-        .open-pill {
-            display: inline-flex;
+        .file-date {
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
+        }
+
+        .content-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(31, 41, 55, 0.5);
+            background: linear-gradient(135deg, #020617dd, #020617f5);
+            flex-shrink: 0;
+        }
+
+        .content-title {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .content-viewer {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.3rem;
-            padding: 0.1rem 0.5rem;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            font-size: 0.7rem;
-            color: #e5e7eb;
-            background: rgba(15, 23, 42, 0.88);
+            justify-content: center;
+            height: 100%;
+            padding: 2rem;
+            text-align: center;
         }
 
-        .open-pill span {
-            font-size: 0.8rem;
-            line-height: 1;
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
         }
 
-        .empty {
+        .empty-state-text {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .empty-state-hint {
             font-size: 0.9rem;
             color: var(--text-muted);
-            text-align: center;
-            padding: 2.5rem 1rem 1.5rem;
+            opacity: 0.7;
         }
 
-        .empty code {
-            font-size: 0.85rem;
-            background: rgba(15, 23, 42, 0.8);
-            padding: 0.15rem 0.4rem;
-            border-radius: 999px;
-            border: 1px solid rgba(31, 41, 55, 0.9);
+        /* Scrollbar Styling */
+        .file-list-container::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .modified-date {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            white-space: nowrap;
+        .file-list-container::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.3);
+        }
+
+        .file-list-container::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 4px;
+        }
+
+        .file-list-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.5);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 100%;
+            }
+
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 40vh;
+                border-right: none;
+                border-bottom: 1px solid #111827;
+            }
+
+            .main-content {
+                height: 60vh;
+            }
+
+            .file-item:hover {
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="shell">
-        <header>
-            <div class="title-block">
-                <div class="badge">
-                    <span class="dot"></span>
-                    <span>Qnèctra Notebook</span>
-                </div>
-                <h1>Interactive Research Notebook</h1>
-                <p class="subtitle">
-                    A visual shelf for your interactive HTML artifacts—click any tile to open the full notebook in a new
-                    tab.
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="badge">
+                <span class="dot"></span>
+                <span>Qnèctra Notebook</span>
+            </div>
+            <h1 class="sidebar-title">Research Notebook</h1>
+            <p class="sidebar-subtitle">
+                Select any document to view in the main panel
+            </p>
+            <div id="file-count" class="file-count">Loading files…</div>
+        </div>
+
+        <div class="file-list-container">
+            <ul id="file-list" class="file-list"></ul>
+            <div id="empty-state-sidebar" class="empty-state" style="display: none; padding: 2rem 1rem;">
+                <p style="font-size: 0.9rem; color: var(--text-muted);">
+                    No documents found.<br />
+                    Add HTML files to <code style="font-size: 0.85rem; background: rgba(15, 23, 42, 0.8); padding: 0.15rem 0.4rem; border-radius: 4px;">dashboards/</code>
                 </p>
             </div>
-            <div class="meta">
-                <div><strong>View mode:</strong> HTML tiles</div>
-                <div id="file-count">Loading files…</div>
-            </div>
-        </header>
+        </div>
+    </div>
 
-        <section class="grid-wrapper">
-            <div class="grid-header">
-                <div class="grid-title">
-                    <strong>Notebook index</strong><br />
-                    Auto-populated from your <code>dashboards/</code> HTML files.
-                </div>
-                <div class="hint">
-                    Drop a new HTML into <code>dashboards/</code> and push to GitHub—this index updates automatically.
-                </div>
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="content-header">
+            <h2 id="content-title" class="content-title">Select a document</h2>
+        </div>
+        <div class="content-viewer">
+            <iframe id="content-iframe" class="content-iframe" style="display: none;"></iframe>
+            <div id="empty-state-main" class="empty-state">
+                <div class="empty-state-icon">📄</div>
+                <p class="empty-state-text">No document selected</p>
+                <p class="empty-state-hint">Choose a document from the sidebar to view it here</p>
             </div>
-
-            <div id="tiles" class="tiles"></div>
-            <div id="empty-state" class="empty" style="display: none;">
-                No HTML notebooks found.<br /><br />
-                Add files into the <code>dashboards/</code> folder and push your changes.
-            </div>
-        </section>
+        </div>
     </div>
 
     <script>
-        const tilesContainer = document.getElementById("tiles");
-        const emptyState = document.getElementById("empty-state");
-        const fileCount = document.getElementById("file-count");
+        const fileListContainer = document.getElementById("file-list");
+        const emptyStateSidebar = document.getElementById("empty-state-sidebar");
+        const emptyStateMain = document.getElementById("empty-state-main");
+        const fileCountEl = document.getElementById("file-count");
+        const contentTitle = document.getElementById("content-title");
+        const contentIframe = document.getElementById("content-iframe");
+
+        let currentFiles = [];
+        let activeFileIndex = -1;
 
         function formatShortDate(iso) {
             if (!iso) return "";
@@ -347,7 +374,6 @@
             const year = d.getFullYear();
             return `${month}/${day}/${year}`;
         }
-
 
         function truncate(text, maxLen) {
             if (!text) return "";
@@ -359,16 +385,15 @@
                 (entry.type || "").toLowerCase() === "pdf" ||
                 entry.filename.toLowerCase().endsWith(".pdf");
 
-            // 👉 For PDFs, just use filename as title; no DOM parsing
             if (isPdf) {
                 return {
                     ...entry,
                     title: entry.filename,
-                    description: ""
+                    description: "",
+                    isPdf: true
                 };
             }
 
-            // HTML notebooks: fetch and parse title/meta
             try {
                 const response = await fetch(entry.path);
                 if (!response.ok) throw new Error("HTTP " + response.status);
@@ -389,66 +414,89 @@
                 return {
                     ...entry,
                     title,
-                    description: desc || ""
+                    description: desc || "",
+                    isPdf: false
                 };
             } catch (err) {
                 console.warn("Metadata read failed for", entry.path, err);
                 return {
                     ...entry,
                     title: entry.filename,
-                    description: ""
+                    description: "",
+                    isPdf: false
                 };
             }
         }
 
+        function loadDocument(index) {
+            if (index < 0 || index >= currentFiles.length) return;
 
-        function renderTiles(items) {
-            tilesContainer.innerHTML = "";
+            const file = currentFiles[index];
+            
+            // Update active state
+            document.querySelectorAll('.file-item').forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            // Update content header
+            contentTitle.textContent = file.title || file.filename;
+
+            // Load content in iframe
+            contentIframe.src = file.path;
+            contentIframe.style.display = 'block';
+            emptyStateMain.style.display = 'none';
+
+            activeFileIndex = index;
+        }
+
+        function renderFileList(items) {
+            fileListContainer.innerHTML = "";
+            
             if (!items.length) {
-                tilesContainer.style.display = "none";
-                emptyState.style.display = "block";
-                fileCount.textContent = "0 files";
+                fileListContainer.style.display = "none";
+                emptyStateSidebar.style.display = "block";
+                fileCountEl.innerHTML = '<strong>0</strong> files';
                 return;
             }
 
-            tilesContainer.style.display = "grid";
-            emptyState.style.display = "none";
+            fileListContainer.style.display = "flex";
+            emptyStateSidebar.style.display = "none";
 
-            for (const item of items) {
-                const a = document.createElement("a");
-                a.className = "tile";
-                a.href = item.path;
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                const li = document.createElement("li");
+                li.className = "file-item";
+                
+                const typeTag = item.isPdf ? '<span class="file-type-tag">PDF</span>' : '';
+                
+                li.innerHTML = `
+                    <div class="file-item-header">
+                        <p class="file-item-title">${truncate(item.title || item.filename, 80)}</p>
+                        ${typeTag}
+                    </div>
+                    <div class="file-item-meta">
+                        <span class="file-filename" title="${item.filename}">${item.filename}</span>
+                        <span class="file-date">${formatShortDate(item.modified)}</span>
+                    </div>
+                `;
 
-                const isPdf =
-                    (item.type || "").toLowerCase() === "pdf" ||
-                    item.filename.toLowerCase().endsWith(".pdf");
-
-                // If you want NO label at all, set tagHtml = "" always
-                const tagHtml = isPdf ? '<span class="tile-tag">PDF</span>' : "";
-
-                a.innerHTML = `
-        <div class="tile-header">
-            <p class="tile-title">${truncate(item.title || item.filename, 80)}</p>
-            ${tagHtml}
-        </div>
-        <p class="tile-desc">${truncate(item.description || "", 120)}</p>
-          <div class="tile-footer">
-                <span class="filename" title="${item.filename}">${item.filename}</span>
-                <span class="modified-date">${formatShortDate(item.modified)}</span>
-                <span class="open-pill">
-                <span>⤴</span>
-                <span>Open</span>
-                </span>
-            </div>
-
-        `;
-
-
-                tilesContainer.appendChild(a);
+                li.addEventListener('click', () => loadDocument(i));
+                fileListContainer.appendChild(li);
             }
 
-            fileCount.textContent =
-                items.length === 1 ? "1 file indexed" : `${items.length} files indexed`;
+            const count = items.length;
+            fileCountEl.innerHTML = count === 1 
+                ? '<strong>1</strong> file indexed' 
+                : `<strong>${count}</strong> files indexed`;
+
+            // Auto-load first document
+            if (count > 0) {
+                loadDocument(0);
+            }
         }
 
         async function initNotebook() {
@@ -458,7 +506,7 @@
                 const manifest = await res.json();
 
                 if (!Array.isArray(manifest) || !manifest.length) {
-                    renderTiles([]);
+                    renderFileList([]);
                     return;
                 }
 
@@ -468,13 +516,13 @@
                     enriched.push(meta);
                 }
 
-                // Sort alphabetically by title for display
                 // Sort newest → oldest
                 enriched.sort((a, b) => new Date(b.modified) - new Date(a.modified));
-                renderTiles(enriched);
+                currentFiles = enriched;
+                renderFileList(enriched);
             } catch (err) {
                 console.error("Failed to load manifest.json", err);
-                renderTiles([]);
+                renderFileList([]);
             }
         }
 
