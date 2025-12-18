@@ -1,1671 +1,712 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Networking & Lead Gen Agenda</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        /*
-        ═══════════════════════════════════════════════════════════════════════════
-        INLINE README / DEVELOPER GUIDE
-        ═══════════════════════════════════════════════════════════════════════════
-        
-        WEEKS & STORAGE:
-        - Weeks are keyed by the Monday date of each week (YYYY-MM-DD format).
-        - localStorage key: "networking_agenda_v1"
-        - Structure: { weeks: { "2025-11-03": { linkedin: {...}, salesNav: {...}, ... } }, config: {...} }
-        - Each week stores completed counts per platform/day/task.
-        
-        ADDING/MODIFYING TASKS:
-        - Edit the CONFIG object in the JavaScript section below.
-        - Each platform has a "tasks" array with: { id, label, type: 'daily'|'weekly', defaultTarget }
-        - type='daily' means the target applies per day (Mon-Fri)
-        - type='weekly' means the target is for the entire week
-        
-        CHANGING DEFAULTS:
-        - Modify defaultTarget values in CONFIG.tasks[].defaultTarget
-        - Users can override via "Edit Targets" modal; those persist separately
-        
-        RESET WEEK:
-        - Clears only the currently selected week's data from storage
-        - Does not affect other weeks or target configurations
-        
-        SELF-TEST:
-        - Open browser console and run: window.seedSampleDataForCurrentWeek()
-        - This populates the current week with realistic test data
-        
-        ═══════════════════════════════════════════════════════════════════════════
-        */
-        
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --bg-tertiary: #e9ecef;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --border-color: #dee2e6;
-            --accent-blue: #0066cc;
-            --accent-green: #28a745;
-            --accent-orange: #fd7e14;
-            --accent-purple: #6f42c1;
-            --accent-teal: #20c997;
-            --accent-red: #dc3545;
-            --shadow: 0 2px 4px rgba(0,0,0,0.1);
-            --shadow-lg: 0 4px 12px rgba(0,0,0,0.15);
-            --focus-ring: 0 0 0 3px rgba(0,102,204,0.3);
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-primary: #1a1a1a;
-                --bg-secondary: #2d2d2d;
-                --bg-tertiary: #3a3a3a;
-                --text-primary: #e9ecef;
-                --text-secondary: #adb5bd;
-                --border-color: #495057;
-                --shadow: 0 2px 4px rgba(0,0,0,0.3);
-                --shadow-lg: 0 4px 12px rgba(0,0,0,0.4);
-            }
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background: var(--bg-primary);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-        }
-        
-        h1 {
-            font-size: 28px;
-            margin-bottom: 15px;
-            color: var(--accent-blue);
-        }
-        
-        .header-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .week-selector {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        
-        .btn:hover {
-            background: var(--bg-tertiary);
-        }
-        
-        .btn:focus {
-            outline: none;
-            box-shadow: var(--focus-ring);
-        }
-        
-        .btn-primary {
-            background: var(--accent-blue);
-            color: white;
-            border-color: var(--accent-blue);
-        }
-        
-        .btn-primary:hover {
-            background: #0052a3;
-        }
-        
-        .btn-danger {
-            background: var(--accent-red);
-            color: white;
-            border-color: var(--accent-red);
-        }
-        
-        .btn-danger:hover {
-            background: #c82333;
-        }
-        
-        .week-display {
-            font-weight: 600;
-            padding: 8px 16px;
-            background: var(--bg-tertiary);
-            border-radius: 6px;
-        }
-        
-        .tabs {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            background: var(--bg-primary);
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        
-        .tab {
-            padding: 10px 20px;
-            background: transparent;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-        }
-        
-        .tab:hover {
-            background: var(--bg-tertiary);
-        }
-        
-        .tab:focus {
-            outline: none;
-            box-shadow: var(--focus-ring);
-        }
-        
-        .tab.active {
-            background: var(--accent-blue);
-            color: white;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .platform-layout {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 20px;
-        }
-        
-        @media (max-width: 1024px) {
-            .platform-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .main-content {
-            background: var(--bg-primary);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        
-        .sidebar {
-            background: var(--bg-primary);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        
-        .sidebar h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: var(--accent-blue);
-        }
-        
-        .sidebar ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        
-        .sidebar li {
-            padding: 8px 0;
-            padding-left: 20px;
-            position: relative;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .sidebar li:before {
-            content: "▸";
-            position: absolute;
-            left: 0;
-            color: var(--accent-blue);
-            font-weight: bold;
-        }
-        
-        .day-item {
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            margin-bottom: 10px;
-            overflow: hidden;
-        }
-        
-        .day-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: var(--bg-secondary);
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        
-        .day-header:hover {
-            background: var(--bg-tertiary);
-        }
-        
-        .day-header:focus {
-            outline: 2px solid var(--accent-blue);
-            outline-offset: -2px;
-        }
-        
-        .day-title {
-            font-weight: 600;
-            font-size: 16px;
-        }
-        
-        .day-progress {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .day-percentage {
-            font-weight: 600;
-            font-size: 18px;
-            color: var(--accent-blue);
-        }
-        
-        .progress-bar-container {
-            width: 120px;
-            height: 8px;
-            background: var(--bg-tertiary);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: var(--accent-green);
-            transition: width 0.3s;
-        }
-        
-        .day-tasks {
-            padding: 15px;
-            display: none;
-        }
-        
-        .day-tasks.expanded {
-            display: block;
-        }
-        
-        .task-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 100px;
-            gap: 15px;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .task-row:last-child {
-            border-bottom: none;
-        }
-        
-        .task-label {
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .tooltip-icon {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            background: var(--accent-blue);
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 16px;
-            font-size: 11px;
-            cursor: help;
-            position: relative;
-        }
-        
-        .tooltip-icon:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--text-primary);
-            color: var(--bg-primary);
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            z-index: 1000;
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .task-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .counter-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        
-        .counter-btn:hover {
-            background: var(--bg-tertiary);
-        }
-        
-        .counter-btn:focus {
-            outline: none;
-            box-shadow: var(--focus-ring);
-        }
-        
-        .counter-input {
-            width: 60px;
-            padding: 6px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border-radius: 4px;
-            text-align: center;
-            font-size: 14px;
-        }
-        
-        .counter-input:focus {
-            outline: none;
-            box-shadow: var(--focus-ring);
-        }
-        
-        .task-stats {
-            font-size: 14px;
-            text-align: right;
-        }
-        
-        .weekly-tracker {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-color);
-        }
-        
-        .weekly-tracker h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: var(--accent-blue);
-        }
-        
-        .weekly-summary-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .weekly-summary-row.weekly-with-controls {
-            grid-template-columns: 2fr 2fr;
-        }
-        
-        .weekly-summary-row:last-child {
-            border-bottom: none;
-        }
-        
-        .weekly-task-name {
-            font-size: 14px;
-        }
-        
-        .weekly-controls-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            justify-content: flex-end;
-        }
-        
-        .weekly-task-stats {
-            text-align: right;
-            font-weight: 600;
-        }
-        
-        .overview-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .card {
-            background: var(--bg-primary);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        
-        .card h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: var(--text-secondary);
-        }
-        
-        .card-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: var(--accent-blue);
-        }
-        
-        .card-subtitle {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-top: 5px;
-        }
-        
-        .highlights {
-            margin-top: 10px;
-        }
-        
-        .highlight-item {
-            padding: 8px 12px;
-            margin: 5px 0;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .highlight-good {
-            background: rgba(40, 167, 69, 0.1);
-            color: var(--accent-green);
-        }
-        
-        .highlight-bad {
-            background: rgba(220, 53, 69, 0.1);
-            color: var(--accent-red);
-        }
-        
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 20px;
-        }
-        
-        .chart-container {
-            background: var(--bg-primary);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        
-        .chart-container h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: var(--accent-blue);
-        }
-        
-        .advice-content {
-            background: var(--bg-primary);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        
-        .advice-section {
-            margin-bottom: 30px;
-        }
-        
-        .advice-section h3 {
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: var(--accent-blue);
-        }
-        
-        .advice-section h4 {
-            font-size: 16px;
-            margin: 15px 0 10px;
-            color: var(--text-primary);
-        }
-        
-        .advice-section ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        
-        .advice-section li {
-            padding: 6px 0;
-            padding-left: 25px;
-            position: relative;
-            font-size: 14px;
-        }
-        
-        .advice-section li:before {
-            content: "•";
-            position: absolute;
-            left: 8px;
-            color: var(--accent-blue);
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: var(--bg-primary);
-            padding: 30px;
-            border-radius: 8px;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .modal-header h2 {
-            font-size: 24px;
-            color: var(--accent-blue);
-        }
-        
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 28px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            line-height: 1;
-        }
-        
-        .close-btn:hover {
-            color: var(--text-primary);
-        }
-        
-        .target-group {
-            margin-bottom: 25px;
-        }
-        
-        .target-group h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: var(--text-primary);
-        }
-        
-        .target-item {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 10px;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .target-item:last-child {
-            border-bottom: none;
-        }
-        
-        .target-item label {
-            font-size: 14px;
-        }
-        
-        .target-item input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            border-radius: 4px;
-        }
-        
-        .modal-footer {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            justify-content: flex-end;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🚀 Networking & Lead Gen Agenda</h1>
-            <div class="header-controls">
-                <div class="week-selector">
-                    <button class="btn" id="prevWeekBtn" aria-label="Previous week">← Previous</button>
-                    <div class="week-display" id="weekDisplay">Week of Nov 03, 2025</div>
-                    <button class="btn" id="nextWeekBtn" aria-label="Next week">Next →</button>
-                </div>
-                <button class="btn btn-primary" id="editTargetsBtn">⚙️ Edit Targets</button>
-                <button class="btn btn-danger" id="resetWeekBtn">🗑️ Reset Week</button>
-            </div>
-        </header>
-        
-        <div class="tabs">
-            <button class="tab active" data-tab="overview">Overview</button>
-            <button class="tab" data-tab="linkedin">LinkedIn</button>
-            <button class="tab" data-tab="alignable">Alignable</button>
-            <button class="tab" data-tab="salesNav">Sales Navigator</button>
-            <button class="tab" data-tab="advice">General Advice</button>
-            <button class="tab" data-tab="drafts">Drafts Copy</button>
-        </div>
-        
-        <div id="overview" class="tab-content active">
-            <div class="overview-cards" id="overviewCards"></div>
-            <div class="charts-grid">
-                <div class="chart-container">
-                    <h3>Weekly Totals by Platform</h3>
-                    <canvas id="platformChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Completion Rate by Platform</h3>
-                    <canvas id="completionChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <div id="linkedin" class="tab-content">
-            <div class="platform-layout">
-                <div class="main-content" id="linkedinContent"></div>
-                <div class="sidebar" id="linkedinSidebar"></div>
-            </div>
-        </div>
-        
-        <div id="alignable" class="tab-content">
-            <div class="platform-layout">
-                <div class="main-content" id="alignableContent"></div>
-                <div class="sidebar" id="alignableSidebar"></div>
-            </div>
-        </div>
-        
-        <div id="salesNav" class="tab-content">
-            <div class="platform-layout">
-                <div class="main-content" id="salesNavContent"></div>
-                <div class="sidebar" id="salesNavSidebar"></div>
-            </div>
-        </div>
-        
-        <div id="advice" class="tab-content">
-            <div class="advice-content" id="adviceContent"></div>
-        </div>
-        
-        <div id="drafts" class="tab-content">
-            <div class="advice-content" id="draftsContent"></div>
-        </div>
+<!-- Qnèctra Sales Nav 30/60/90 Scorecard — Interactive Dashboard Block -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0f1117;
+    --card:rgba(255,255,255,.05);
+    --card2:rgba(255,255,255,.03);
+    --border:rgba(255,255,255,.10);
+    --text:#f4f6ff;
+    --muted:rgba(244,246,255,.70);
+    --muted2:rgba(244,246,255,.55);
+    --brand:#C12638;
+    --green:#1F9C53;
+    --amber:#DA8B00;
+    --red:#C12638;
+  }
+  .qsn-wrap{
+    font-family:"Montserrat",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    color:var(--text);
+    background:radial-gradient(circle at top left, #1a1a26 0%, #0b0b11 55%);
+    border:1px solid var(--border);
+    border-radius:18px;
+    box-shadow:0 18px 44px rgba(0,0,0,.35);
+    max-width:1080px;
+    margin:0 auto;
+    overflow:hidden;
+  }
+  .qsn-hdr{
+    padding:18px 18px 14px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
+  }
+  .qsn-title{
+    font-size:18px;
+    font-weight:900;
+    letter-spacing:.2px;
+    margin:0;
+  }
+  .qsn-sub{
+    margin-top:6px;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.45;
+    max-width:740px;
+  }
+  .qsn-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+  .qsn-btn{
+    appearance:none;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.06);
+    color:var(--text);
+    font-weight:800;
+    font-size:12px;
+    padding:10px 12px;
+    border-radius:12px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .qsn-btn.primary{
+    background:var(--brand);
+    border-color:rgba(255,255,255,.12);
+  }
+  .qsn-btn:hover{ filter:brightness(.96); }
+
+  .qsn-body{
+    padding:16px 18px 18px;
+    background:rgba(0,0,0,.08);
+  }
+
+  .qsn-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+  @media(min-width:980px){
+    .qsn-grid{ grid-template-columns: 1.15fr .85fr; }
+  }
+
+  .qsn-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:14px 14px 12px;
+  }
+  .qsn-card h3{
+    margin:0 0 8px 0;
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:rgba(244,246,255,.82);
+  }
+
+  .qsn-tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .qsn-tab{
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    font-weight:900;
+    font-size:12px;
+    padding:9px 10px;
+    border-radius:999px;
+    cursor:pointer;
+    opacity:.9;
+  }
+  .qsn-tab.active{
+    background:rgba(193,38,56,.18);
+    border-color:rgba(193,38,56,.55);
+    opacity:1;
+  }
+
+  .qsn-kq{
+    background:var(--card2);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    padding:12px;
+    margin-bottom:12px;
+  }
+  .qsn-kq .k{ font-size:11px; color:var(--muted2); text-transform:uppercase; letter-spacing:.08em; font-weight:900; }
+  .qsn-kq .q{ margin-top:6px; font-size:13px; line-height:1.45; font-weight:700; color:rgba(244,246,255,.92); }
+
+  .qsn-table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0 10px;
+  }
+  .qsn-row{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .qsn-row td{
+    padding:10px 10px;
+    vertical-align:top;
+    font-size:12px;
+    line-height:1.4;
+  }
+  .qsn-metric{ font-weight:800; width:36%; }
+  .qsn-target{ color:var(--muted); width:34%; }
+  .qsn-score{ width:30%; }
+
+  .qsn-select{
+    width:100%;
+    border-radius:12px;
+    padding:9px 10px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(0,0,0,.22);
+    color:var(--text);
+    font-weight:800;
+    font-size:12px;
+    outline:none;
+  }
+
+  .qsn-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 10px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.05);
+    font-size:12px;
+    font-weight:900;
+  }
+  .qsn-dot{
+    width:10px; height:10px; border-radius:999px;
+    background:rgba(255,255,255,.35);
+  }
+  .dot-green{ background:var(--green); }
+  .dot-amber{ background:var(--amber); }
+  .dot-red{ background:var(--red); }
+
+  .qsn-progress{
+    margin-top:10px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:14px;
+    padding:12px;
+  }
+  .qsn-progress .top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+    margin-bottom:8px;
+  }
+  .qsn-progress .lbl{
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:rgba(244,246,255,.82);
+  }
+  .qsn-progress .val{
+    font-size:12px;
+    color:rgba(244,246,255,.86);
+    font-weight:900;
+  }
+  .qsn-bar{
+    height:10px;
+    border-radius:999px;
+    background:rgba(0,0,0,.28);
+    border:1px solid rgba(255,255,255,.10);
+    overflow:hidden;
+  }
+  .qsn-bar > div{
+    height:100%;
+    width:0%;
+    background:var(--brand);
+    transition:width .25s ease;
+  }
+  .qsn-notes{
+    margin-top:10px;
+  }
+  .qsn-notes textarea{
+    width:100%;
+    min-height:120px;
+    resize:vertical;
+    border-radius:14px;
+    padding:10px 12px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(0,0,0,.22);
+    color:var(--text);
+    font-size:12px;
+    line-height:1.5;
+    outline:none;
+  }
+  .qsn-mini{
+    margin-top:8px;
+    font-size:11px;
+    color:var(--muted2);
+    line-height:1.45;
+  }
+
+  .qsn-right .qsn-card{ position:sticky; top:12px; }
+  .qsn-summary{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:10px;
+  }
+  .qsn-srow{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.04);
+  }
+  .qsn-srow .k{
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:rgba(244,246,255,.78);
+  }
+  .qsn-srow .v{
+    font-size:12px;
+    font-weight:900;
+  }
+
+  .qsn-decision{
+    margin-top:10px;
+    border-radius:16px;
+    padding:14px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.05);
+  }
+  .qsn-decision h4{
+    margin:0 0 6px 0;
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:rgba(244,246,255,.82);
+  }
+  .qsn-decision .p{
+    margin:0;
+    font-size:12px;
+    line-height:1.55;
+    color:rgba(244,246,255,.78);
+  }
+  .qsn-foot{
+    padding:10px 18px 16px;
+    font-size:11px;
+    color:rgba(244,246,255,.55);
+    border-top:1px solid rgba(255,255,255,.08);
+    text-align:right;
+  }
+</style>
+
+<div class="qsn-wrap" id="qsnScorecard">
+  <div class="qsn-hdr">
+    <div>
+      <h2 class="qsn-title">Sales Navigator 30 / 60 / 90 Scorecard</h2>
+      <div class="qsn-sub">
+        Use this to validate your coaching ICP on LinkedIn and ensure your Sales Nav subscription compounds.
+        Score each metric as <b>Green</b>, <b>Yellow</b>, or <b>Red</b>. Notes persist locally in your browser.
+      </div>
     </div>
-    
-    <div class="modal" id="editTargetsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Targets</h2>
-                <button class="close-btn" id="closeModalBtn" aria-label="Close modal">&times;</button>
-            </div>
-            <div id="targetsForm"></div>
-            <div class="modal-footer">
-                <button class="btn" id="restoreDefaultsBtn">Restore Defaults</button>
-                <button class="btn btn-primary" id="saveTargetsBtn">Save Changes</button>
-            </div>
-        </div>
+    <div class="qsn-actions">
+      <button class="qsn-btn" id="qsnExport">Export Summary</button>
+      <button class="qsn-btn" id="qsnReset">Reset</button>
+      <button class="qsn-btn primary" id="qsnSave">Save</button>
     </div>
-    
-    <script>
-        // ═══════════════════════════════════════════════════════════════════════════
-        // DATA MODEL
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        const CONFIG = {
-            linkedin: {
-                name: 'LinkedIn',
-                color: '#0077b5',
-                tasks: [
-                    { id: 'comments', label: 'Comments on ICP posts', type: 'daily', defaultTarget: 10, tooltip: 'Thoughtful comments on posts from your Ideal Customer Profile connections' },
-                    { id: 'reactions', label: 'Reactions', type: 'daily', defaultTarget: 20, tooltip: 'Likes, celebrates, loves, and other reactions on relevant posts' },
-                    { id: 'connections', label: 'Connection Requests', type: 'daily', defaultTarget: 10, tooltip: 'Personalized connection requests to potential leads' },
-                    { id: 'dms', label: 'Personalized DMs started', type: 'daily', defaultTarget: 5, tooltip: 'New direct message conversations initiated' },
-                    { id: 'followups', label: 'Follow-ups/replies', type: 'daily', defaultTarget: 5, tooltip: 'Responses to ongoing DM conversations' },
-                    { id: 'posts', label: 'Posts published', type: 'weekly', defaultTarget: 3, tooltip: 'Original content posts shared on your profile' }
-                ],
-                guidance: [
-                    'Comment on ICP posts before 9 AM for maximum visibility',
-                    'Personalize every connection request with specific context',
-                    'Follow the 3:1 rule — engage 3 times before asking for anything',
-                    'Use voice notes or video in DMs to stand out',
-                    'Post on Tuesday-Thursday between 8-10 AM for best reach',
-                    'Save high-quality posts to reference in future conversations',
-                    'Track response rates and adjust messaging based on what works'
-                ]
-            },
-            alignable: {
-                name: 'Alignable',
-                color: '#20c997',
-                tasks: [
-                    { id: 'messages', label: 'Messages replied/sent', type: 'daily', defaultTarget: 5, tooltip: 'Reply to DMs, thank people for introductions, follow up with non-responders' },
-                    { id: 'groupComments', label: 'Comments on posts in groups', type: 'daily', defaultTarget: 5, tooltip: 'Value-add comments in key interest groups' },
-                    { id: 'posts', label: 'Posts created/shared', type: 'daily', defaultTarget: 1, tooltip: 'Create or share posts that add relationship or business value' },
-                    { id: 'newConnections', label: 'New connections made', type: 'daily', defaultTarget: 3, tooltip: 'New personalized connection requests sent' },
-                    { id: 'introductions', label: 'Introductions made', type: 'daily', defaultTarget: 1, tooltip: 'Connect people in your network who could benefit from each other' },
-                    { id: 'appreciation', label: 'Appreciation messages sent', type: 'daily', defaultTarget: 1, tooltip: 'Send messages of appreciation to connections' },
-                    { id: 'warmLeadFollowups', label: 'Warm lead follow-ups', type: 'daily', defaultTarget: 1, tooltip: 'Gently nudge warm leads toward booking a call' },
-                    { id: 'smartConnectsWeekly', label: 'Smart Connects Engaged', type: 'weekly', defaultTarget: 3, tooltip: 'Quality connections with aligned professionals for building rapport' },
-                    { id: 'networkingCalls', label: 'Networking Calls Booked', type: 'weekly', defaultTarget: 10, tooltip: '15-20 min discovery chats to explore synergy and referrals' },
-                    { id: 'referralPartners', label: 'New Referral Partners Acquired', type: 'weekly', defaultTarget: 2, tooltip: 'Build steady collaboration pipelines with aligned service providers' }
-                ],
-                guidance: [
-                    'Follow the 90-minute daily routine: Check-In → Engage → Connect → Give → Track',
-                    'Comment quality matters — skip "great post" and add real insight',
-                    'Personalize every connection request with specific context',
-                    'Make 1-2 introductions daily to stay top of mind',
-                    'Use warm lead follow-up templates to book discovery calls',
-                    'Track all interactions in notes — capture insights and next steps',
-                    'Focus on relationship-centered professionals and aligned service providers'
-                ]
-            },
-            salesNav: {
-                name: 'Sales Navigator',
-                color: '#C12638',
-                tasks: [
-                    { id: 'savedSearchReview', label: 'Saved search or list opened', type: 'daily', defaultTarget: 1, tooltip: 'Open one saved search or list - consistency creates signal' },
-                    { id: 'leadsScanned', label: 'Leads scanned (Qnèctra Scanner)', type: 'daily', defaultTarget: 5, tooltip: 'Scan 5-10 leads using the right-side panel only' },
-                    { id: 'qualifiedSaves', label: 'Qualified leads saved', type: 'daily', defaultTarget: 2, tooltip: 'Quality beats volume - save strong fits only' },
-                    { id: 'notesAdded', label: 'Notes added to saved leads', type: 'daily', defaultTarget: 2, tooltip: 'Short, observational notes on tools, language, structure' },
-                    { id: 'listReview', label: 'Saved leads reviewed & cleaned', type: 'weekly', defaultTarget: 1, tooltip: 'Remove false positives - if they would not buy, they do not belong' },
-                    { id: 'patternDocumentation', label: 'Recurring patterns documented', type: 'weekly', defaultTarget: 1, tooltip: 'Document patterns in tools, offers, pain points' },
-                    { id: 'listRefinement', label: 'Lead list created/refined', type: 'weekly', defaultTarget: 1, tooltip: 'Each list should answer one question only' }
-                ],
-                guidance: [
-                    'Use Sales Nav as a signal-capture and ICP validation system — not a mass outreach tool',
-                    'Optimize for signal, not outcomes — your job is to observe, not convert',
-                    'Consistency beats intensity — short, regular usage (15-30 min daily) outperforms sporadic deep dives',
-                    'Start broad, narrow late — perfect filters upfront always hide signal',
-                    'Lists are experiments, not storage — each list should answer one question',
-                    'Credits are inventory, not pressure — never use credits out of habit or because they are expiring',
-                    'Notes compound value — a saved lead without a note is unfinished work',
-                    'Avoid premature outreach — early outreach pollutes signal and forces positioning too soon',
-                    'Review weekly, decide monthly — never collapse these time horizons',
-                    'If Sales Nav feels noisy, your ICP is not finished — pause, refine, continue'
-                ]
-            }
-        };
-        
-        const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
-        const DAY_LABELS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-        const STORAGE_KEY = 'networking_agenda_v1';
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // STATE
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        let currentWeekMonday = null;
-        let data = { weeks: {}, config: {} };
-        let charts = { platform: null, completion: null };
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // STORAGE
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function loadData() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                data = JSON.parse(stored);
-            }
-            if (!data.weeks) data.weeks = {};
-            if (!data.config) data.config = {};
+  </div>
+
+  <div class="qsn-body">
+    <div class="qsn-grid">
+      <!-- LEFT: score inputs -->
+      <div class="qsn-left">
+        <div class="qsn-card">
+          <h3>Checkpoints</h3>
+
+          <div class="qsn-tabs" role="tablist" aria-label="Scorecard checkpoints">
+            <button class="qsn-tab active" data-tab="d30" role="tab" aria-selected="true">30 Days</button>
+            <button class="qsn-tab" data-tab="d60" role="tab" aria-selected="false">60 Days</button>
+            <button class="qsn-tab" data-tab="d90" role="tab" aria-selected="false">90 Days</button>
+          </div>
+
+          <!-- 30 -->
+          <div class="qsn-panel" id="panel-d30">
+            <div class="qsn-kq">
+              <div class="k">Key question at 30 days</div>
+              <div class="q">Do I clearly recognize who belongs — and who doesn’t?</div>
+            </div>
+
+            <table class="qsn-table">
+              <tr class="qsn-row"><td class="qsn-metric">Profiles reviewed</td><td class="qsn-target">100–150</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d30_profiles"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">Qualified leads saved</td><td class="qsn-target">30–50</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d30_saved"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">False positives trend</td><td class="qsn-target">Decreasing week-over-week</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d30_fp"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">Distinct patterns identified</td><td class="qsn-target">≥5</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d30_patterns"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">ICP confidence</td><td class="qsn-target">Medium+ (can describe a real buyer)</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d30_icp"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+            </table>
+
+            <div class="qsn-notes">
+              <textarea data-k="d30_notes" placeholder="30-day notes (patterns, surprises, what changed this month)…"></textarea>
+              <div class="qsn-mini">Operator note: At 30 days, clarity matters more than outreach. If it still feels random, refine lists + filters.</div>
+            </div>
+          </div>
+
+          <!-- 60 -->
+          <div class="qsn-panel" id="panel-d60" style="display:none;">
+            <div class="qsn-kq">
+              <div class="k">Key question at 60 days</div>
+              <div class="q">Can I segment this market into subtypes I understand?</div>
+            </div>
+
+            <table class="qsn-table">
+              <tr class="qsn-row"><td class="qsn-metric">Profiles reviewed (cumulative)</td><td class="qsn-target">250–300</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d60_profiles"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">Qualified leads saved (cumulative)</td><td class="qsn-target">60–80</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d60_saved"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">Distinct ICP subtypes</td><td class="qsn-target">3–4</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d60_subtypes"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">Strong-signal lists</td><td class="qsn-target">≥2 lists produce good leads reliably</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d60_lists"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">Messaging readiness</td><td class="qsn-target">High (you know what to lead with)</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d60_msg"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+            </table>
+
+            <div class="qsn-notes">
+              <textarea data-k="d60_notes" placeholder="60-day notes (subtypes emerging, which lists work, key disqualifiers)…"></textarea>
+              <div class="qsn-mini">Operator note: At 60 days, you should be able to say “we serve <i>these</i> subtypes best” and exclude the rest.</div>
+            </div>
+          </div>
+
+          <!-- 90 -->
+          <div class="qsn-panel" id="panel-d90" style="display:none;">
+            <div class="qsn-kq">
+              <div class="k">Key question at 90 days</div>
+              <div class="q">Is this a niche I can consistently reach, qualify, and engage on LinkedIn?</div>
+            </div>
+
+            <table class="qsn-table">
+              <tr class="qsn-row"><td class="qsn-metric">Profiles reviewed (cumulative)</td><td class="qsn-target">400–500</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d90_profiles"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">Clean lead bench</td><td class="qsn-target">100–150 outreach-ready leads</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d90_bench"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">Outreach confidence</td><td class="qsn-target">High (who + why is obvious)</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d90_conf"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">Credit efficiency</td><td class="qsn-target">Low waste; credits tied to objectives</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d90_credits"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+              <tr class="qsn-row"><td class="qsn-metric">Channel clarity</td><td class="qsn-target">LinkedIn is viable primary channel</td><td class="qsn-score">
+                <select class="qsn-select" data-k="d90_channel"><option value="">Select…</option><option value="green">Green</option><option value="amber">Yellow</option><option value="red">Red</option></select>
+              </td></tr>
+            </table>
+
+            <div class="qsn-notes">
+              <textarea data-k="d90_notes" placeholder="90-day notes (commit / hybrid / exit decision rationale)…"></textarea>
+              <div class="qsn-mini">Operator note: At 90 days, you should know exactly who to message and why. If not, pause or exit the channel.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: rollup + decision -->
+      <div class="qsn-right">
+        <div class="qsn-card">
+          <h3>Rollup</h3>
+
+          <div class="qsn-progress">
+            <div class="top">
+              <div class="lbl">Overall completion</div>
+              <div class="val" id="qsnCompletion">0%</div>
+            </div>
+            <div class="qsn-bar"><div id="qsnBar"></div></div>
+            <div class="qsn-mini" style="margin-top:10px;">
+              Completion measures whether you’ve scored each metric (not whether it’s green).
+            </div>
+          </div>
+
+          <div class="qsn-summary" style="margin-top:12px;">
+            <div class="qsn-srow">
+              <div class="k">30-Day Status</div>
+              <div class="v" id="status30">
+                <span class="qsn-badge"><span class="qsn-dot"></span> Not scored</span>
+              </div>
+            </div>
+            <div class="qsn-srow">
+              <div class="k">60-Day Status</div>
+              <div class="v" id="status60">
+                <span class="qsn-badge"><span class="qsn-dot"></span> Not scored</span>
+              </div>
+            </div>
+            <div class="qsn-srow">
+              <div class="k">90-Day Status</div>
+              <div class="v" id="status90">
+                <span class="qsn-badge"><span class="qsn-dot"></span> Not scored</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="qsn-decision" id="qsnDecisionBox">
+            <h4>Decision Guidance</h4>
+            <p class="p" id="qsnDecisionText">
+              Score the checkpoints, then review the rollup. Use this as a “clarity meter,” not a vanity score.
+            </p>
+          </div>
+
+          <div class="qsn-mini" style="margin-top:10px;">
+            Scoring: <b>Green</b> = repeatable, improving • <b>Yellow</b> = some signal, refine • <b>Red</b> = unclear/noisy
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="qsn-foot">
+    Internal scorecard • Qnèctra HQ • Signal &gt; Activity
+  </div>
+</div>
+
+<script>
+(function(){
+  const STORE_KEY = "qnectra_salesnav_306090_scorecard_v1";
+  const root = document.getElementById("qsnScorecard");
+  const tabs = Array.from(root.querySelectorAll(".qsn-tab"));
+  const panels = {
+    d30: root.querySelector("#panel-d30"),
+    d60: root.querySelector("#panel-d60"),
+    d90: root.querySelector("#panel-d90"),
+  };
+
+  const inputs = Array.from(root.querySelectorAll("[data-k]"));
+  const selects = inputs.filter(el => el.tagName === "SELECT");
+  const notes = inputs.filter(el => el.tagName === "TEXTAREA");
+
+  const bar = root.querySelector("#qsnBar");
+  const completionEl = root.querySelector("#qsnCompletion");
+
+  const status30 = root.querySelector("#status30");
+  const status60 = root.querySelector("#status60");
+  const status90 = root.querySelector("#status90");
+
+  const decisionText = root.querySelector("#qsnDecisionText");
+  const decisionBox = root.querySelector("#qsnDecisionBox");
+
+  function setActiveTab(tabKey){
+    tabs.forEach(t => {
+      const active = t.dataset.tab === tabKey;
+      t.classList.toggle("active", active);
+      t.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    Object.keys(panels).forEach(k => panels[k].style.display = (k === tabKey) ? "block" : "none");
+  }
+
+  tabs.forEach(t => t.addEventListener("click", () => setActiveTab(t.dataset.tab)));
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      inputs.forEach(el => {
+        const k = el.getAttribute("data-k");
+        if(k in data){
+          if(el.tagName === "SELECT") el.value = data[k];
+          if(el.tagName === "TEXTAREA") el.value = data[k];
         }
-        
-        function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        }
-        
-        function getWeekData(weekKey) {
-            if (!data.weeks[weekKey]) {
-                data.weeks[weekKey] = initializeWeekData();
-            }
-            return data.weeks[weekKey];
-        }
-        
-        function initializeWeekData() {
-            const weekData = {};
-            Object.keys(CONFIG).forEach(platform => {
-                weekData[platform] = {};
-                DAYS.forEach(day => {
-                    weekData[platform][day] = {};
-                    CONFIG[platform].tasks.forEach(task => {
-                        weekData[platform][day][task.id] = 0;
-                    });
-                });
-            });
-            return weekData;
-        }
-        
-        function getTarget(platform, taskId) {
-            const configKey = `${platform}_${taskId}`;
-            if (data.config[configKey] !== undefined) {
-                return data.config[configKey];
-            }
-            const task = CONFIG[platform].tasks.find(t => t.id === taskId);
-            return task ? task.defaultTarget : 0;
-        }
-        
-        function setTarget(platform, taskId, value) {
-            const configKey = `${platform}_${taskId}`;
-            data.config[configKey] = value;
-            saveData();
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // UTIL
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function getMondayOfWeek(date) {
-            const d = new Date(date);
-            const day = d.getDay();
-            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-            return new Date(d.setDate(diff));
-        }
-        
-        function formatDate(date) {
-            const options = { month: 'short', day: '2-digit', year: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
-        }
-        
-        function getWeekKey(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-        
-        function changeWeek(offset) {
-            const newDate = new Date(currentWeekMonday);
-            newDate.setDate(newDate.getDate() + (offset * 7));
-            currentWeekMonday = getMondayOfWeek(newDate);
-            render();
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // CALCULATIONS
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function calculateDayPercentage(platform, day) {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            const dayData = weekData[platform][day];
-            
-            let totalCompleted = 0;
-            let totalTarget = 0;
-            
-            CONFIG[platform].tasks.forEach(task => {
-                if (task.type === 'daily') {
-                    const completed = dayData[task.id] || 0;
-                    const target = getTarget(platform, task.id);
-                    totalCompleted += completed;
-                    totalTarget += target;
-                }
-            });
-            
-            if (totalTarget === 0) return 0;
-            return Math.round((totalCompleted / totalTarget) * 100);
-        }
-        
-        function calculateWeeklySummary(platform) {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            const summary = [];
-            
-            CONFIG[platform].tasks.forEach(task => {
-                let completed = 0;
-                let target = 0;
-                
-                if (task.type === 'daily') {
-                    DAYS.forEach(day => {
-                        completed += weekData[platform][day][task.id] || 0;
-                    });
-                    target = getTarget(platform, task.id) * 5;
-                } else {
-                    DAYS.forEach(day => {
-                        completed += weekData[platform][day][task.id] || 0;
-                    });
-                    target = getTarget(platform, task.id);
-                }
-                
-                const percentage = target > 0 ? Math.round((completed / target) * 100) : 0;
-                summary.push({
-                    label: task.label,
-                    type: task.type,
-                    taskId: task.id,
-                    completed,
-                    target,
-                    percentage
-                });
-            });
-            
-            return summary;
-        }
-        
-        function calculateOverviewData() {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            
-            let totalCompleted = 0;
-            let totalTarget = 0;
-            const platformData = {};
-            
-            Object.keys(CONFIG).forEach(platform => {
-                let platformCompleted = 0;
-                let platformTarget = 0;
-                
-                CONFIG[platform].tasks.forEach(task => {
-                    let taskCompleted = 0;
-                    let taskTarget = 0;
-                    
-                    if (task.type === 'daily') {
-                        DAYS.forEach(day => {
-                            taskCompleted += weekData[platform][day][task.id] || 0;
-                        });
-                        taskTarget = getTarget(platform, task.id) * 5;
-                    } else {
-                        DAYS.forEach(day => {
-                            taskCompleted += weekData[platform][day][task.id] || 0;
-                        });
-                        taskTarget = getTarget(platform, task.id);
-                    }
-                    
-                    platformCompleted += taskCompleted;
-                    platformTarget += taskTarget;
-                });
-                
-                totalCompleted += platformCompleted;
-                totalTarget += platformTarget;
-                
-                const percentage = platformTarget > 0 ? (platformCompleted / platformTarget) * 100 : 0;
-                platformData[platform] = {
-                    completed: platformCompleted,
-                    target: platformTarget,
-                    percentage: Math.round(percentage)
-                };
-            });
-            
-            const overallPercentage = totalTarget > 0 ? Math.round((totalCompleted / totalTarget) * 100) : 0;
-            
-            const highlights = [];
-            Object.entries(platformData).forEach(([platform, stats]) => {
-                if (stats.percentage >= 120) {
-                    highlights.push({ platform: CONFIG[platform].name, percentage: stats.percentage, good: true });
-                } else if (stats.percentage <= 60 && stats.percentage > 0) {
-                    highlights.push({ platform: CONFIG[platform].name, percentage: stats.percentage, good: false });
-                }
-            });
-            
-            return { totalCompleted, totalTarget, overallPercentage, platformData, highlights };
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // RENDER
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function render() {
-            document.getElementById('weekDisplay').textContent = `Week of ${formatDate(currentWeekMonday)}`;
-            renderOverview();
-            renderPlatform('linkedin');
-            renderPlatform('alignable');
-            renderPlatform('salesNav');
-            renderAdvice();
-            renderDrafts();
-        }
-        
-        function renderOverview() {
-            const overview = calculateOverviewData();
-            const cardsHtml = `
-                <div class="card">
-                    <h3>Overall Progress</h3>
-                    <div class="card-value">${overview.overallPercentage}%</div>
-                    <div class="card-subtitle">${overview.totalCompleted} / ${overview.totalTarget} activities</div>
-                </div>
-                <div class="card">
-                    <h3>Performance Highlights</h3>
-                    ${overview.highlights.length === 0 ? '<div class="card-subtitle">All platforms within normal range</div>' : ''}
-                    <div class="highlights">
-                        ${overview.highlights.map(h => `
-                            <div class="highlight-item ${h.good ? 'highlight-good' : 'highlight-bad'}">
-                                ${h.platform}: ${h.percentage}% ${h.good ? '🔥' : '⚠️'}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-            document.getElementById('overviewCards').innerHTML = cardsHtml;
-            
-            updateCharts(overview);
-        }
-        
-        function renderPlatform(platformKey) {
-            const platform = CONFIG[platformKey];
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            
-            // Store which days are currently expanded before re-rendering
-            const expandedDays = [];
-            DAYS.forEach((day, idx) => {
-                const dayElement = document.querySelector(`#${platformKey}Content .day-item:nth-child(${idx + 1}) .day-tasks`);
-                if (dayElement && dayElement.classList.contains('expanded')) {
-                    expandedDays.push(idx);
-                }
-            });
-            
-            const daysHtml = DAYS.map((day, idx) => {
-                const percentage = calculateDayPercentage(platformKey, day);
-                const tasksHtml = platform.tasks.map(task => {
-                    if (task.type !== 'daily') return '';
-                    const completed = weekData[platformKey][day][task.id] || 0;
-                    const target = getTarget(platformKey, task.id);
-                    const taskPercentage = target > 0 ? Math.round((completed / target) * 100) : 0;
-                    return `
-                        <div class="task-row">
-                            <div class="task-label">
-                                ${task.label}
-                                <span class="tooltip-icon" data-tooltip="${task.tooltip}">?</span>
-                            </div>
-                            <div class="task-controls" onclick="event.stopPropagation()">
-                                <button class="counter-btn" onclick="updateCounter('${platformKey}', '${day}', '${task.id}', -1)" aria-label="Decrease ${task.label}">−</button>
-                                <input type="number" class="counter-input" value="${completed}" 
-                                       onchange="setCounter('${platformKey}', '${day}', '${task.id}', this.value)"
-                                       onclick="event.stopPropagation()"
-                                       aria-label="${task.label} count">
-                                <button class="counter-btn" onclick="updateCounter('${platformKey}', '${day}', '${task.id}', 1)" aria-label="Increase ${task.label}">+</button>
-                            </div>
-                            <div class="task-stats">
-                                ${completed} / ${target}
-                                <div style="color: ${taskPercentage >= 100 ? 'var(--accent-green)' : 'var(--text-secondary)'}; font-weight: bold;">
-                                    ${taskPercentage}%
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-                
-                const isExpanded = expandedDays.includes(idx);
-                
-                return `
-                    <div class="day-item">
-                        <div class="day-header" onclick="toggleDay(this)" tabindex="0" role="button" 
-                             aria-expanded="${isExpanded}" aria-label="Toggle ${DAY_LABELS[idx]}"
-                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDay(this)}">
-                            <div class="day-title">${DAY_LABELS[idx]}</div>
-                            <div class="day-progress">
-                                <div class="day-percentage">${percentage}%</div>
-                                <div class="progress-bar-container">
-                                    <div class="progress-bar" style="width: ${Math.min(percentage, 100)}%"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="day-tasks ${isExpanded ? 'expanded' : ''}">${tasksHtml}</div>
-                    </div>
-                `;
-            }).join('');
-            
-            const weeklySummary = calculateWeeklySummary(platformKey);
-            const weeklyHtml = weeklySummary.map(item => {
-                if (item.type === 'daily') {
-                    // Daily tasks: show aggregate with no controls
-                    return `
-                        <div class="weekly-summary-row">
-                            <div class="weekly-task-name">${item.label} (daily)</div>
-                            <div class="weekly-task-stats" style="color: ${item.percentage >= 100 ? 'var(--accent-green)' : item.percentage >= 60 ? 'var(--accent-orange)' : 'var(--accent-red)'}">
-                                ${item.completed} / ${item.target} (${item.percentage}%)
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    // Weekly tasks: show with +/- controls
-                    return `
-                        <div class="weekly-summary-row weekly-with-controls">
-                            <div class="weekly-task-name">${item.label} (weekly)</div>
-                            <div class="weekly-controls-group">
-                                <div class="task-controls">
-                                    <button class="counter-btn" onclick="updateWeeklyCounter('${platformKey}', '${item.taskId}', -1)" aria-label="Decrease ${item.label}">−</button>
-                                    <input type="number" class="counter-input" value="${item.completed}" 
-                                           onchange="setWeeklyCounter('${platformKey}', '${item.taskId}', this.value)"
-                                           aria-label="${item.label} count">
-                                    <button class="counter-btn" onclick="updateWeeklyCounter('${platformKey}', '${item.taskId}', 1)" aria-label="Increase ${item.label}">+</button>
-                                </div>
-                                <div class="weekly-task-stats" style="color: ${item.percentage >= 100 ? 'var(--accent-green)' : item.percentage >= 60 ? 'var(--accent-orange)' : 'var(--accent-red)'}">
-                                    ${item.completed} / ${item.target} (${item.percentage}%)
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-            }).join('');
-            
-            const contentHtml = `
-                ${daysHtml}
-                <div class="weekly-tracker">
-                    <h3>📊 Weekly Tracker</h3>
-                    ${weeklyHtml}
-                </div>
-            `;
-            
-            const sidebarHtml = `
-                <h3>💡 ${platform.name} Guidance</h3>
-                <ul>
-                    ${platform.guidance.map(tip => `<li>${tip}</li>`).join('')}
-                </ul>
-            `;
-            
-            document.getElementById(`${platformKey}Content`).innerHTML = contentHtml;
-            document.getElementById(`${platformKey}Sidebar`).innerHTML = sidebarHtml;
-        }
-        
-        function renderAdvice() {
-            const adviceHtml = `
-                <div class="advice-section">
-                    <h3>⏰ Daily Cadence</h3>
-                    <ul>
-                        <li><strong>Morning (8-10 AM):</strong> LinkedIn comments and engagement when feeds are hot</li>
-                        <li><strong>Mid-Morning (10-12 PM):</strong> Sales Navigator research and lead curation</li>
-                        <li><strong>Afternoon (1-3 PM):</strong> Personalized outreach and DMs across platforms</li>
-                        <li><strong>Late Afternoon (3-5 PM):</strong> Follow-ups, forum participation, event planning</li>
-                        <li><strong>Batch similar tasks:</strong> Send all connection requests at once, write all DMs together</li>
-                        <li><strong>Quality over quantity:</strong> 10 thoughtful interactions beat 50 generic ones</li>
-                    </ul>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>🎯 Sales Navigator Operating Principles</h3>
-                    <h4>What Sales Navigator Is For</h4>
-                    <ul>
-                        <li>Sales Navigator is a <strong>signal discovery and market intelligence tool</strong></li>
-                        <li>Success means: Sharpens ICP clarity, reduces false positives, reveals repeatable patterns, builds a clean lead bench</li>
-                        <li>It is <strong>not</strong> successful based on replies, meetings, or revenue at this stage</li>
-                    </ul>
-                    
-                    <h4>Core Operating Rules</h4>
-                    <ul>
-                        <li><strong>Optimize for signal, not outcomes:</strong> Your job is to observe, not convert. If your understanding of the market is improving month over month, the platform is working</li>
-                        <li><strong>Consistency beats intensity:</strong> Short, regular usage (15-30 min most days) outperforms long sporadic sessions, endless filter tweaking, or "let me just check one more thing"</li>
-                        <li><strong>Start broad, narrow late:</strong> Begin with a correct but imperfect ICP universe. Narrow through lists, manual qualification, notes and pattern recognition. Perfect filters upfront always hide signal</li>
-                        <li><strong>Lists are experiments, not storage:</strong> Each list should answer one question (e.g., "Who runs group programs?", "Who uses Skool?"). If a list doesn't teach you something, refactor or delete it</li>
-                        <li><strong>Credits are inventory, not pressure:</strong> Never use credits out of habit, because they're expiring, or to "see what happens". Always batch credits around a clear objective, specific list, and low-risk action</li>
-                        <li><strong>Notes compound value:</strong> A saved lead without a note is unfinished work. Good notes are short, observational, and specific (tools, language, structure). Future decisions depend on past notes</li>
-                        <li><strong>Avoid premature outreach:</strong> Early outreach pollutes signal, forces positioning too soon, and creates false feedback. Silence ≠ failure. Confusion = failure</li>
-                        <li><strong>Review weekly, decide monthly:</strong> Daily: execute. Weekly: learn. Monthly: decide. Never collapse these time horizons</li>
-                        <li><strong>Noise is a signal:</strong> If Sales Nav feels noisy, your ICP isn't finished, lists need refinement, or you're asking the platform for certainty too early. Pause, refine, continue</li>
-                    </ul>
-                    
-                    <h4>The True Success Metric</h4>
-                    <ul>
-                        <li>Sales Navigator is earning its cost if you can honestly say: <strong>"I understand this market better than I did last month"</strong></li>
-                        <li>Operating posture: Signal > Activity, Clarity > Volume, Discipline > Hustle</li>
-                    </ul>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>💬 Comment Quality Framework</h3>
-                    <ul>
-                        <li><strong>Signal > Fluff:</strong> Add a new perspective, don't just agree</li>
-                        <li><strong>Cite data or experience:</strong> "In our testing..." or "Research shows..."</li>
-                        <li><strong>Ask thoughtful questions:</strong> Invite the poster or others to expand</li>
-                        <li><strong>Keep it concise:</strong> 2-3 sentences max for most comments</li>
-                        <li><strong>Tag strategically:</strong> Mention others who'd benefit from the discussion</li>
-                        <li><strong>Avoid sales-y language:</strong> Build credibility first, pitch later</li>
-                    </ul>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>✉️ Personalized Outreach Template</h3>
-                    <h4>Message 1: The Hook</h4>
-                    <ul>
-                        <li>Reference something specific (their post, company news, mutual connection)</li>
-                        <li>Give before you ask — share a resource or insight</li>
-                        <li>Keep it under 100 words</li>
-                    </ul>
-                    <h4>Message 2-3: Build Context</h4>
-                    <ul>
-                        <li>Share a relevant case study or example</li>
-                        <li>Ask about their current challenges or goals</li>
-                        <li>Provide value without pitching</li>
-                    </ul>
-                    <h4>Message 4-5: Soft CTA</h4>
-                    <ul>
-                        <li>"Would a 15-min call be useful to discuss X?"</li>
-                        <li>"I have a framework for Y — want me to send it over?"</li>
-                        <li>Make it low-friction and specific</li>
-                    </ul>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>📞 DM → Call Conversion Framework</h3>
-                    <ul>
-                        <li><strong>Qualify first:</strong> Ensure they match your ICP before suggesting a call</li>
-                        <li><strong>Position the call as valuable for them:</strong> "I have a couple ideas that might help with [their challenge]"</li>
-                        <li><strong>Offer specific time options:</strong> "Tuesday at 2 PM or Thursday at 10 AM?"</li>
-                        <li><strong>Use a scheduling link:</strong> Reduce friction with Calendly or similar</li>
-                        <li><strong>Send a confirmation with an agenda:</strong> "Looking forward to discussing [X, Y, Z]"</li>
-                        <li><strong>Follow up if no response:</strong> Wait 3-4 days, then bump with a value add</li>
-                    </ul>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>🤝 Platform Etiquette & Best Practices</h3>
-                    <ul>
-                        <li><strong>Pace yourself:</strong> Don't send 50 connection requests in one hour — spread them out</li>
-                        <li><strong>Never copy-paste obviously:</strong> Even templates need personalization</li>
-                        <li><strong>Reciprocity matters:</strong> Engage with others' content before asking them to engage with yours</li>
-                        <li><strong>Track what works:</strong> Note which messages get replies and double down</li>
-                        <li><strong>Respect "no":</strong> If someone doesn't respond after 2-3 attempts, move on</li>
-                        <li><strong>Always lead with value:</strong> Be the person who gives more than they take</li>
-                        <li><strong>Build relationships, not transactions:</strong> Think 6-12 month timelines, not overnight wins</li>
-                    </ul>
-                </div>
-            `;
-            document.getElementById('adviceContent').innerHTML = adviceHtml;
-        }
-        
-        function renderDrafts() {
-            const draftsHtml = `
-                <div class="advice-section">
-                    <h3>📝 Business Introduction Drafts</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Use these drafts when introducing your business to non-technical prospects in various contexts.</p>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>🎯 Long Version (Detailed Conversation)</h3>
-                    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 6px; border-left: 4px solid var(--accent-blue); line-height: 1.8;">
-                        <p style="margin-bottom: 15px;">I'm Chris. I spent 20+ years running sales and support operations — building the systems and processes that let teams scale without falling apart. I've seen what works and what becomes an expensive mess.</p>
-                        
-                        <p style="margin-bottom: 15px;">Now through Qnectra, I've taken all that experience and turned it into a service for small business owners: you get a senior operations leader who's built this stuff dozens of times, without paying for a full-time executive.</p>
-                        
-                        <p style="margin-bottom: 0;">Most owners either hire someone junior who's still figuring it out, or they try to do it all themselves and burn out. I come in part-time, diagnose what's slowing you down, and build the foundation so your business runs predictably — without you being the bottleneck.</p>
-                    </div>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>💼 Medium Version (Networking/Discovery Call)</h3>
-                    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 6px; border-left: 4px solid var(--accent-green); line-height: 1.8;">
-                        <p style="margin-bottom: 15px;">I'm Chris. I spent 20+ years running sales and support operations, building the systems and processes that let companies scale smoothly. Now through Qnectra, I've packaged that expertise for small business owners who need it but can't afford a full-time executive.</p>
-                        
-                        <p style="margin-bottom: 0;">I work with owners who are stuck — maybe your systems don't talk to each other, your team keeps reinventing the wheel, or you're making tech decisions you're not confident about. Instead of hiring someone who's still learning or doing it all yourself, you bring me in part-time. I figure out what's broken, fix it, and set you up to grow without the chaos.</p>
-                    </div>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>⚡ Short Version (Quick Introduction)</h3>
-                    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 6px; border-left: 4px solid var(--accent-orange); line-height: 1.8;">
-                        <p style="margin-bottom: 0;">I'm Chris. I help small business owners scale without the chaos. I spent 20+ years running operations and building systems that work — now you get that expertise part-time, without paying for a full-time executive you might not need yet.</p>
-                    </div>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>🚀 Extra Short (Elevator Pitch)</h3>
-                    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 6px; border-left: 4px solid var(--accent-purple); line-height: 1.8;">
-                        <p style="margin-bottom: 0;">I help small business owners who are drowning in operations — broken systems, wasted time, growth that feels chaotic. I spent 20 years building operations from the inside; now I come in part-time, figure out what's holding you back, and fix it.</p>
-                    </div>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>💡 Usage Tips</h3>
-                    <ul>
-                        <li><strong>Long Version:</strong> Use in detailed conversations, podcast interviews, or when someone asks "So what exactly do you do?"</li>
-                        <li><strong>Medium Version:</strong> Perfect for networking events, discovery calls, or LinkedIn DMs</li>
-                        <li><strong>Short Version:</strong> Great for quick introductions, email signatures, or bio sections</li>
-                        <li><strong>Extra Short:</strong> Use when you have 30 seconds or less — at events, chance encounters, or quick handshakes</li>
-                        <li><strong>Personalize always:</strong> These are frameworks — adjust based on what you learn about the person first</li>
-                    </ul>
-                </div>
-            `;
-            document.getElementById('draftsContent').innerHTML = draftsHtml;
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // CHARTS
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function updateCharts(overview) {
-            const platformLabels = Object.keys(CONFIG).map(k => CONFIG[k].name);
-            const platformCompleted = Object.keys(CONFIG).map(k => overview.platformData[k].completed);
-            const platformTargets = Object.keys(CONFIG).map(k => overview.platformData[k].target);
-            const platformColors = Object.keys(CONFIG).map(k => CONFIG[k].color);
-            
-            // Chart 1: Platform Totals
-            const ctx1 = document.getElementById('platformChart').getContext('2d');
-            if (charts.platform) charts.platform.destroy();
-            charts.platform = new Chart(ctx1, {
-                type: 'bar',
-                data: {
-                    labels: platformLabels,
-                    datasets: [
-                        {
-                            label: 'Completed',
-                            data: platformCompleted,
-                            backgroundColor: platformColors.map(c => c + 'cc'),
-                            borderColor: platformColors,
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Target',
-                            data: platformTargets,
-                            backgroundColor: platformColors.map(c => c + '33'),
-                            borderColor: platformColors,
-                            borderWidth: 2,
-                            borderDash: [5, 5]
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: true, position: 'top' },
-                        tooltip: { mode: 'index', intersect: false }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary') } },
-                        x: { ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary') } }
-                    }
-                }
-            });
-            
-            // Chart 2: Completion Rates
-            const completionRates = Object.keys(CONFIG).map(k => overview.platformData[k].percentage);
-            const ctx2 = document.getElementById('completionChart').getContext('2d');
-            if (charts.completion) charts.completion.destroy();
-            charts.completion = new Chart(ctx2, {
-                type: 'radar',
-                data: {
-                    labels: platformLabels,
-                    datasets: [
-                        {
-                            label: 'Completion %',
-                            data: completionRates,
-                            backgroundColor: 'rgba(0, 102, 204, 0.2)',
-                            borderColor: 'rgba(0, 102, 204, 1)',
-                            borderWidth: 2,
-                            pointBackgroundColor: platformColors,
-                            pointBorderColor: '#fff',
-                            pointRadius: 5
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 120,
-                            ticks: {
-                                stepSize: 20,
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary'),
-                                callback: function(value) { return value + '%'; }
-                            },
-                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--border-color') },
-                            pointLabels: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary') }
-                        }
-                    }
-                }
-            });
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // EVENTS
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function updateCounter(platform, day, taskId, delta) {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            const current = weekData[platform][day][taskId] || 0;
-            const newValue = Math.max(0, current + delta);
-            weekData[platform][day][taskId] = newValue;
-            saveData();
-            render();
-        }
-        
-        function setCounter(platform, day, taskId, value) {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            weekData[platform][day][taskId] = Math.max(0, parseInt(value) || 0);
-            saveData();
-            render();
-        }
-        
-        function updateWeeklyCounter(platform, taskId, delta) {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            
-            // Get current total
-            let total = 0;
-            DAYS.forEach(day => {
-                total += weekData[platform][day][taskId] || 0;
-            });
-            
-            // Calculate new total
-            const newTotal = Math.max(0, total + delta);
-            
-            // Distribute the new total across days (put all on Monday for simplicity)
-            DAYS.forEach(day => {
-                weekData[platform][day][taskId] = 0;
-            });
-            weekData[platform]['monday'][taskId] = newTotal;
-            
-            saveData();
-            render();
-        }
-        
-        function setWeeklyCounter(platform, taskId, value) {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            
-            const newTotal = Math.max(0, parseInt(value) || 0);
-            
-            // Distribute the new total across days (put all on Monday for simplicity)
-            DAYS.forEach(day => {
-                weekData[platform][day][taskId] = 0;
-            });
-            weekData[platform]['monday'][taskId] = newTotal;
-            
-            saveData();
-            render();
-        }
-        
-        function toggleDay(element) {
-            const tasksDiv = element.nextElementSibling;
-            const isExpanded = tasksDiv.classList.contains('expanded');
-            tasksDiv.classList.toggle('expanded');
-            element.setAttribute('aria-expanded', !isExpanded);
-        }
-        
-        function openEditTargetsModal() {
-            const modal = document.getElementById('editTargetsModal');
-            const form = document.getElementById('targetsForm');
-            
-            let formHtml = '';
-            Object.entries(CONFIG).forEach(([platformKey, platform]) => {
-                formHtml += `<div class="target-group"><h3>${platform.name}</h3>`;
-                platform.tasks.forEach(task => {
-                    const currentTarget = getTarget(platformKey, task.id);
-                    formHtml += `
-                        <div class="target-item">
-                            <label for="target_${platformKey}_${task.id}">${task.label} (${task.type})</label>
-                            <input type="number" id="target_${platformKey}_${task.id}" 
-                                   value="${currentTarget}" min="0" 
-                                   data-platform="${platformKey}" data-task="${task.id}">
-                        </div>
-                    `;
-                });
-                formHtml += '</div>';
-            });
-            
-            form.innerHTML = formHtml;
-            modal.classList.add('active');
-        }
-        
-        function closeEditTargetsModal() {
-            document.getElementById('editTargetsModal').classList.remove('active');
-        }
-        
-        function saveTargets() {
-            const inputs = document.querySelectorAll('#targetsForm input[type="number"]');
-            inputs.forEach(input => {
-                const platform = input.dataset.platform;
-                const task = input.dataset.task;
-                const value = parseInt(input.value) || 0;
-                setTarget(platform, task, value);
-            });
-            closeEditTargetsModal();
-            render();
-        }
-        
-        function restoreDefaults() {
-            if (!confirm('Are you sure you want to restore all targets to defaults?')) return;
-            data.config = {};
-            saveData();
-            closeEditTargetsModal();
-            render();
-        }
-        
-        function resetWeek() {
-            if (!confirm(`Reset all data for week of ${formatDate(currentWeekMonday)}?`)) return;
-            const weekKey = getWeekKey(currentWeekMonday);
-            delete data.weeks[weekKey];
-            saveData();
-            render();
-        }
-        
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.tab === tabName);
-            });
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.toggle('active', content.id === tabName);
-            });
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // INIT & SELF-TEST
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function init() {
-            loadData();
-            currentWeekMonday = getMondayOfWeek(new Date());
-            
-            document.getElementById('prevWeekBtn').addEventListener('click', () => changeWeek(-1));
-            document.getElementById('nextWeekBtn').addEventListener('click', () => changeWeek(1));
-            document.getElementById('resetWeekBtn').addEventListener('click', resetWeek);
-            document.getElementById('editTargetsBtn').addEventListener('click', openEditTargetsModal);
-            document.getElementById('closeModalBtn').addEventListener('click', closeEditTargetsModal);
-            document.getElementById('saveTargetsBtn').addEventListener('click', saveTargets);
-            document.getElementById('restoreDefaultsBtn').addEventListener('click', restoreDefaults);
-            
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
-            });
-            
-            render();
-        }
-        
-        // Self-test helper for developers
-        window.seedSampleDataForCurrentWeek = function() {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            
-            Object.keys(CONFIG).forEach(platform => {
-                CONFIG[platform].tasks.forEach(task => {
-                    if (task.type === 'daily') {
-                        DAYS.forEach((day, idx) => {
-                            // Simulate realistic progress: earlier days more complete
-                            const completionFactor = Math.max(0.4, 1 - (idx * 0.15));
-                            const target = getTarget(platform, task.id);
-                            const completed = Math.floor(target * completionFactor * (0.8 + Math.random() * 0.4));
-                            weekData[platform][day][task.id] = completed;
-                        });
-                    } else {
-                        // Weekly tasks: distribute across week
-                        const target = getTarget(platform, task.id);
-                        const completed = Math.floor(target * (0.6 + Math.random() * 0.4));
-                        const perDay = Math.floor(completed / 5);
-                        const remainder = completed % 5;
-                        DAYS.forEach((day, idx) => {
-                            weekData[platform][day][task.id] = perDay + (idx < remainder ? 1 : 0);
-                        });
-                    }
-                });
-            });
-            
-            saveData();
-            render();
-            console.log('✅ Sample data seeded for current week!');
-        };
-        
-        // Make functions globally accessible
-        window.updateCounter = updateCounter;
-        window.setCounter = setCounter;
-        window.updateWeeklyCounter = updateWeeklyCounter;
-        window.setWeeklyCounter = setWeeklyCounter;
-        window.toggleDay = toggleDay;
-        
-        // Start the app
-        init();
-    </script>
-</body>
-</html>
+      });
+    }catch(e){}
+  }
+
+  function save(){
+    const data = {};
+    inputs.forEach(el => data[el.getAttribute("data-k")] = el.value || "");
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    refresh();
+  }
+
+  function resetAll(){
+    if(!confirm("Reset all scores and notes for this scorecard?")) return;
+    localStorage.removeItem(STORE_KEY);
+    selects.forEach(s => s.value = "");
+    notes.forEach(t => t.value = "");
+    refresh();
+  }
+
+  function badge(state){
+    if(state === "green") return `<span class="qsn-badge"><span class="qsn-dot dot-green"></span> Green</span>`;
+    if(state === "amber") return `<span class="qsn-badge"><span class="qsn-dot dot-amber"></span> Yellow</span>`;
+    if(state === "red") return `<span class="qsn-badge"><span class="qsn-dot dot-red"></span> Red</span>`;
+    return `<span class="qsn-badge"><span class="qsn-dot"></span> Not scored</span>`;
+  }
+
+  // Compute checkpoint status by majority rule:
+  // - If any red present AND reds >= greens => red
+  // - Else if greens > ambers and greens >= 3 => green
+  // - Else if any scores present => amber
+  // - Else => none
+  function checkpointStatus(prefix){
+    const keys = selects
+      .filter(s => s.getAttribute("data-k").startsWith(prefix))
+      .map(s => s.value)
+      .filter(v => v);
+
+    if(keys.length === 0) return "";
+
+    const greens = keys.filter(v => v === "green").length;
+    const ambers = keys.filter(v => v === "amber").length;
+    const reds = keys.filter(v => v === "red").length;
+
+    if(reds > 0 && reds >= greens) return "red";
+    if(greens >= 3 && greens > ambers && greens >= reds) return "green";
+    return "amber";
+  }
+
+  function refresh(){
+    // completion
+    const total = selects.length + notes.length;
+    const filled = selects.filter(s => s.value).length + notes.filter(t => t.value.trim().length > 0).length;
+    const pct = total ? Math.round((filled/total)*100) : 0;
+    completionEl.textContent = pct + "%";
+    bar.style.width = pct + "%";
+
+    // checkpoint badges
+    const s30 = checkpointStatus("d30_");
+    const s60 = checkpointStatus("d60_");
+    const s90 = checkpointStatus("d90_");
+    status30.innerHTML = badge(s30);
+    status60.innerHTML = badge(s60);
+    status90.innerHTML = badge(s90);
+
+    // decision guidance (simple, operator-friendly)
+    // Prefer the latest scored checkpoint for guidance; otherwise overall.
+    const latest = s90 || s60 || s30 || "";
+    decisionBox.style.borderColor = "rgba(255,255,255,.12)";
+    decisionBox.style.background = "rgba(255,255,255,.05)";
+
+    if(!latest){
+      decisionText.textContent =
+        "Score the checkpoints, then review the rollup. Use this as a “clarity meter,” not a vanity score.";
+      return;
+    }
+
+    if(latest === "green"){
+      decisionBox.style.borderColor = "rgba(31,156,83,.45)";
+      decisionBox.style.background = "rgba(31,156,83,.14)";
+      decisionText.textContent =
+        "Mostly GREEN: keep the cadence, double down on the strongest lists, and begin planning intentional outreach triggers.";
+      return;
+    }
+    if(latest === "amber"){
+      decisionBox.style.borderColor = "rgba(218,139,0,.45)";
+      decisionBox.style.background = "rgba(218,139,0,.14)";
+      decisionText.textContent =
+        "Mostly YELLOW: signal exists, but refine filters/lists and tighten disqualifiers. Focus on clarity, not volume.";
+      return;
+    }
+    if(latest === "red"){
+      decisionBox.style.borderColor = "rgba(193,38,56,.55)";
+      decisionBox.style.background = "rgba(193,38,56,.14)";
+      decisionText.textContent =
+        "RED present: pause outreach. Reassess ICP assumptions, list design, and where false positives come from before continuing.";
+      return;
+    }
+  }
+
+  // Export a concise summary to clipboard
+  function exportSummary(){
+    const data = {};
+    inputs.forEach(el => data[el.getAttribute("data-k")] = el.value || "");
+
+    const summarize = (prefix) => {
+      const metrics = Object.keys(data).filter(k => k.startsWith(prefix) && !k.endsWith("_notes"));
+      const nkey = prefix + "notes";
+      const notesText = (data[nkey] || "").trim();
+
+      const counts = { green:0, amber:0, red:0, blank:0 };
+      metrics.forEach(k => {
+        const v = data[k];
+        if(v === "green") counts.green++;
+        else if(v === "amber") counts.amber++;
+        else if(v === "red") counts.red++;
+        else counts.blank++;
+      });
+
+      return {
+        counts,
+        notes: notesText
+      };
+    };
+
+    const s30 = summarize("d30_");
+    const s60 = summarize("d60_");
+    const s90 = summarize("d90_");
+
+    const out =
+`Qnèctra Sales Nav 30/60/90 Scorecard Summary
+
+30 Days: Green ${s30.counts.green} • Yellow ${s30.counts.amber} • Red ${s30.counts.red} • Unscored ${s30.counts.blank}
+Notes: ${s30.notes || "(none)"}
+
+60 Days: Green ${s60.counts.green} • Yellow ${s60.counts.amber} • Red ${s60.counts.red} • Unscored ${s60.counts.blank}
+Notes: ${s60.notes || "(none)"}
+
+90 Days: Green ${s90.counts.green} • Yellow ${s90.counts.amber} • Red ${s90.counts.red} • Unscored ${s90.counts.blank}
+Notes: ${s90.notes || "(none)"}
+`;
+
+    navigator.clipboard.writeText(out).then(() => {
+      const btn = root.querySelector("#qsnExport");
+      const prev = btn.textContent;
+      btn.textContent = "Exported ✓";
+      setTimeout(()=>btn.textContent = prev, 1200);
+    }).catch(()=> {
+      alert("Copy failed. Your browser may block clipboard access in this context.");
+    });
+  }
+
+  // Auto-save on change (lightweight)
+  function autoSave(){
+    // debounce
+    if(autoSave._t) clearTimeout(autoSave._t);
+    autoSave._t = setTimeout(save, 250);
+  }
+  selects.forEach(s => s.addEventListener("change", autoSave));
+  notes.forEach(t => t.addEventListener("input", autoSave));
+
+  root.querySelector("#qsnSave").addEventListener("click", () => {
+    save();
+    const btn = root.querySelector("#qsnSave");
+    const prev = btn.textContent;
+    btn.textContent = "Saved ✓";
+    setTimeout(()=>btn.textContent = prev, 1200);
+  });
+  root.querySelector("#qsnReset").addEventListener("click", resetAll);
+  root.querySelector("#qsnExport").addEventListener("click", exportSummary);
+
+  load();
+  refresh();
+  setActiveTab("d30");
+})();
+</script>
