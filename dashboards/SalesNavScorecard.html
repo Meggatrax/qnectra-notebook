@@ -1,4 +1,4 @@
-<!-- Qnèctra Sales Nav 30/60/90 Scorecard — Interactive Dashboard Block (v2: dark page bg, lighter labels, color selectors) -->
+<!-- Qnèctra Sales Nav 30/60/90 Scorecard — v1 behavior (dropdowns) + dark page bg + brighter labels -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -19,7 +19,7 @@
     --red:#C12638;
   }
 
-  /* NEW: force the page background dark (covers your screenshot issue) */
+  /* NEW: force the page background dark */
   html, body{
     background: var(--page) !important;
     margin:0;
@@ -163,7 +163,7 @@
     line-height:1.35;
   }
 
-  /* NEW: lighter + more readable labels (your 2nd screenshot) */
+  /* NEW: brighter + more readable labels */
   .qsn-metric{
     font-weight:900;
     width:36%;
@@ -174,55 +174,22 @@
     color:var(--label2);
     font-weight:700;
   }
-  .qsn-score{ width:30%; }
+  .qsn-score{ width:30%; text-align:right; }
 
-  /* NEW: 3-color selector pills */
-  .qsn-pills{
-    display:flex;
-    gap:8px;
-    justify-content:flex-end;
-    flex-wrap:wrap;
-  }
-  .qsn-pill{
-    position:relative;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 10px;
-    border-radius:999px;
+  /* Dropdown (original behavior) */
+  .qsn-select{
+    width:140px;
+    padding:9px 10px;
+    border-radius:12px;
     border:1px solid rgba(255,255,255,.14);
-    background:rgba(0,0,0,.18);
+    background:rgba(0,0,0,.22);
+    color:rgba(244,246,255,.92);
+    font-weight:800;
+    font-size:12px;
+    outline:none;
     cursor:pointer;
-    user-select:none;
-    font-weight:900;
-    font-size:11px;
-    color:rgba(244,246,255,.88);
-    transition: transform .08s ease, filter .12s ease, border-color .12s ease;
   }
-  .qsn-pill:hover{ filter:brightness(.98); transform: translateY(-1px); }
-
-  .qsn-pill input{
-    position:absolute;
-    opacity:0;
-    pointer-events:none;
-  }
-  .qsn-swatch{
-    width:12px; height:12px;
-    border-radius:4px;
-    box-shadow:0 0 0 2px rgba(255,255,255,.08) inset;
-  }
-  .sw-green{ background:var(--green); }
-  .sw-amber{ background:var(--amber); }
-  .sw-red{ background:var(--red); }
-
-  /* selected state */
-  .qsn-pill.selected{
-    border-color: rgba(244,246,255,.38);
-    background: rgba(255,255,255,.08);
-  }
-  .qsn-pill.selected.green{ border-color: rgba(31,156,83,.65); }
-  .qsn-pill.selected.amber{ border-color: rgba(218,139,0,.65); }
-  .qsn-pill.selected.red{ border-color: rgba(193,38,56,.70); }
+  .qsn-select option{ background:#0b0b11; color:#f4f6ff; }
 
   .qsn-notes{ margin-top:10px; }
   .qsn-notes textarea{
@@ -244,8 +211,6 @@
     color:var(--muted2);
     line-height:1.45;
   }
-
-  .qsn-right .qsn-card{ position:sticky; top:12px; }
 
   .qsn-progress{
     margin-top:10px;
@@ -364,7 +329,7 @@
       <h2 class="qsn-title">Sales Navigator 30 / 60 / 90 Scorecard</h2>
       <div class="qsn-sub">
         Use this to validate your coaching ICP on LinkedIn and ensure your Sales Nav subscription compounds.
-        Select a score using the <b>colored selectors</b>. Notes persist locally in your browser.
+        Score each metric as Green, Yellow, or Red. Notes persist locally in your browser.
       </div>
     </div>
     <div class="qsn-actions">
@@ -398,37 +363,27 @@
               <tr class="qsn-row">
                 <td class="qsn-metric">Profiles reviewed</td>
                 <td class="qsn-target">100–150</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d30_profiles"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d30_profiles"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">Qualified leads saved</td>
                 <td class="qsn-target">30–50</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d30_saved"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d30_saved"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">False positives trend</td>
                 <td class="qsn-target">Decreasing week-over-week</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d30_fp"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d30_fp"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">Distinct patterns identified</td>
                 <td class="qsn-target">≥5</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d30_patterns"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d30_patterns"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">ICP confidence</td>
                 <td class="qsn-target">Medium+ (can describe a real buyer)</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d30_icp"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d30_icp"></select></td>
               </tr>
             </table>
 
@@ -449,37 +404,27 @@
               <tr class="qsn-row">
                 <td class="qsn-metric">Profiles reviewed (cumulative)</td>
                 <td class="qsn-target">250–300</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d60_profiles"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d60_profiles"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">Qualified leads saved (cumulative)</td>
                 <td class="qsn-target">60–80</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d60_saved"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d60_saved"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">Distinct ICP subtypes</td>
                 <td class="qsn-target">3–4</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d60_subtypes"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d60_subtypes"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">Strong-signal lists</td>
                 <td class="qsn-target">≥2 lists produce good leads reliably</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d60_lists"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d60_lists"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">Messaging readiness</td>
                 <td class="qsn-target">High (you know what to lead with)</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d60_msg"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d60_msg"></select></td>
               </tr>
             </table>
 
@@ -500,37 +445,27 @@
               <tr class="qsn-row">
                 <td class="qsn-metric">Profiles reviewed (cumulative)</td>
                 <td class="qsn-target">400–500</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d90_profiles"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d90_profiles"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">Clean lead bench</td>
                 <td class="qsn-target">100–150 outreach-ready leads</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d90_bench"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d90_bench"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">Outreach confidence</td>
                 <td class="qsn-target">High (who + why is obvious)</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d90_conf"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d90_conf"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">Credit efficiency</td>
                 <td class="qsn-target">Low waste; credits tied to objectives</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d90_credits"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d90_credits"></select></td>
               </tr>
               <tr class="qsn-row">
                 <td class="qsn-metric">Channel clarity</td>
                 <td class="qsn-target">LinkedIn is viable primary channel</td>
-                <td class="qsn-score">
-                  <div class="qsn-pills" data-group="d90_channel"></div>
-                </td>
+                <td class="qsn-score"><select class="qsn-select" data-k="d90_channel"></select></td>
               </tr>
             </table>
 
@@ -595,7 +530,7 @@
 
 <script>
 (function(){
-  const STORE_KEY = "qnectra_salesnav_306090_scorecard_v2";
+  const STORE_KEY = "qnectra_salesnav_306090_scorecard_v1_dark";
   const root = document.getElementById("qsnScorecard");
 
   const tabs = Array.from(root.querySelectorAll(".qsn-tab"));
@@ -613,48 +548,7 @@
   const decisionText = root.querySelector("#qsnDecisionText");
   const decisionBox = root.querySelector("#qsnDecisionBox");
 
-  // We persist values in hidden inputs (one per metric) to simplify storage/rollups
-  function ensureHiddenField(key){
-    let el = root.querySelector(`input[type="hidden"][data-k="${key}"]`);
-    if(!el){
-      el = document.createElement("input");
-      el.type = "hidden";
-      el.setAttribute("data-k", key);
-      el.value = "";
-      root.appendChild(el);
-    }
-    return el;
-  }
-
-  // Build 3 colored selectors for each metric
-  const pillGroups = Array.from(root.querySelectorAll(".qsn-pills[data-group]"));
-  const OPTIONS = [
-    { v:"green", label:"Green", cls:"green", sw:"sw-green" },
-    { v:"amber", label:"Yellow", cls:"amber", sw:"sw-amber" },
-    { v:"red",   label:"Red",   cls:"red",   sw:"sw-red" },
-  ];
-
-  function renderPills(){
-    pillGroups.forEach(pg=>{
-      const key = pg.getAttribute("data-group");
-      ensureHiddenField(key);
-
-      pg.innerHTML = "";
-      OPTIONS.forEach(opt=>{
-        const id = `${key}_${opt.v}`;
-        const pill = document.createElement("label");
-        pill.className = `qsn-pill ${opt.cls}`;
-        pill.setAttribute("data-key", key);
-        pill.setAttribute("data-val", opt.v);
-        pill.innerHTML = `
-          <input type="radio" name="${key}" id="${id}" value="${opt.v}">
-          <span class="qsn-swatch ${opt.sw}"></span>
-          <span>${opt.label}</span>
-        `;
-        pg.appendChild(pill);
-      });
-    });
-  }
+  const GREEN="#1F9C53", AMBER="#DA8B00", RED="#C12638";
 
   function setActiveTab(tabKey){
     tabs.forEach(t => {
@@ -666,6 +560,19 @@
   }
   tabs.forEach(t => t.addEventListener("click", () => setActiveTab(t.dataset.tab)));
 
+  function populateSelects(){
+    const selects = Array.from(root.querySelectorAll("select.qsn-select"));
+    selects.forEach(sel=>{
+      if(sel.options.length) return;
+      sel.innerHTML = `
+        <option value="">Select…</option>
+        <option value="green">Green</option>
+        <option value="amber">Yellow</option>
+        <option value="red">Red</option>
+      `;
+    });
+  }
+
   function badge(state){
     if(state === "green") return `<span class="qsn-badge"><span class="qsn-dot dot-green"></span> Green</span>`;
     if(state === "amber") return `<span class="qsn-badge"><span class="qsn-dot dot-amber"></span> Yellow</span>`;
@@ -674,7 +581,7 @@
   }
 
   function checkpointStatus(prefix){
-    const vals = Array.from(root.querySelectorAll(`input[type="hidden"][data-k^="${prefix}"]`))
+    const vals = Array.from(root.querySelectorAll(`select[data-k^="${prefix}"]`))
       .map(el => el.value)
       .filter(Boolean);
 
@@ -689,33 +596,11 @@
     return "amber";
   }
 
-  function refreshPillUI(key){
-    const hidden = root.querySelector(`input[type="hidden"][data-k="${key}"]`);
-    const val = hidden ? hidden.value : "";
-    const pills = Array.from(root.querySelectorAll(`.qsn-pill[data-key="${key}"]`));
-    pills.forEach(p=>{
-      const pval = p.getAttribute("data-val");
-      const selected = (val && pval === val);
-      p.classList.toggle("selected", selected);
-      if(selected) p.classList.add(val);
-      else p.classList.remove("green","amber","red");
-      const radio = p.querySelector('input[type="radio"]');
-      if(radio) radio.checked = selected;
-    });
-  }
-
-  function refreshAllPills(){
-    pillGroups.forEach(pg => refreshPillUI(pg.getAttribute("data-group")));
-  }
-
   function computeCompletion(){
-    const hiddenInputs = Array.from(root.querySelectorAll(`input[type="hidden"][data-k]`))
-      .filter(el => !el.getAttribute("data-k").endsWith("_notes"));
-
-    const notes = Array.from(root.querySelectorAll(`textarea[data-k]`));
-
-    const total = hiddenInputs.length + notes.length;
-    const filled = hiddenInputs.filter(h => h.value).length + notes.filter(t => t.value.trim().length > 0).length;
+    const selects = Array.from(root.querySelectorAll("select.qsn-select"));
+    const notes = Array.from(root.querySelectorAll("textarea[data-k]"));
+    const total = selects.length + notes.length;
+    const filled = selects.filter(s => s.value).length + notes.filter(t => t.value.trim().length > 0).length;
     const pct = total ? Math.round((filled/total)*100) : 0;
     completionEl.textContent = pct + "%";
     bar.style.width = pct + "%";
@@ -759,37 +644,10 @@
     }
   }
 
-  function refresh(){
-    refreshAllPills();
-    computeCompletion();
-    refreshDecision();
-  }
-
-  function load(){
-    try{
-      const raw = localStorage.getItem(STORE_KEY);
-      if(!raw) return;
-      const data = JSON.parse(raw);
-
-      // hidden inputs
-      Object.keys(data).forEach(k=>{
-        if(k.endsWith("_notes")) return;
-        const h = ensureHiddenField(k);
-        h.value = data[k] || "";
-      });
-
-      // notes
-      Array.from(root.querySelectorAll("textarea[data-k]")).forEach(t=>{
-        const k = t.getAttribute("data-k");
-        if(k in data) t.value = data[k] || "";
-      });
-    }catch(e){}
-  }
-
   function save(){
     const data = {};
-    Array.from(root.querySelectorAll(`input[type="hidden"][data-k]`)).forEach(h=>{
-      data[h.getAttribute("data-k")] = h.value || "";
+    Array.from(root.querySelectorAll("select.qsn-select")).forEach(s=>{
+      data[s.getAttribute("data-k")] = s.value || "";
     });
     Array.from(root.querySelectorAll("textarea[data-k]")).forEach(t=>{
       data[t.getAttribute("data-k")] = t.value || "";
@@ -798,50 +656,46 @@
     refresh();
   }
 
+  function load(){
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+
+      Array.from(root.querySelectorAll("select.qsn-select")).forEach(s=>{
+        const k = s.getAttribute("data-k");
+        if(k in data) s.value = data[k] || "";
+      });
+      Array.from(root.querySelectorAll("textarea[data-k]")).forEach(t=>{
+        const k = t.getAttribute("data-k");
+        if(k in data) t.value = data[k] || "";
+      });
+    }catch(e){}
+  }
+
   function resetAll(){
     if(!confirm("Reset all scores and notes for this scorecard?")) return;
     localStorage.removeItem(STORE_KEY);
-    Array.from(root.querySelectorAll(`input[type="hidden"][data-k]`)).forEach(h=>h.value="");
+    Array.from(root.querySelectorAll("select.qsn-select")).forEach(s=>s.value="");
     Array.from(root.querySelectorAll("textarea[data-k]")).forEach(t=>t.value="");
     refresh();
   }
 
-  // Click handling for pill selectors (single-select per metric)
-  function wirePills(){
-    root.addEventListener("click", (e)=>{
-      const pill = e.target.closest(".qsn-pill[data-key][data-val]");
-      if(!pill) return;
-      const key = pill.getAttribute("data-key");
-      const val = pill.getAttribute("data-val");
-
-      const hidden = ensureHiddenField(key);
-
-      // Toggle behavior: clicking the selected pill clears it
-      hidden.value = (hidden.value === val) ? "" : val;
-
-      // auto-save (debounced)
-      if(wirePills._t) clearTimeout(wirePills._t);
-      wirePills._t = setTimeout(save, 200);
-    });
-  }
-
-  // Export summary
   function exportSummary(){
     const data = {};
-    Array.from(root.querySelectorAll(`input[type="hidden"][data-k]`)).forEach(h=>{
-      data[h.getAttribute("data-k")] = h.value || "";
+    Array.from(root.querySelectorAll("select.qsn-select")).forEach(s=>{
+      data[s.getAttribute("data-k")] = s.value || "";
     });
     Array.from(root.querySelectorAll("textarea[data-k]")).forEach(t=>{
       data[t.getAttribute("data-k")] = t.value || "";
     });
 
     const summarize = (prefix) => {
-      const metrics = Object.keys(data).filter(k => k.startsWith(prefix) && !k.endsWith("_notes"));
+      const keys = Object.keys(data).filter(k => k.startsWith(prefix) && !k.endsWith("_notes"));
       const notesKey = prefix + "notes";
       const notesText = (data[notesKey] || "").trim();
-
       const counts = { green:0, amber:0, red:0, blank:0 };
-      metrics.forEach(k => {
+      keys.forEach(k=>{
         const v = data[k];
         if(v === "green") counts.green++;
         else if(v === "amber") counts.amber++;
@@ -876,34 +730,44 @@ Notes: ${s90.notes || "(none)"}
     }).catch(()=> alert("Copy failed. Your browser may block clipboard access in this context."));
   }
 
-  // Notes auto-save
-  function wireNotes(){
-    const notes = Array.from(root.querySelectorAll("textarea[data-k]"));
-    notes.forEach(t=>{
-      t.addEventListener("input", ()=>{
-        if(wireNotes._t) clearTimeout(wireNotes._t);
-        wireNotes._t = setTimeout(save, 300);
-      });
-    });
+  function refresh(){
+    computeCompletion();
+    refreshDecision();
   }
 
-  // Buttons
-  root.querySelector("#qsnSave").addEventListener("click", () => {
-    save();
-    const btn = root.querySelector("#qsnSave");
-    const prev = btn.textContent;
-    btn.textContent = "Saved ✓";
-    setTimeout(()=>btn.textContent = prev, 1200);
-  });
-  root.querySelector("#qsnReset").addEventListener("click", resetAll);
-  root.querySelector("#qsnExport").addEventListener("click", exportSummary);
+  // Wire events (original dropdown behavior)
+  function wire(){
+    Array.from(root.querySelectorAll("select.qsn-select")).forEach(s=>{
+      s.addEventListener("change", ()=>{
+        // tiny auto-save debounce
+        if(wire._t) clearTimeout(wire._t);
+        wire._t = setTimeout(save, 150);
+      });
+    });
+    Array.from(root.querySelectorAll("textarea[data-k]")).forEach(t=>{
+      t.addEventListener("input", ()=>{
+        if(wire._t2) clearTimeout(wire._t2);
+        wire._t2 = setTimeout(save, 300);
+      });
+    });
+
+    root.querySelector("#qsnSave").addEventListener("click", () => {
+      save();
+      const btn = root.querySelector("#qsnSave");
+      const prev = btn.textContent;
+      btn.textContent = "Saved ✓";
+      setTimeout(()=>btn.textContent = prev, 1200);
+    });
+    root.querySelector("#qsnReset").addEventListener("click", resetAll);
+    root.querySelector("#qsnExport").addEventListener("click", exportSummary);
+  }
 
   // init
-  renderPills();
-  wirePills();
-  wireNotes();
+  populateSelects();
   load();
+  wire();
   refresh();
   setActiveTab("d30");
 })();
 </script>
+
