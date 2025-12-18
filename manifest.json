@@ -1,5 +1,17 @@
 [
   {
+    "path": "dashboards/networking-lead-gen-agenda.html",
+    "filename": "networking-lead-gen-agenda.html",
+    "type": "html",
+    "modified": "2025-12-18T13:27:47"
+  },
+  {
+    "path": "dashboards/Sales Nav Scorecard.html",
+    "filename": "Sales Nav Scorecard.html",
+    "type": "html",
+    "modified": "2025-12-18T13:27:47"
+  },
+  {
     "path": "dashboards/eric_proposal_review.html",
     "filename": "eric_proposal_review.html",
     "type": "html",
@@ -40,12 +52,6 @@
     "filename": "eric_discovery_meeting_canvas.html",
     "type": "html",
     "modified": "2025-12-02T09:55:09"
-  },
-  {
-    "path": "dashboards/networking-lead-gen-agenda.html",
-    "filename": "networking-lead-gen-agenda.html",
-    "type": "html",
-    "modified": "2025-11-17T16:33:05"
   },
   {
     "path": "dashboards/B2B Finance Expo Networking Plan.html",
