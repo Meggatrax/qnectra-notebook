@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Qnèctra • Warm Lead → Client Nurture Sequence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#05060a;
+      --panel:rgba(255,255,255,.06);
+      --panel2:rgba(255,255,255,.04);
+      --border:rgba(255,255,255,.12);
+      --text:#f3f6ff;
+      --muted:rgba(243,246,255,.72);
+      --muted2:rgba(243,246,255,.58);
+      --brand:#C12638;
+      --green:#1F9C53;
+      --amber:#DA8B00;
+      --blue:#4b7dff;
+      --shadow: 0 18px 44px rgba(0,0,0,.45);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(75,125,255,.14), transparent 55%),
+        radial-gradient(900px 600px at 85% 15%, rgba(193,38,56,.18), transparent 60%),
+        radial-gradient(900px 600px at 40% 85%, rgba(31,156,83,.10), transparent 55%),
+        var(--bg);
+      padding:28px;
+    }
+
+    .wrap{
+      max-width:1180px;
+      margin:0 auto;
+    }
+
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+      padding:18px 18px 14px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+    }
+    .title{
+      margin:0;
+      font-weight:900;
+      letter-spacing:.2px;
+      font-size:20px;
+    }
+    .subtitle{
+      margin-top:8px;
+      font-size:12px;
+      line-height:1.5;
+      color:var(--muted);
+      max-width:760px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .dot{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,.35)}
+    .dot.brand{background:var(--brand)}
+    .dot.blue{background:var(--blue)}
+    .dot.green{background:var(--green)}
+
+    .grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+    }
+    @media(max-width:980px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    .card{
+      border:1px solid var(--border);
+      background:var(--panel);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card-h{
+      padding:14px 16px 12px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .card-h h2{
+      margin:0;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:rgba(243,246,255,.86);
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);
+      font-size:11px;
+      font-weight:900;
+      color:rgba(243,246,255,.82);
+      white-space:nowrap;
+    }
+    .pill .miniDot{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.35)}
+    .pill .miniDot.amber{background:var(--amber)}
+    .pill .miniDot.green{background:var(--green)}
+    .pill .miniDot.blue{background:var(--blue)}
+
+    .card-b{padding:14px 16px 16px}
+
+    /* Pipeline */
+    .pipeline{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .step{
+      border:1px solid rgba(255,255,255,.12);
+      background:var(--panel2);
+      border-radius:16px;
+      padding:12px 12px 11px;
+      display:grid;
+      grid-template-columns: 44px 1fr;
+      gap:12px;
+      position:relative;
+    }
+    .step .num{
+      width:44px;height:44px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:rgba(243,246,255,.92);
+    }
+    .step .top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:6px;
+    }
+    .step h3{
+      margin:0;
+      font-size:14px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .tag{
+      font-size:11px;
+      font-weight:900;
+      padding:6px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);
+      color:rgba(243,246,255,.80);
+      white-space:nowrap;
+    }
+    .step p{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+    .bullets{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:6px;
+    }
+    .b{
+      font-size:12px;
+      color:rgba(243,246,255,.82);
+      line-height:1.45;
+      padding-left:14px;
+      position:relative;
+    }
+    .b:before{
+      content:"";
+      position:absolute;
+      left:0; top:.55em;
+      width:6px;height:6px;border-radius:999px;
+      background:rgba(243,246,255,.35);
+    }
+
+    .arrow{
+      height:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:rgba(243,246,255,.38);
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:10px;
+    }
+
+    /* Right column blocks */
+    .stack{display:flex; flex-direction:column; gap:14px}
+    .mini{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:14px 14px 12px;
+    }
+    .mini h3{
+      margin:0 0 10px 0;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:rgba(243,246,255,.86);
+    }
+
+    .kpi{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+    }
+    .kpiRow{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:10px 10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.16);
+    }
+    .kpiRow .k{font-size:12px;font-weight:900;color:rgba(243,246,255,.86)}
+    .kpiRow .v{font-size:12px;font-weight:900;color:rgba(243,246,255,.72)}
+    .mutedNote{margin-top:10px;color:var(--muted2);font-size:11px;line-height:1.5}
+
+    .cadence{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+    .cad{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.16);
+      padding:12px 12px 10px;
+    }
+    .cad .head{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-bottom:8px;
+    }
+    .cad .head .name{font-weight:900;font-size:12px;color:rgba(243,246,255,.90)}
+    .cad .head .time{font-weight:900;font-size:11px;color:rgba(243,246,255,.65)}
+    .cad ul{margin:0;padding-left:18px;color:rgba(243,246,255,.78);font-size:12px;line-height:1.55}
+    .cad li{margin:6px 0}
+
+    .footer{
+      margin-top:14px;
+      text-align:right;
+      font-size:11px;
+      color:rgba(243,246,255,.50);
+    }
+    .accent{
+      color:rgba(243,246,255,.95);
+      font-weight:900;
+    }
+    .callout{
+      border-left:3px solid var(--brand);
+      padding:10px 12px;
+      background:rgba(193,38,56,.10);
+      border-radius:14px;
+      color:rgba(243,246,255,.82);
+      font-size:12px;
+      line-height:1.55;
+    }
+    .callout b{color:#fff}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="header">
+      <div>
+        <h1 class="title">Warm Lead → Client Conversion System (Coaching Niche)</h1>
+        <div class="subtitle">
+          Sales Navigator is your <span class="accent">signal engine</span>. This sequence converts signals into conversations,
+          conversations into diagnostics, and diagnostics into paid work—without mass outreach.
+        </div>
+      </div>
+
+      <div class="badge" title="Core idea">
+        <span class="dot brand"></span>
+        Signal → Trust → Diagnosis → Paid Execution
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <!-- LEFT: Pipeline -->
+      <div class="card">
+        <div class="card-h">
+          <h2>Nurture Sequence</h2>
+          <div class="pill"><span class="miniDot blue"></span> Run on warm leads only</div>
+        </div>
+        <div class="card-b">
+          <div class="pipeline">
+
+            <div class="step">
+              <div class="num">A</div>
+              <div>
+                <div class="top">
+                  <h3>Signal → Context</h3>
+                  <span class="tag">5–7 min / lead</span>
+                </div>
+                <p>Turn alerts + profile cues into a one-line “why now” hypothesis.</p>
+                <div class="bullets">
+                  <div class="b">Capture 3 notes: offer type, delivery model, ops complexity (portal/onboarding/tools).</div>
+                  <div class="b">Assign list: <b>Coaching – Warm</b> / <b>Coaching – Watch</b>.</div>
+                  <div class="b"><b>Exit:</b> You can state the likely time leak in one sentence.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arrow">▼ micro-touches</div>
+
+            <div class="step">
+              <div class="num">B</div>
+              <div>
+                <div class="top">
+                  <h3>Relationship → Micro-touch</h3>
+                  <span class="tag">2 touches / 5 days</span>
+                </div>
+                <p>Show attention before asking for anything. Keep it human and specific.</p>
+                <div class="bullets">
+                  <div class="b">Comment with an operator insight (1–2 sentences).</div>
+                  <div class="b">Reply to a post; reference a real constraint (delivery, retention, ops load).</div>
+                  <div class="b"><b>Exit:</b> They connect, reply, or engage back.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arrow">▼ open a thread</div>
+
+            <div class="step">
+              <div class="num">C</div>
+              <div>
+                <div class="top">
+                  <h3>Warm DM (No Pitch)</h3>
+                  <span class="tag">1 message</span>
+                </div>
+                <p>Trigger + operator observation + permission question. Create a “yes/no” reply path.</p>
+                <div class="bullets">
+                  <div class="b">Lead with a trigger: cohort launch, new hire, frequent posting, scale language.</div>
+                  <div class="b">Ask 1 ops question: <b>client portal</b>, onboarding flow, delivery consistency.</div>
+                  <div class="b"><b>Exit:</b> They answer (even briefly).</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arrow">▼ diagnose</div>
+
+            <div class="step">
+              <div class="num">D</div>
+              <div>
+                <div class="top">
+                  <h3>3-Question Diagnostic</h3>
+                  <span class="tag">DM or 15–20 min</span>
+                </div>
+                <p>Surface the real drag. Don’t sell—map constraints.</p>
+                <div class="bullets">
+                  <div class="b">Where’s the most drag: lead→client, onboarding, delivery, renewals?</div>
+                  <div class="b">What breaks when volume spikes?</div>
+                  <div class="b">What systems are in play (GHL/HubSpot/Kajabi/Stripe/etc.) and where do handoffs happen?</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arrow">▼ convert</div>
+
+            <div class="step">
+              <div class="num">E</div>
+              <div>
+                <div class="top">
+                  <h3>Mini-Diagnosis Offer</h3>
+                  <span class="tag">15-min “Ops Map”</span>
+                </div>
+                <p>Earn the right to propose paid work by delivering a useful artifact fast.</p>
+                <div class="bullets">
+                  <div class="b">Deliver: quick ops map + 2 quick wins (portal/onboarding/automation).</div>
+                  <div class="b"><b>Exit:</b> They ask “what would it take to fix this?”</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arrow">▼ paid entry</div>
+
+            <div class="step">
+              <div class="num">F</div>
+              <div>
+                <div class="top">
+                  <h3>Paid Diagnostic Sprint (Q-Consult™)</h3>
+                  <span class="tag">2 weeks</span>
+                </div>
+                <p>Package clarity into a plan: workflow map, portal blueprint, KPI baseline, quick wins.</p>
+                <div class="bullets">
+                  <div class="b">Outcome: prioritized roadmap + implementation sequence.</div>
+                  <div class="b">Bridge: “If we build this, do you want it done with you or for you?”</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arrow">▼ execution</div>
+
+            <div class="step">
+              <div class="num">G</div>
+              <div>
+                <div class="top">
+                  <h3>Execution Retainer (Q-Engaged™)</h3>
+                  <span class="tag">Build + integrate</span>
+                </div>
+                <p>Client portal, CRM cleanup, automations, reporting, governance—so scale stays clean.</p>
+                <div class="bullets">
+                  <div class="b">Build: portal + onboarding + delivery workflows.</div>
+                  <div class="b">Measure: cycle time + drop-off + manual hours reclaimed.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div style="margin-top:12px" class="callout">
+            <b>Operator rule:</b> Don’t pitch before warm. Warm means you’ve earned a response—then you diagnose.
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Cadence + Metrics -->
+      <div class="stack">
+
+        <div class="card">
+          <div class="card-h">
+            <h2>Cadence</h2>
+            <div class="pill"><span class="miniDot green"></span> Conversion-focused</div>
+          </div>
+          <div class="card-b">
+            <div class="cadence">
+              <div class="cad">
+                <div class="head">
+                  <div class="name">Daily (45–60 min)</div>
+                  <div class="time">Mon–Fri</div>
+                </div>
+                <ul>
+                  <li><b>10 min</b> Alerts → context notes → list assignment</li>
+                  <li><b>15 min</b> 3 micro-touches (comment/reply)</li>
+                  <li><b>20 min</b> 3 warm DMs (no pitch)</li>
+                  <li><b>10 min</b> Move replies into 3-question diagnostic</li>
+                </ul>
+              </div>
+
+              <div class="cad">
+                <div class="head">
+                  <div class="name">Weekly (90 min)</div>
+                  <div class="time">Fri review</div>
+                </div>
+                <ul>
+                  <li>Label warm list: Warm / Cooling / Not ICP / Ready for mini-diagnosis</li>
+                  <li>Book <b>2 mini-diagnoses</b></li>
+                  <li>Publish 1 post: portal + onboarding + delivery consistency</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mutedNote">
+              Tip: Keep the “daily” lightweight. The win is <b>threads</b>, not “hours spent in Sales Nav.”
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">
+            <h2>Metrics That Matter</h2>
+            <div class="pill"><span class="miniDot amber"></span> Not vanity</div>
+          </div>
+          <div class="card-b">
+            <div class="kpi">
+              <div class="kpiRow">
+                <div class="k">Warm threads started</div>
+                <div class="v">Target: 10 / week</div>
+              </div>
+              <div class="kpiRow">
+                <div class="k">Mini-diagnoses booked</div>
+                <div class="v">Target: 2 / week</div>
+              </div>
+              <div class="kpiRow">
+                <div class="k">Diagnostics sold (Q-Consult™)</div>
+                <div class="v">Target: 1–2 / month</div>
+              </div>
+              <div class="kpiRow">
+                <div class="k">Time-to-first-value</div>
+                <div class="v">Artifact ≤ 48 hrs</div>
+              </div>
+            </div>
+
+            <div class="mutedNote">
+              “Warm” is defined by <b>response</b>, <b>engagement</b>, or <b>opt-in</b>. If it’s silent, it’s not warm yet.
+            </div>
+          </div>
+        </div>
+
+        <div class="mini">
+          <h3>Nurture Tracks</h3>
+          <div class="kpi">
+            <div class="kpiRow">
+              <div class="k">Track 1: Newsletter Warm</div>
+              <div class="v">Weekly operator note</div>
+            </div>
+            <div class="kpiRow">
+              <div class="k">Track 2: Audit Warm</div>
+              <div class="v">3-email mini-sequence</div>
+            </div>
+          </div>
+          <div class="mutedNote">
+            Audit Warm sequence: <b>Email 1</b> result + insight → <b>Email 2</b> failure points → <b>Email 3</b> offer 15-min ops map.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer">Internal visual • Qnèctra HQ • Signal &gt; Activity</div>
+  </div>
+</body>
+</html>

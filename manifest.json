@@ -1,9 +1,15 @@
 [
   {
+    "path": "dashboards/lead-nurture-sequence.html",
+    "filename": "lead-nurture-sequence.html",
+    "type": "html",
+    "modified": "2025-12-18T15:25:37"
+  },
+  {
     "path": "dashboards/SalesNavScorecard.html",
     "filename": "SalesNavScorecard.html",
     "type": "html",
-    "modified": "2025-12-18T14:14:36"
+    "modified": "2025-12-18T14:41:00"
   },
   {
     "path": "dashboards/networking-lead-gen-agenda.html",
