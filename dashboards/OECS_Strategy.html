@@ -1,0 +1,1335 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>St. Lucia Expansion Action Plan — Interactive Dashboard</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --panel2:#111b27;
+      --text:#e7edf7;
+      --muted:#9fb0c7;
+      --muted2:#7f93ad;
+      --stroke:#1f2a3a;
+      --accent:#78ffd6;
+      --accent2:#7aa7ff;
+      --warn:#ffd36e;
+      --ok:#6ef0a7;
+      --bad:#ff6e6e;
+
+      --radius:16px;
+      --shadow: 0 10px 35px rgba(0,0,0,.35);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 18% -10%, rgba(122,167,255,.18), transparent 55%),
+        radial-gradient(900px 500px at 85% 0%, rgba(120,255,214,.12), transparent 50%),
+        linear-gradient(180deg, #070a0f 0%, var(--bg) 30%, #070a0f 100%);
+      min-height:100vh;
+    }
+
+    .wrap{ max-width:1200px; margin:0 auto; padding:28px 18px 70px; }
+    .topbar{
+      display:flex; flex-wrap:wrap; gap:12px;
+      align-items:center; justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .title{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .title h1{
+      margin:0;
+      font-size:20px;
+      letter-spacing:.2px;
+      font-weight:700;
+    }
+    .title .sub{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    .chipRow{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    .chip{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--stroke);
+      border-radius:999px;
+      padding:8px 10px;
+      display:flex; gap:8px; align-items:center;
+      box-shadow: 0 4px 18px rgba(0,0,0,.25);
+    }
+    .chip label{ color:var(--muted2); font-size:12px; }
+    .chip select, .chip input{
+      background:transparent;
+      border:none;
+      outline:none;
+      color:var(--text);
+      font-size:12px;
+      padding:2px 4px;
+      min-width:140px;
+    }
+    .chip input{ min-width:160px; }
+    .chip select option{ background: var(--panel); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+      margin-top:12px;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .cardHead{
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      background: linear-gradient(180deg, rgba(17,27,39,.75), rgba(15,22,32,.35));
+      border-bottom:1px solid var(--stroke);
+    }
+    .cardHead .h{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .cardHead .h strong{ font-size:13.5px; letter-spacing:.2px; }
+    .cardHead .h span{ color:var(--muted); font-size:12px; }
+    .cardBody{ padding:14px 16px; }
+
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap;
+      padding:12px 16px;
+      border-bottom:1px solid var(--stroke);
+      background: rgba(15,22,32,.45);
+    }
+    .tab{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      padding:8px 10px;
+      font-size:12px;
+      border-radius:999px;
+      cursor:pointer;
+      user-select:none;
+      transition: all .15s ease;
+    }
+    .tab.active{
+      border-color: rgba(120,255,214,.45);
+      color: var(--text);
+      background: rgba(120,255,214,.08);
+    }
+
+    .row{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    .btn{
+      cursor:pointer;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      padding:9px 11px;
+      border-radius:12px;
+      font-size:12px;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+    }
+    .btn:hover{ background: rgba(255,255,255,.06); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      border-color: rgba(122,167,255,.45);
+      background: rgba(122,167,255,.10);
+    }
+    .btn.good{
+      border-color: rgba(110,240,167,.45);
+      background: rgba(110,240,167,.08);
+    }
+    .btn.warn{
+      border-color: rgba(255,211,110,.50);
+      background: rgba(255,211,110,.08);
+    }
+
+    .progressWrap{
+      width:100%;
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.18);
+    }
+    .progressMeta{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .progressMeta span{ font-size:12px; color: var(--muted); }
+    .bar{
+      height:10px;
+      background: rgba(255,255,255,.05);
+      border:1px solid var(--stroke);
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:8px;
+    }
+    .bar > i{
+      display:block; height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(122,167,255,.9), rgba(120,255,214,.85));
+      border-radius:999px;
+      transition: width .25s ease;
+    }
+
+    details{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.02);
+      border-radius: 14px;
+      padding:10px 12px;
+      margin:10px 0;
+    }
+    details[open]{ background: rgba(255,255,255,.03); }
+    summary{
+      cursor:pointer;
+      list-style:none;
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      font-size:13px;
+      font-weight:600;
+      user-select:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    .badge{
+      font-size:11px;
+      color: var(--muted2);
+      border:1px solid var(--stroke);
+      padding:4px 8px;
+      border-radius:999px;
+      background: rgba(0,0,0,.12);
+      display:inline-flex; gap:6px; align-items:center;
+      white-space:nowrap;
+    }
+    .badge.ok{ border-color: rgba(110,240,167,.45); color: rgba(110,240,167,.95); background: rgba(110,240,167,.06); }
+    .badge.warn{ border-color: rgba(255,211,110,.55); color: rgba(255,211,110,.95); background: rgba(255,211,110,.06); }
+    .badge.bad{ border-color: rgba(255,110,110,.55); color: rgba(255,110,110,.95); background: rgba(255,110,110,.06); }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top:10px;
+    }
+    .item{
+      display:flex; gap:10px; align-items:flex-start;
+      padding:10px 10px;
+      border:1px solid var(--stroke);
+      border-radius: 14px;
+      background: rgba(0,0,0,.14);
+    }
+    .item input[type="checkbox"]{
+      width:18px; height:18px; margin-top:2px;
+      accent-color: var(--accent);
+    }
+    .item .t{ flex:1; }
+    .item .t b{ display:block; font-size:12.8px; margin-bottom:4px; }
+    .item .t p{ margin:0; font-size:12px; color:var(--muted); line-height:1.4; }
+    .pill{
+      font-size:11px;
+      color:var(--muted);
+      border:1px solid var(--stroke);
+      padding:3px 8px;
+      border-radius:999px;
+      background: rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+
+    .kpiGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    @media (max-width: 520px){ .kpiGrid{ grid-template-columns:1fr; } }
+    .kpi{
+      border:1px solid var(--stroke);
+      border-radius: 14px;
+      padding:12px 12px;
+      background: rgba(0,0,0,.16);
+    }
+    .kpi .label{ color: var(--muted2); font-size:11px; }
+    .kpi .value{ margin-top:6px; font-size:16px; font-weight:800; letter-spacing:.2px; }
+    .kpi .hint{ margin-top:6px; font-size:11.5px; color: var(--muted); line-height:1.35; }
+
+    .mono{
+      font-family: var(--mono);
+      font-size:12px;
+      color: rgba(231,237,247,.95);
+      background: rgba(0,0,0,.25);
+      border:1px solid var(--stroke);
+      border-radius: 14px;
+      padding:12px;
+      overflow:auto;
+      line-height:1.45;
+      white-space:pre-wrap;
+    }
+
+    .small{ font-size:12px; color: var(--muted); line-height:1.45; }
+    .hr{ height:1px; background: var(--stroke); margin:12px 0; }
+
+    .toast{
+      position:fixed;
+      bottom:18px; left:50%;
+      transform: translateX(-50%);
+      background: rgba(15,22,32,.95);
+      border:1px solid var(--stroke);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      font-size:12px;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .mutedLink{
+      color: var(--muted2);
+      text-decoration:none;
+      border-bottom: 1px dashed rgba(159,176,199,.35);
+    }
+    .mutedLink:hover{ color: var(--text); border-bottom-color: rgba(231,237,247,.5); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title">
+        <h1>St. Lucia → OECS Expansion Action Plan</h1>
+        <div class="sub">A focused beachhead plan: <b>Discovery sprint → paid pilot → lighthouse proof → regional replication</b>. Built to avoid “second full-time business” drift.</div>
+      </div>
+
+      <div class="chipRow">
+        <div class="chip">
+          <label for="segment">Beachhead</label>
+          <select id="segment">
+            <option value="gov">Government / Quasi-Gov Ops</option>
+            <option value="fin">Regulated Financial Services</option>
+            <option value="priv">High-throughput Private Sector</option>
+          </select>
+        </div>
+
+        <div class="chip">
+          <label for="mode">Delivery</label>
+          <select id="mode">
+            <option value="remote">Remote-first + on-island sprints</option>
+            <option value="hybrid">Hybrid weekly cadence</option>
+            <option value="onsite">On-island heavy (not recommended)</option>
+          </select>
+        </div>
+
+        <div class="chip">
+          <label for="search">Find</label>
+          <input id="search" placeholder="Search tasks, boxes, templates..." />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: Main -->
+      <div class="card" id="mainCard">
+        <div class="tabs" id="tabs">
+          <div class="tab active" data-tab="overview">Overview</div>
+          <div class="tab" data-tab="phases">Phases</div>
+          <div class="tab" data-tab="boxes">Boxes to Check</div>
+          <div class="tab" data-tab="outreach">Outreach</div>
+        </div>
+
+        <div class="cardBody" id="tab_overview">
+          <div class="row" style="justify-content:space-between;">
+            <div class="small">
+              <b>Operating thesis:</b> trust → one anchor engagement → repeatable playbook → neighboring islands.
+              <span style="color:var(--muted2)">Keep the entry offer small but meaningful.</span>
+            </div>
+            <div class="row">
+              <div class="btn primary" id="expandAll">Expand all</div>
+              <div class="btn" id="collapseAll">Collapse</div>
+              <div class="btn warn" id="reset">Reset checks</div>
+            </div>
+          </div>
+
+          <div class="progressWrap">
+            <div class="progressMeta">
+              <span><b>Plan completion</b> (checked items across phases + boxes)</span>
+              <span id="pctText">0%</span>
+            </div>
+            <div class="bar"><i id="barFill"></i></div>
+          </div>
+
+          <div class="kpiGrid" aria-label="Key measures">
+            <div class="kpi">
+              <div class="label">Next best move</div>
+              <div class="value" id="nextMove">—</div>
+              <div class="hint" id="nextMoveHint">Select a beachhead and start checking items to generate your next steps.</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Target: stakeholder conversations</div>
+              <div class="value" id="talksTarget">8–12</div>
+              <div class="hint">Use Phase 1 to learn cycle-time pain, governance reality, constraints, and veto holders.</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Pilot shape</div>
+              <div class="value" id="pilotShape">4–6 weeks</div>
+              <div class="hint">Fixed scope, fixed deliverables. Aim for 2–3 success metrics (cycle time, rework, visibility).</div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <details class="group" open>
+            <summary>
+              Focus guardrails (how not to spread thin)
+              <span class="badge warn" id="guardBadge">0/3 set</span>
+            </summary>
+            <div class="list">
+              <div class="item" data-key="guard_one_wedge" data-tags="guardrail beachhead choose one">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Choose one wedge (one segment only)</b>
+                  <p>Pick the segment where pain is obvious, decisions are concentrated, and a 4–6 week pilot is feasible.</p>
+                </div>
+                <span class="pill">Decision</span>
+              </div>
+
+              <div class="item" data-key="guard_offer_ladder" data-tags="guardrail offer diagnostic sprint">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Lock a simple 2-step ladder</b>
+                  <p>Step 1: Paid diagnostic. Step 2: 60–90 day implementation sprint. Don’t sell a “big program.”</p>
+                </div>
+                <span class="pill">Packaging</span>
+              </div>
+
+              <div class="item" data-key="guard_delivery_model" data-tags="guardrail delivery remote on-island sprints partner">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Define delivery model (remote-first + on-island bursts)</b>
+                  <p>Workshops + design remote; 3–5 day on-island weeks at kickoff and milestones. Optionally add a local execution partner.</p>
+                </div>
+                <span class="pill">Capacity</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="group">
+            <summary>
+              What “done” looks like (end state)
+              <span class="badge" id="doneBadge">0/4</span>
+            </summary>
+            <div class="list">
+              <div class="item" data-key="done_brief" data-tags="deliverable st lucia ops modernization brief">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>1–2 page “St. Lucia Ops Modernization Brief”</b>
+                  <p>Top pains heard, 3 high-leverage workflows, pilot recommendation, likely champion/buyer map.</p>
+                </div>
+                <span class="pill">Asset</span>
+              </div>
+
+              <div class="item" data-key="done_pilot" data-tags="deliverable pilot fixed scope readout metrics">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Pilot executed (4–6 weeks) with measurable wins</b>
+                  <p>Cycle time down, rework down, backlog down, or visibility up (weekly dashboard exists and trusted).</p>
+                </div>
+                <span class="pill">Proof</span>
+              </div>
+
+              <div class="item" data-key="done_case" data-tags="deliverable case study before after screenshots">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Case study + before/after story</b>
+                  <p>One-page narrative + 2–3 artifacts (process map, dashboard, simplified form, or governance checklist).</p>
+                </div>
+                <span class="pill">Marketing</span>
+              </div>
+
+              <div class="item" data-key="done_playbook" data-tags="deliverable repeatable playbook regional replication oecs">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Repeatable “pilot menu” ready for next org / next island</b>
+                  <p>Same scope, same success metrics, refined outreach, and a clean pricing/contract template.</p>
+                </div>
+                <span class="pill">Scale</span>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- PHASES -->
+        <div class="cardBody" id="tab_phases" style="display:none;">
+          <div class="small" style="margin-bottom:10px;">
+            The phases are designed as a <b>30–45 day discovery sprint</b> followed by a <b>4–6 week pilot</b>, then <b>lighthouse → playbook → replicate</b>.
+          </div>
+
+          <details class="group" open>
+            <summary>Phase 0 (Week 1): Define the beachhead <span class="badge" id="phase0Badge">0/3</span></summary>
+            <div class="list">
+              <div class="item" data-key="p0_pick_segment" data-tags="phase0 beachhead segment wedge">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Select the initial segment</b>
+                  <p>One wedge only. Choose where pain is visible, decision-making is concentrated, and pilots are feasible.</p>
+                </div>
+                <span class="pill">Week 1</span>
+              </div>
+              <div class="item" data-key="p0_define_offer" data-tags="phase0 offer diagnostic implementation ladder">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Define your localized “starter”</b>
+                  <p>Paid diagnostic → 60–90 day sprint. Keep it bounded; value must be undeniable.</p>
+                </div>
+                <span class="pill">Week 1</span>
+              </div>
+              <div class="item" data-key="p0_success_metrics" data-tags="phase0 metrics cycle time rework backlog dashboard">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Choose 2–3 success metrics</b>
+                  <p>Cycle time, rework/error rate, backlog, or visibility (weekly dashboard + trusted numbers).</p>
+                </div>
+                <span class="pill">Week 1</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="group">
+            <summary>Phase 1 (Weeks 2–4): Relationship-led validation <span class="badge" id="phase1Badge">0/5</span></summary>
+            <div class="list">
+              <div class="item" data-key="p1_outreach_intros" data-tags="phase1 intros outreach calls 20 minutes">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Contact the two introductions (no pitch)</b>
+                  <p>Position it as learning + exploring a small pilot—<b>not</b> selling a big program.</p>
+                </div>
+                <span class="pill">Weeks 2–4</span>
+              </div>
+              <div class="item" data-key="p1_run_8_12_calls" data-tags="phase1 stakeholder conversations cycle time governance constraints veto">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Run 8–12 stakeholder conversations</b>
+                  <p>Bucket your notes: cycle-time pain, data pain, governance reality, constraints, stakeholder map.</p>
+                </div>
+                <span class="pill">Weeks 2–4</span>
+              </div>
+              <div class="item" data-key="p1_map_workflows" data-tags="phase1 workflows bottlenecks handoffs approvals documentation">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Identify 3 high-leverage workflows</b>
+                  <p>Pick the ones with clear friction and measurable improvement potential.</p>
+                </div>
+                <span class="pill">Weeks 2–4</span>
+              </div>
+              <div class="item" data-key="p1_champion_buyer" data-tags="phase1 champion buyer decision makers sponsor">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Confirm a likely champion + buyer</b>
+                  <p>Who can approve change? Who owns process vs system? Who can quietly veto?</p>
+                </div>
+                <span class="pill">Weeks 2–4</span>
+              </div>
+              <div class="item" data-key="p1_write_brief" data-tags="phase1 st lucia ops modernization brief 1-2 pages">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Publish the 1–2 page modernization brief</b>
+                  <p>Summarize patterns, shortlist workflows, propose a pilot, and align on metrics.</p>
+                </div>
+                <span class="pill">Weeks 2–4</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="group">
+            <summary>Phase 2 (Weeks 4–6): Package + sell the pilot <span class="badge" id="phase2Badge">0/4</span></summary>
+            <div class="list">
+              <div class="item" data-key="p2_pilot_scope" data-tags="phase2 pilot fixed scope deliverables readout">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Write the pilot scope (fixed deliverables)</b>
+                  <p>Maps (current→future), risk register, data/control scan, 90-day plan, exec readout.</p>
+                </div>
+                <span class="pill">Weeks 4–6</span>
+              </div>
+              <div class="item" data-key="p2_pricing_terms" data-tags="phase2 pricing invoice payments terms contract">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Set pricing + terms that travel well</b>
+                  <p>Keep it simple. Clear invoice cadence and payment method. Avoid bespoke complexity.</p>
+                </div>
+                <span class="pill">Weeks 4–6</span>
+              </div>
+              <div class="item" data-key="p2_schedule" data-tags="phase2 schedule remote workshops on-island sprint week">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Define the cadence</b>
+                  <p>Remote workshops + an on-island kickoff sprint + milestone readout.</p>
+                </div>
+                <span class="pill">Weeks 4–6</span>
+              </div>
+              <div class="item" data-key="p2_close_anchor" data-tags="phase2 close lighthouse client anchor engagement">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Close one anchor (“lighthouse”) engagement</b>
+                  <p>One yes beats ten maybes. Land the pilot and treat it as the seed of the playbook.</p>
+                </div>
+                <span class="pill">Weeks 4–6</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="group">
+            <summary>Phase 3 (Weeks 6–12): Deliver + document + replicate <span class="badge" id="phase3Badge">0/4</span></summary>
+            <div class="list">
+              <div class="item" data-key="p3_execute_pilot" data-tags="phase3 deliver pilot improvements metrics">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Execute pilot and measure outcomes</b>
+                  <p>Choose 2–3 metrics; publish a simple weekly progress snapshot.</p>
+                </div>
+                <span class="pill">Weeks 6–12</span>
+              </div>
+              <div class="item" data-key="p3_case_study" data-tags="phase3 case study before after artifacts">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Create the one-page case study</b>
+                  <p>Before/after story + 2–3 artifacts (map, dashboard, simplified form, governance checklist).</p>
+                </div>
+                <span class="pill">Weeks 6–12</span>
+              </div>
+              <div class="item" data-key="p3_pilot_menu" data-tags="phase3 pilot menu repeatable package">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Turn it into a repeatable “pilot menu”</b>
+                  <p>Standardize deliverables, timeline, and pricing. Make it easy to say yes again.</p>
+                </div>
+                <span class="pill">Weeks 6–12</span>
+              </div>
+              <div class="item" data-key="p3_expand_oecs" data-tags="phase3 expand oecs neighboring islands replication">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Expand to the next island with proof in hand</b>
+                  <p>Lead with outcomes and a tight pilot offer; don’t rebuild from scratch.</p>
+                </div>
+                <span class="pill">Weeks 6–12</span>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- BOXES -->
+        <div class="cardBody" id="tab_boxes" style="display:none;">
+          <div class="small" style="margin-bottom:10px;">
+            These are the “don’t get surprised” checks. You don’t need perfection—just enough clarity to avoid avoidable friction.
+          </div>
+
+          <details class="group" open>
+            <summary>Legal & commercial <span class="badge" id="boxLegalBadge">0/4</span></summary>
+            <div class="list">
+              <div class="item" data-key="b_legal_registration" data-tags="legal registration foreign consultant">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Operating posture: local registration vs foreign consultant</b>
+                  <p>Decide how you’ll operate for the first engagement (simple first, scalable later).</p>
+                </div>
+                <span class="pill">Legal</span>
+              </div>
+              <div class="item" data-key="b_legal_contract_norms" data-tags="legal contract clauses indemnity governing law">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Contracting norms + required clauses</b>
+                  <p>Who signs? What’s expected around liability, confidentiality, and governing law?</p>
+                </div>
+                <span class="pill">Legal</span>
+              </div>
+              <div class="item" data-key="b_legal_procurement" data-tags="legal procurement public sector vendors">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Procurement realities (especially public sector)</b>
+                  <p>Budget cycles, vendor onboarding, and any thresholds that trigger formal procurement.</p>
+                </div>
+                <span class="pill">Legal</span>
+              </div>
+              <div class="item" data-key="b_legal_insurance" data-tags="legal insurance professional liability">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Insurance expectations</b>
+                  <p>Even basic professional liability may be requested. Know the minimum.</p>
+                </div>
+                <span class="pill">Legal</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="group">
+            <summary>Data, privacy & risk <span class="badge" id="boxDataBadge">0/4</span></summary>
+            <div class="list">
+              <div class="item" data-key="b_data_storage" data-tags="data storage cloud restrictions sensitivity">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Data storage constraints</b>
+                  <p>Any restrictions on cloud, residency, or sensitive datasets (financial/customer data)?</p>
+                </div>
+                <span class="pill">Risk</span>
+              </div>
+              <div class="item" data-key="b_data_access" data-tags="data access controls audit trail">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Access controls + audit trail expectations</b>
+                  <p>Clarify who needs access and what auditability is expected.</p>
+                </div>
+                <span class="pill">Risk</span>
+              </div>
+              <div class="item" data-key="b_data_tools" data-tags="data tools systems in use email whatsapp spreadsheets">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>System reality check</b>
+                  <p>What’s in place today (email, WhatsApp, spreadsheets, line-of-business apps)?</p>
+                </div>
+                <span class="pill">Risk</span>
+              </div>
+              <div class="item" data-key="b_data_posture" data-tags="data security posture minimal controls">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Baseline security posture</b>
+                  <p>Define minimal controls early if you’ll touch regulated or customer data.</p>
+                </div>
+                <span class="pill">Risk</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="group">
+            <summary>Payments & money movement <span class="badge" id="boxPayBadge">0/4</span></summary>
+            <div class="list">
+              <div class="item" data-key="b_pay_method" data-tags="payments wire ach card invoice">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>How you’ll invoice + collect</b>
+                  <p>International ACH/wire, card, local bank transfer—pick the path of least friction.</p>
+                </div>
+                <span class="pill">Payments</span>
+              </div>
+              <div class="item" data-key="b_pay_currency" data-tags="payments currency exchange pricing">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Currency + pricing clarity</b>
+                  <p>Define currency, FX expectations, and whether pricing is fixed or indexed.</p>
+                </div>
+                <span class="pill">Payments</span>
+              </div>
+              <div class="item" data-key="b_pay_tax" data-tags="payments tax implications permanent establishment">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Tax implications (US + local)</b>
+                  <p>Understand whether onsite work triggers additional obligations.</p>
+                </div>
+                <span class="pill">Payments</span>
+              </div>
+              <div class="item" data-key="b_pay_terms" data-tags="payments terms net due cadence">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Payment terms + cadence</b>
+                  <p>Simple terms (e.g., deposit + milestone payments) reduce friction and risk.</p>
+                </div>
+                <span class="pill">Payments</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="group">
+            <summary>Stakeholders & politics <span class="badge" id="boxStakeBadge">0/4</span></summary>
+            <div class="list">
+              <div class="item" data-key="b_stake_owner_process" data-tags="stakeholders owns process owns system">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Process owner vs system owner</b>
+                  <p>Clarify who owns the workflow and who owns the tooling; they’re often different.</p>
+                </div>
+                <span class="pill">People</span>
+              </div>
+              <div class="item" data-key="b_stake_veto" data-tags="stakeholders veto hidden resistance">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Identify invisible veto holders</b>
+                  <p>Who can slow-roll change? Who benefits from the status quo?</p>
+                </div>
+                <span class="pill">People</span>
+              </div>
+              <div class="item" data-key="b_stake_value" data-tags="stakeholders value narrative who wins">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Value narrative that matches reality</b>
+                  <p>Frame outcomes in terms leaders care about: time, leakage, trust, throughput, citizen/client experience.</p>
+                </div>
+                <span class="pill">People</span>
+              </div>
+              <div class="item" data-key="b_stake_change" data-tags="stakeholders change management training adoption">
+                <input type="checkbox" />
+                <div class="t">
+                  <b>Adoption plan (lightweight)</b>
+                  <p>Document new steps, train the few who matter, and reduce rework via clarity.</p>
+                </div>
+                <span class="pill">People</span>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- OUTREACH -->
+        <div class="cardBody" id="tab_outreach" style="display:none;">
+          <div class="small" style="margin-bottom:10px;">
+            Short, relationship-led outreach. The goal is the call—<b>not</b> the pitch.
+          </div>
+
+          <details class="group" open>
+            <summary>Intro message (copy/paste) <span class="badge ok">Ready</span></summary>
+            <div class="row" style="justify-content:flex-end; margin-bottom:10px;">
+              <div class="btn good" data-copy="#msg1">Copy</div>
+            </div>
+            <div class="mono" id="msg1">Subject: Intro from [Cousin Name] — operational modernization conversations
+
+Hi [Name] — [Cousin] suggested I reach out.
+
+I’m exploring a focused initiative in St. Lucia around operational modernization: reducing cycle time, cleaning up handoffs, and putting practical governance in place that supports automation (without adding complexity).
+
+I’m not selling a big program—just starting with a few conversations to understand where the real friction is and whether a small pilot could be useful. If you’re open, I’d value 20 minutes to learn how you see the biggest operational bottlenecks today.
+
+Thank you,
+Chris</div>
+          </details>
+
+          <details class="group">
+            <summary>Call agenda (20 minutes) <span class="badge">5 prompts</span></summary>
+            <div class="row" style="justify-content:flex-end; margin-bottom:10px;">
+              <div class="btn good" data-copy="#agenda">Copy</div>
+            </div>
+            <div class="mono" id="agenda">1) Where do things stall today (approvals, documentation, handoffs)?
+2) What data can’t be trusted (duplicates, manual entry, conflicting sources)?
+3) Governance reality: who owns process vs system? who can approve change?
+4) Constraints: tooling, staffing, procurement/budget timing, risk constraints
+5) Stakeholder map: champions, blockers, invisible veto holders</div>
+          </details>
+
+          <details class="group">
+            <summary>Follow-up after the call <span class="badge">Short</span></summary>
+            <div class="row" style="justify-content:flex-end; margin-bottom:10px;">
+              <div class="btn good" data-copy="#followup">Copy</div>
+            </div>
+            <div class="mono" id="followup">Subject: Thank you — quick summary + next step
+
+Hi [Name] — thank you again for the time.
+
+Based on what you shared, the biggest friction points appear to be:
+• [Friction point 1]
+• [Friction point 2]
+• [Friction point 3]
+
+If it’s helpful, my next step would be a short, fixed-scope pilot (4–6 weeks) to map the workflow, identify bottlenecks/risk, and produce a practical 90-day execution plan with 2–3 measurable improvements (cycle time, rework, backlog, or visibility).
+
+If you’d like, I can send a one-page pilot outline for review.
+
+Best,
+Chris</div>
+          </details>
+        </div>
+      </div>
+
+      <!-- RIGHT: Sidebar -->
+      <div class="card">
+        <div class="cardHead">
+          <div class="h">
+            <strong>Next Actions Engine</strong>
+            <span>Auto-suggested steps based on what’s checked.</span>
+          </div>
+          <div class="badge" id="engineBadge">0 signals</div>
+        </div>
+        <div class="cardBody">
+          <div class="small" id="segmentHint" style="margin-bottom:10px;"></div>
+
+          <details class="group" open>
+            <summary>
+              Recommended next actions
+              <span class="badge ok" id="recBadge">0</span>
+            </summary>
+            <div class="list" id="recs"></div>
+          </details>
+
+          <details class="group">
+            <summary>
+              Notes (local, saved)
+              <span class="badge">editable</span>
+            </summary>
+            <textarea id="notes" style="width:100%; min-height:160px; resize:vertical; border-radius:14px; border:1px solid var(--stroke); background:rgba(0,0,0,.18); color:var(--text); padding:12px; outline:none; font-size:12.5px; line-height:1.4;" placeholder="Capture names, orgs, what you heard, and who the champion might be..."></textarea>
+            <div class="row" style="justify-content:flex-end; margin-top:10px;">
+              <div class="btn primary" id="export">Export JSON</div>
+              <div class="btn" onclick="window.print()">Print</div>
+            </div>
+            <div class="small" style="margin-top:10px;">
+              Tip: keep these notes as your raw input for the <b>St. Lucia Ops Modernization Brief</b>.
+            </div>
+          </details>
+
+          <details class="group">
+            <summary>
+              Quick “pilot menu” outline
+              <span class="badge">template</span>
+            </summary>
+            <div class="mono" id="pilotMenu">Pilot (4–6 weeks) — Fixed Scope
+Deliverables:
+• Current → Future workflow map
+• Bottleneck + risk register
+• Data/control quick scan (what to standardize first)
+• 90-day execution plan (2–3 priority moves)
+• Executive readout + success metrics
+
+Success metrics (pick 2–3):
+• Cycle time ↓
+• Rework/error rate ↓
+• Backlog ↓
+• Visibility ↑ (weekly dashboard exists + trusted)</div>
+            <div class="row" style="justify-content:flex-end; margin-top:10px;">
+              <div class="btn good" data-copy="#pilotMenu">Copy</div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Copied.</div>
+
+  <script>
+    // -----------------------------
+    // Persistence helpers
+    // -----------------------------
+    const LS_KEY = "qnectra_stlucia_plan_v1";
+    const state = {
+      segment: "gov",
+      mode: "remote",
+      checks: {},
+      notes: ""
+    };
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(LS_KEY);
+        if(!raw) return;
+        const saved = JSON.parse(raw);
+        if(saved && typeof saved === "object"){
+          Object.assign(state, saved);
+        }
+      }catch(e){}
+    }
+    function saveState(){
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+    }
+
+    // -----------------------------
+    // UI wiring
+    // -----------------------------
+    const els = {
+      segment: document.getElementById("segment"),
+      mode: document.getElementById("mode"),
+      search: document.getElementById("search"),
+      pctText: document.getElementById("pctText"),
+      barFill: document.getElementById("barFill"),
+      toast: document.getElementById("toast"),
+      expandAll: document.getElementById("expandAll"),
+      collapseAll: document.getElementById("collapseAll"),
+      reset: document.getElementById("reset"),
+      notes: document.getElementById("notes"),
+      export: document.getElementById("export"),
+      recs: document.getElementById("recs"),
+      engineBadge: document.getElementById("engineBadge"),
+      segmentHint: document.getElementById("segmentHint"),
+      nextMove: document.getElementById("nextMove"),
+      nextMoveHint: document.getElementById("nextMoveHint"),
+      guardBadge: document.getElementById("guardBadge"),
+      doneBadge: document.getElementById("doneBadge"),
+      phase0Badge: document.getElementById("phase0Badge"),
+      phase1Badge: document.getElementById("phase1Badge"),
+      phase2Badge: document.getElementById("phase2Badge"),
+      phase3Badge: document.getElementById("phase3Badge"),
+      boxLegalBadge: document.getElementById("boxLegalBadge"),
+      boxDataBadge: document.getElementById("boxDataBadge"),
+      boxPayBadge: document.getElementById("boxPayBadge"),
+      boxStakeBadge: document.getElementById("boxStakeBadge"),
+      recBadge: document.getElementById("recBadge")
+    };
+
+    const tabButtons = Array.from(document.querySelectorAll(".tab"));
+    const tabPanels = {
+      overview: document.getElementById("tab_overview"),
+      phases: document.getElementById("tab_phases"),
+      boxes: document.getElementById("tab_boxes"),
+      outreach: document.getElementById("tab_outreach")
+    };
+
+    function setActiveTab(name){
+      tabButtons.forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+      Object.entries(tabPanels).forEach(([k, panel]) => panel.style.display = (k===name) ? "" : "none");
+    }
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
+    });
+
+    function toast(msg="Copied."){
+      els.toast.textContent = msg;
+      els.toast.classList.add("show");
+      setTimeout(() => els.toast.classList.remove("show"), 900);
+    }
+
+    // Copy buttons
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-copy]");
+      if(!btn) return;
+      const selector = btn.getAttribute("data-copy");
+      const node = document.querySelector(selector);
+      if(!node) return;
+      const text = node.textContent.trim();
+      navigator.clipboard.writeText(text).then(() => toast("Copied to clipboard."));
+    });
+
+    // Expand/Collapse
+    els.expandAll.addEventListener("click", () => {
+      document.querySelectorAll("details.group").forEach(d => d.open = true);
+    });
+    els.collapseAll.addEventListener("click", () => {
+      document.querySelectorAll("details.group").forEach(d => d.open = false);
+    });
+
+    // Reset checks
+    els.reset.addEventListener("click", () => {
+      if(!confirm("Reset all checked items?")) return;
+      state.checks = {};
+      document.querySelectorAll(".item input[type='checkbox']").forEach(cb => cb.checked = false);
+      saveState();
+      recompute();
+      toast("Reset complete.");
+    });
+
+    // Notes
+    els.notes.addEventListener("input", () => {
+      state.notes = els.notes.value;
+      saveState();
+    });
+
+    // Export
+    els.export.addEventListener("click", () => {
+      const payload = {
+        ...state,
+        exportedAt: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "stlucia-expansion-plan.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      toast("Exported JSON.");
+    });
+
+    // Search filter
+    els.search.addEventListener("input", () => {
+      const q = els.search.value.trim().toLowerCase();
+      document.querySelectorAll(".item").forEach(row => {
+        const tags = (row.getAttribute("data-tags") || "").toLowerCase();
+        const txt = row.innerText.toLowerCase();
+        const show = !q || tags.includes(q) || txt.includes(q);
+        row.style.display = show ? "" : "none";
+      });
+    });
+
+    // Segment/mode changes
+    els.segment.addEventListener("change", () => {
+      state.segment = els.segment.value;
+      saveState();
+      recompute();
+    });
+    els.mode.addEventListener("change", () => {
+      state.mode = els.mode.value;
+      saveState();
+      recompute();
+    });
+
+    // Checkbox persistence
+    function wireCheckboxes(){
+      document.querySelectorAll(".item").forEach(item => {
+        const key = item.getAttribute("data-key");
+        const cb = item.querySelector("input[type='checkbox']");
+        if(!key || !cb) return;
+
+        // init
+        cb.checked = !!state.checks[key];
+
+        cb.addEventListener("change", () => {
+          state.checks[key] = cb.checked;
+          saveState();
+          recompute();
+        });
+      });
+    }
+
+    // -----------------------------
+    // Metrics + badges + next actions
+    // -----------------------------
+    const groups = {
+      guard: ["guard_one_wedge","guard_offer_ladder","guard_delivery_model"],
+      done: ["done_brief","done_pilot","done_case","done_playbook"],
+      phase0: ["p0_pick_segment","p0_define_offer","p0_success_metrics"],
+      phase1: ["p1_outreach_intros","p1_run_8_12_calls","p1_map_workflows","p1_champion_buyer","p1_write_brief"],
+      phase2: ["p2_pilot_scope","p2_pricing_terms","p2_schedule","p2_close_anchor"],
+      phase3: ["p3_execute_pilot","p3_case_study","p3_pilot_menu","p3_expand_oecs"],
+      legal: ["b_legal_registration","b_legal_contract_norms","b_legal_procurement","b_legal_insurance"],
+      data: ["b_data_storage","b_data_access","b_data_tools","b_data_posture"],
+      pay: ["b_pay_method","b_pay_currency","b_pay_tax","b_pay_terms"],
+      stake: ["b_stake_owner_process","b_stake_veto","b_stake_value","b_stake_change"]
+    };
+
+    function countChecked(keys){
+      let c=0;
+      keys.forEach(k => { if(state.checks[k]) c++; });
+      return c;
+    }
+
+    function badge(el, done, total, tone=""){
+      el.textContent = `${done}/${total}`;
+      el.className = "badge" + (tone ? ` ${tone}` : "");
+    }
+
+    function segmentCopy(seg){
+      if(seg==="gov"){
+        return {
+          title: "Government / quasi-gov ops",
+          hint: "Aim for throughput + trust: approvals, documentation, handoffs, auditability. Expect procurement + stakeholder complexity—keep the pilot tight."
+        };
+      }
+      if(seg==="fin"){
+        return {
+          title: "Regulated financial services",
+          hint: "Lead with risk + cycle time: underwriting/renewals, reconciliations, customer onboarding, exception handling. Tighten security posture early."
+        };
+      }
+      return {
+        title: "High-throughput private sector",
+        hint: "Lead with cashflow + speed: procurement-to-pay, inventory/import workflows, customer service, billing. Faster decisions—move quickly to a pilot."
+      };
+    }
+
+    function modeCopy(mode){
+      if(mode==="remote") return "Remote-first + on-island sprints";
+      if(mode==="hybrid") return "Hybrid weekly cadence";
+      return "On-island heavy";
+    }
+
+    function buildRecommendations(){
+      // Rules: generate next actions based on missing critical items.
+      const recs = [];
+
+      const guardDone = countChecked(groups.guard);
+      const phase0Done = countChecked(groups.phase0);
+      const phase1Done = countChecked(groups.phase1);
+      const phase2Done = countChecked(groups.phase2);
+      const phase3Done = countChecked(groups.phase3);
+
+      // Always start with guardrails
+      if(!state.checks.guard_one_wedge){
+        recs.push({
+          title: "Decide your wedge (one segment only)",
+          why: "Prevents spreading thin. Everything else becomes clearer once the wedge is set."
+        });
+      }
+      if(state.checks.guard_one_wedge && !state.checks.guard_offer_ladder){
+        recs.push({
+          title: "Lock the 2-step ladder (paid diagnostic → 60–90 day sprint)",
+          why: "Small ‘yes’ first. Clear ladder turns conversations into an engagement."
+        });
+      }
+      if(state.checks.guard_offer_ladder && !state.checks.guard_delivery_model){
+        recs.push({
+          title: "Define delivery model and cadence",
+          why: "Remote-first reduces load; on-island bursts create momentum and alignment."
+        });
+      }
+
+      // Phase progression
+      if(guardDone >= 2 && phase0Done < 3){
+        recs.push({
+          title: "Finish Phase 0 (Week 1): metrics + starter offer",
+          why: "You need a clear target (2–3 metrics) and a bounded offer before outreach scales."
+        });
+      }
+
+      if(phase0Done >= 2 && phase1Done < 2){
+        recs.push({
+          title: "Activate intros and schedule the first 3 calls",
+          why: "Early conversations reveal constraints and the real decision path."
+        });
+      }
+
+      if(phase1Done >= 2 && !state.checks.p1_write_brief){
+        recs.push({
+          title: "Draft the 1–2 page ‘St. Lucia Ops Modernization Brief’",
+          why: "This becomes the bridge from ‘conversation’ to ‘pilot proposal’."
+        });
+      }
+
+      if(state.checks.p1_write_brief && phase2Done < 2){
+        recs.push({
+          title: "Package the pilot (fixed scope + deliverables) and send it",
+          why: "A tight pilot outline makes it easy for champions to socialize internally."
+        });
+      }
+
+      if(phase2Done >= 2 && !state.checks.p2_close_anchor){
+        recs.push({
+          title: "Close one anchor (lighthouse) engagement",
+          why: "One yes → proof → repetition. Don’t over-optimize beyond this."
+        });
+      }
+
+      if(state.checks.p2_close_anchor && phase3Done < 2){
+        recs.push({
+          title: "Deliver pilot and publish a weekly progress snapshot",
+          why: "Visibility builds trust; measurable wins unlock referrals and replication."
+        });
+      }
+
+      // Risk checks when targeting regulated segments
+      if(state.segment === "fin"){
+        const dataDone = countChecked(groups.data);
+        if(dataDone < 2){
+          recs.push({
+            title: "Tighten data/privacy/risk checks early",
+            why: "Regulated environments require baseline controls before you touch sensitive data."
+          });
+        }
+      }
+
+      // Procurement warning for gov
+      if(state.segment === "gov"){
+        const legalDone = countChecked(groups.legal);
+        if(legalDone < 2){
+          recs.push({
+            title: "Validate procurement + contracting path",
+            why: "Public sector can stall without clarity on signing authority and vendor onboarding."
+          });
+        }
+      }
+
+      // Payments basics for any segment
+      const payDone = countChecked(groups.pay);
+      if(payDone < 1){
+        recs.push({
+          title: "Pick invoice + collection method (simple first)",
+          why: "Payment friction kills momentum—decide the path of least resistance."
+        });
+      }
+
+      // Deduplicate by title
+      const seen = new Set();
+      return recs.filter(r => (seen.has(r.title) ? false : (seen.add(r.title), true))).slice(0, 6);
+    }
+
+    function recompute(){
+      // Badges
+      badge(els.guardBadge, countChecked(groups.guard), groups.guard.length, countChecked(groups.guard)===3 ? "ok" : "warn");
+      badge(els.doneBadge, countChecked(groups.done), groups.done.length, countChecked(groups.done)>=2 ? "" : "warn");
+      badge(els.phase0Badge, countChecked(groups.phase0), groups.phase0.length);
+      badge(els.phase1Badge, countChecked(groups.phase1), groups.phase1.length);
+      badge(els.phase2Badge, countChecked(groups.phase2), groups.phase2.length);
+      badge(els.phase3Badge, countChecked(groups.phase3), groups.phase3.length);
+      badge(els.boxLegalBadge, countChecked(groups.legal), groups.legal.length);
+      badge(els.boxDataBadge, countChecked(groups.data), groups.data.length);
+      badge(els.boxPayBadge, countChecked(groups.pay), groups.pay.length);
+      badge(els.boxStakeBadge, countChecked(groups.stake), groups.stake.length);
+
+      // Completion (all checkboxes in plan)
+      const allKeys = Object.values(groups).flat();
+      const total = allKeys.length;
+      const done = allKeys.reduce((acc,k) => acc + (state.checks[k] ? 1 : 0), 0);
+      const pct = total ? Math.round((done/total)*100) : 0;
+      els.pctText.textContent = `${pct}%`;
+      els.barFill.style.width = `${pct}%`;
+
+      // Segment hint
+      const s = segmentCopy(state.segment);
+      els.segmentHint.innerHTML = `<b>Selected beachhead:</b> ${s.title}<br/><span class="small">${s.hint}</span><div class="hr"></div><span class="small"><b>Delivery mode:</b> ${modeCopy(state.mode)}</span>`;
+
+      // Next best move + recommendations
+      const recs = buildRecommendations();
+      els.recs.innerHTML = "";
+      recs.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div style="width:8px;height:8px;border-radius:999px;background:linear-gradient(90deg, rgba(122,167,255,.9), rgba(120,255,214,.85)); margin-top:6px;"></div>
+          <div class="t">
+            <b>${escapeHtml(r.title)}</b>
+            <p>${escapeHtml(r.why)}</p>
+          </div>
+          <span class="pill">Next</span>
+        `;
+        els.recs.appendChild(div);
+      });
+      els.recBadge.textContent = `${recs.length}`;
+      els.engineBadge.textContent = `${Math.min(recs.length,6)} signals`;
+
+      // Next move headline
+      if(recs.length){
+        els.nextMove.textContent = recs[0].title;
+        els.nextMoveHint.textContent = recs[0].why;
+      }else{
+        els.nextMove.textContent = "Playbook-ready";
+        els.nextMoveHint.textContent = "You’ve checked the key boxes. Focus on documenting proof and replicating into the next org / island.";
+      }
+
+      // Save selects
+      els.segment.value = state.segment;
+      els.mode.value = state.mode;
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // Init
+    loadState();
+    els.segment.value = state.segment;
+    els.mode.value = state.mode;
+    els.notes.value = state.notes || "";
+    wireCheckboxes();
+    recompute();
+
+    // Keep search filter applied after refresh
+    if(state.searchQuery){
+      els.search.value = state.searchQuery;
+    }
+  </script>
+</body>
+</html>
