@@ -956,7 +956,8 @@
                 if (task.type === 'daily') {
                     const completed = dayData[task.id] || 0;
                     const target = getTarget(platform, task.id);
-                    totalCompleted += completed;
+                    // Cap each task's contribution at 100% of its target
+                    totalCompleted += Math.min(completed, target);
                     totalTarget += target;
                 }
             });
@@ -986,7 +987,8 @@
                     target = getTarget(platform, task.id);
                 }
                 
-                const percentage = target > 0 ? Math.round((completed / target) * 100) : 0;
+                // Cap percentage at 100%
+                const percentage = target > 0 ? Math.min(100, Math.round((completed / target) * 100)) : 0;
                 summary.push({
                     label: task.label,
                     type: task.type,
@@ -1028,7 +1030,8 @@
                         taskTarget = getTarget(platform, task.id);
                     }
                     
-                    platformCompleted += taskCompleted;
+                    // Cap each task's contribution at 100% of its target for percentage calculation
+                    platformCompleted += Math.min(taskCompleted, taskTarget);
                     platformTarget += taskTarget;
                 });
                 
@@ -1047,7 +1050,7 @@
             
             const highlights = [];
             Object.entries(platformData).forEach(([platform, stats]) => {
-                if (stats.percentage >= 120) {
+                if (stats.percentage >= 100) {
                     highlights.push({ platform: CONFIG[platform].name, percentage: stats.percentage, good: true });
                 } else if (stats.percentage <= 60 && stats.percentage > 0) {
                     highlights.push({ platform: CONFIG[platform].name, percentage: stats.percentage, good: false });
@@ -1116,7 +1119,7 @@
                     if (task.type !== 'daily') return '';
                     const completed = weekData[platformKey][day][task.id] || 0;
                     const target = getTarget(platformKey, task.id);
-                    const taskPercentage = target > 0 ? Math.round((completed / target) * 100) : 0;
+                    const taskPercentage = target > 0 ? Math.min(100, Math.round((completed / target) * 100)) : 0;
                     return `
                         <div class="task-row">
                             <div class="task-label">
