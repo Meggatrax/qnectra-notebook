@@ -703,7 +703,7 @@
             <button class="tab active" data-tab="overview">Overview</button>
             <button class="tab" data-tab="linkedin">LinkedIn</button>
             <button class="tab" data-tab="alignable">Alignable</button>
-            <button class="tab" data-tab="fundingForums">Funding Forums</button>
+            <button class="tab" data-tab="salesNav">Sales Navigator</button>
             <button class="tab" data-tab="advice">General Advice</button>
             <button class="tab" data-tab="drafts">Drafts Copy</button>
         </div>
@@ -736,10 +736,10 @@
             </div>
         </div>
         
-        <div id="fundingForums" class="tab-content">
+        <div id="salesNav" class="tab-content">
             <div class="platform-layout">
-                <div class="main-content" id="fundingForumsContent"></div>
-                <div class="sidebar" id="fundingForumsSidebar"></div>
+                <div class="main-content" id="salesNavContent"></div>
+                <div class="sidebar" id="salesNavSidebar"></div>
             </div>
         </div>
         
@@ -818,23 +818,29 @@
                     'Focus on relationship-centered professionals and aligned service providers'
                 ]
             },
-            fundingForums: {
-                name: 'Funding Forums',
-                color: '#6f42c1',
+            salesNav: {
+                name: 'Sales Navigator',
+                color: '#C12638',
                 tasks: [
-                    { id: 'reading', label: 'Threads read with value-add', type: 'daily', defaultTarget: 5, tooltip: 'Read threads where you can provide meaningful insights' },
-                    { id: 'replies', label: 'Helpful replies posted', type: 'daily', defaultTarget: 1, tooltip: 'Expert responses that help others and showcase your knowledge' },
-                    { id: 'outreach', label: 'Direct outreach from forum leads', type: 'daily', defaultTarget: 2, tooltip: 'Private messages to promising forum members' },
-                    { id: 'topics', label: 'New topics started', type: 'weekly', defaultTarget: 1, tooltip: 'Original discussion threads you initiate' }
+                    { id: 'savedSearchReview', label: 'Saved search or list opened', type: 'daily', defaultTarget: 1, tooltip: 'Open one saved search or list - consistency creates signal' },
+                    { id: 'leadsScanned', label: 'Leads scanned (Qnèctra Scanner)', type: 'daily', defaultTarget: 5, tooltip: 'Scan 5-10 leads using the right-side panel only' },
+                    { id: 'qualifiedSaves', label: 'Qualified leads saved', type: 'daily', defaultTarget: 2, tooltip: 'Quality beats volume - save strong fits only' },
+                    { id: 'notesAdded', label: 'Notes added to saved leads', type: 'daily', defaultTarget: 2, tooltip: 'Short, observational notes on tools, language, structure' },
+                    { id: 'listReview', label: 'Saved leads reviewed & cleaned', type: 'weekly', defaultTarget: 1, tooltip: 'Remove false positives - if they would not buy, they do not belong' },
+                    { id: 'patternDocumentation', label: 'Recurring patterns documented', type: 'weekly', defaultTarget: 1, tooltip: 'Document patterns in tools, offers, pain points' },
+                    { id: 'listRefinement', label: 'Lead list created/refined', type: 'weekly', defaultTarget: 1, tooltip: 'Each list should answer one question only' }
                 ],
                 guidance: [
-                    'Target threads where founders are asking about your domain expertise',
-                    'Provide frameworks, not just opinions — be the authority',
-                    'Cite data or case studies when possible to build credibility',
-                    'Avoid sales-y language; lead with genuine helpfulness',
-                    'DM founders who ask smart questions or share aligned values',
-                    'Start threads that invite discussion and showcase thought leadership',
-                    'Track which types of replies get the most engagement'
+                    'Use Sales Nav as a signal-capture and ICP validation system — not a mass outreach tool',
+                    'Optimize for signal, not outcomes — your job is to observe, not convert',
+                    'Consistency beats intensity — short, regular usage (15-30 min daily) outperforms sporadic deep dives',
+                    'Start broad, narrow late — perfect filters upfront always hide signal',
+                    'Lists are experiments, not storage — each list should answer one question',
+                    'Credits are inventory, not pressure — never use credits out of habit or because they are expiring',
+                    'Notes compound value — a saved lead without a note is unfinished work',
+                    'Avoid premature outreach — early outreach pollutes signal and forces positioning too soon',
+                    'Review weekly, decide monthly — never collapse these time horizons',
+                    'If Sales Nav feels noisy, your ICP is not finished — pause, refine, continue'
                 ]
             }
         };
@@ -1060,7 +1066,7 @@
             renderOverview();
             renderPlatform('linkedin');
             renderPlatform('alignable');
-            renderPlatform('fundingForums');
+            renderPlatform('salesNav');
             renderAdvice();
             renderDrafts();
         }
@@ -1219,6 +1225,35 @@
                         <li><strong>Late Afternoon (3-5 PM):</strong> Follow-ups, forum participation, event planning</li>
                         <li><strong>Batch similar tasks:</strong> Send all connection requests at once, write all DMs together</li>
                         <li><strong>Quality over quantity:</strong> 10 thoughtful interactions beat 50 generic ones</li>
+                    </ul>
+                </div>
+                
+                <div class="advice-section">
+                    <h3>🎯 Sales Navigator Operating Principles</h3>
+                    <h4>What Sales Navigator Is For</h4>
+                    <ul>
+                        <li>Sales Navigator is a <strong>signal discovery and market intelligence tool</strong></li>
+                        <li>Success means: Sharpens ICP clarity, reduces false positives, reveals repeatable patterns, builds a clean lead bench</li>
+                        <li>It is <strong>not</strong> successful based on replies, meetings, or revenue at this stage</li>
+                    </ul>
+                    
+                    <h4>Core Operating Rules</h4>
+                    <ul>
+                        <li><strong>Optimize for signal, not outcomes:</strong> Your job is to observe, not convert. If your understanding of the market is improving month over month, the platform is working</li>
+                        <li><strong>Consistency beats intensity:</strong> Short, regular usage (15-30 min most days) outperforms long sporadic sessions, endless filter tweaking, or "let me just check one more thing"</li>
+                        <li><strong>Start broad, narrow late:</strong> Begin with a correct but imperfect ICP universe. Narrow through lists, manual qualification, notes and pattern recognition. Perfect filters upfront always hide signal</li>
+                        <li><strong>Lists are experiments, not storage:</strong> Each list should answer one question (e.g., "Who runs group programs?", "Who uses Skool?"). If a list doesn't teach you something, refactor or delete it</li>
+                        <li><strong>Credits are inventory, not pressure:</strong> Never use credits out of habit, because they're expiring, or to "see what happens". Always batch credits around a clear objective, specific list, and low-risk action</li>
+                        <li><strong>Notes compound value:</strong> A saved lead without a note is unfinished work. Good notes are short, observational, and specific (tools, language, structure). Future decisions depend on past notes</li>
+                        <li><strong>Avoid premature outreach:</strong> Early outreach pollutes signal, forces positioning too soon, and creates false feedback. Silence ≠ failure. Confusion = failure</li>
+                        <li><strong>Review weekly, decide monthly:</strong> Daily: execute. Weekly: learn. Monthly: decide. Never collapse these time horizons</li>
+                        <li><strong>Noise is a signal:</strong> If Sales Nav feels noisy, your ICP isn't finished, lists need refinement, or you're asking the platform for certainty too early. Pause, refine, continue</li>
+                    </ul>
+                    
+                    <h4>The True Success Metric</h4>
+                    <ul>
+                        <li>Sales Navigator is earning its cost if you can honestly say: <strong>"I understand this market better than I did last month"</strong></li>
+                        <li>Operating posture: Signal > Activity, Clarity > Volume, Discipline > Hustle</li>
                     </ul>
                 </div>
                 
