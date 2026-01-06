@@ -249,12 +249,12 @@
             padding: 8px 0;
             padding-left: 20px;
             position: relative;
+            color: var(--text-secondary);
             font-size: 14px;
-            line-height: 1.5;
         }
         
-        .sidebar li:before {
-            content: "▸";
+        .sidebar li::before {
+            content: "•";
             position: absolute;
             left: 0;
             color: var(--accent-blue);
@@ -262,20 +262,21 @@
         }
         
         .day-item {
+            margin-bottom: 15px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            margin-bottom: 10px;
+            border-radius: 8px;
             overflow: hidden;
+            background: var(--bg-secondary);
         }
         
         .day-header {
+            padding: 15px;
+            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background: var(--bg-secondary);
-            cursor: pointer;
             transition: background 0.2s;
+            user-select: none;
         }
         
         .day-header:hover {
@@ -283,8 +284,8 @@
         }
         
         .day-header:focus {
-            outline: 2px solid var(--accent-blue);
-            outline-offset: -2px;
+            outline: none;
+            box-shadow: inset var(--focus-ring);
         }
         
         .day-title {
@@ -295,12 +296,13 @@
         .day-progress {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
         
         .day-percentage {
             font-weight: 600;
-            font-size: 18px;
+            min-width: 45px;
+            text-align: right;
             color: var(--accent-blue);
         }
         
@@ -314,22 +316,25 @@
         
         .progress-bar {
             height: 100%;
-            background: var(--accent-green);
-            transition: width 0.3s;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal));
+            transition: width 0.3s ease;
         }
         
         .day-tasks {
-            padding: 15px;
-            display: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
         }
         
         .day-tasks.expanded {
-            display: block;
+            max-height: 1000px;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
         }
         
         .task-row {
             display: grid;
-            grid-template-columns: 2fr 1fr 100px;
+            grid-template-columns: 1fr auto auto;
             gap: 15px;
             align-items: center;
             padding: 12px 0;
@@ -341,22 +346,22 @@
         }
         
         .task-label {
-            font-size: 14px;
+            font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
         
         .tooltip-icon {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
             background: var(--accent-blue);
             color: white;
             border-radius: 50%;
-            text-align: center;
-            line-height: 16px;
-            font-size: 11px;
+            font-size: 12px;
             cursor: help;
             position: relative;
         }
@@ -370,17 +375,18 @@
             background: var(--text-primary);
             color: var(--bg-primary);
             padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
+            border-radius: 6px;
             white-space: nowrap;
+            font-size: 12px;
+            font-weight: normal;
             z-index: 1000;
             box-shadow: var(--shadow-lg);
         }
         
         .task-controls {
             display: flex;
-            align-items: center;
             gap: 8px;
+            align-items: center;
         }
         
         .counter-btn {
@@ -389,17 +395,20 @@
             border: 1px solid var(--border-color);
             background: var(--bg-primary);
             color: var(--text-primary);
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 18px;
+            font-weight: bold;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
         }
         
         .counter-btn:hover {
-            background: var(--bg-tertiary);
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
         }
         
         .counter-btn:focus {
@@ -410,12 +419,12 @@
         .counter-input {
             width: 60px;
             padding: 6px;
+            text-align: center;
             border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
             background: var(--bg-primary);
             color: var(--text-primary);
-            border-radius: 4px;
-            text-align: center;
-            font-size: 14px;
         }
         
         .counter-input:focus {
@@ -424,8 +433,10 @@
         }
         
         .task-stats {
-            font-size: 14px;
             text-align: right;
+            font-size: 14px;
+            color: var(--text-secondary);
+            min-width: 100px;
         }
         
         .weekly-tracker {
@@ -441,42 +452,43 @@
         }
         
         .weekly-summary-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 15px;
-            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
-        }
-        
-        .weekly-summary-row.weekly-with-controls {
-            grid-template-columns: 2fr 2fr;
         }
         
         .weekly-summary-row:last-child {
             border-bottom: none;
         }
         
+        .weekly-with-controls {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+        }
+        
         .weekly-task-name {
-            font-size: 14px;
+            font-weight: 500;
         }
         
         .weekly-controls-group {
             display: flex;
-            align-items: center;
             gap: 15px;
-            justify-content: flex-end;
+            align-items: center;
         }
         
         .weekly-task-stats {
-            text-align: right;
             font-weight: 600;
+            white-space: nowrap;
         }
         
         .overview-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
         }
         
         .card {
@@ -484,12 +496,13 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent-blue);
         }
         
-        .card h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
+        .card-label {
+            font-size: 14px;
             color: var(--text-secondary);
+            margin-bottom: 8px;
         }
         
         .card-value {
@@ -498,94 +511,39 @@
             color: var(--accent-blue);
         }
         
-        .card-subtitle {
-            font-size: 14px;
+        .card-detail {
+            font-size: 12px;
             color: var(--text-secondary);
             margin-top: 5px;
         }
         
         .highlights {
-            margin-top: 10px;
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
         
-        .highlight-item {
-            padding: 8px 12px;
-            margin: 5px 0;
-            border-radius: 4px;
-            font-size: 14px;
+        .highlights h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--accent-blue);
         }
         
-        .highlight-good {
-            background: rgba(40, 167, 69, 0.1);
-            color: var(--accent-green);
+        .highlights ul {
+            list-style: none;
+            padding: 0;
         }
         
-        .highlight-bad {
-            background: rgba(220, 53, 69, 0.1);
-            color: var(--accent-red);
-        }
-        
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 20px;
+        .highlights li {
+            padding: 8px 0;
+            color: var(--text-secondary);
         }
         
         .chart-container {
-            background: var(--bg-primary);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        
-        .chart-container h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: var(--accent-blue);
-        }
-        
-        .advice-content {
-            background: var(--bg-primary);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        
-        .advice-section {
-            margin-bottom: 30px;
-        }
-        
-        .advice-section h3 {
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: var(--accent-blue);
-        }
-        
-        .advice-section h4 {
-            font-size: 16px;
-            margin: 15px 0 10px;
-            color: var(--text-primary);
-        }
-        
-        .advice-section ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        
-        .advice-section li {
-            padding: 6px 0;
-            padding-left: 25px;
             position: relative;
-            font-size: 14px;
-        }
-        
-        .advice-section li:before {
-            content: "•";
-            position: absolute;
-            left: 8px;
-            color: var(--accent-blue);
-            font-weight: bold;
-            font-size: 18px;
+            height: 300px;
+            margin-top: 20px;
         }
         
         .modal {
@@ -595,7 +553,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -608,11 +566,12 @@
         .modal-content {
             background: var(--bg-primary);
             padding: 30px;
-            border-radius: 8px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
             max-width: 600px;
+            width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: var(--shadow-lg);
         }
         
         .modal-header {
@@ -623,296 +582,206 @@
         }
         
         .modal-header h2 {
-            font-size: 24px;
+            font-size: 22px;
             color: var(--accent-blue);
         }
         
-        .close-btn {
+        .modal-close {
             background: none;
             border: none;
             font-size: 28px;
             cursor: pointer;
             color: var(--text-secondary);
-            line-height: 1;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
         }
         
-        .close-btn:hover {
-            color: var(--text-primary);
+        .modal-close:hover {
+            background: var(--bg-tertiary);
+        }
+        
+        .modal-close:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
         }
         
         .target-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .target-group h3 {
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 10px;
-            color: var(--text-primary);
+            color: var(--accent-blue);
         }
         
-        .target-item {
+        .target-row {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 10px;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
             align-items: center;
             padding: 10px 0;
             border-bottom: 1px solid var(--border-color);
         }
         
-        .target-item:last-child {
+        .target-row:last-child {
             border-bottom: none;
         }
         
-        .target-item label {
-            font-size: 14px;
+        .target-label {
+            font-weight: 500;
         }
         
-        .target-item input {
-            width: 100%;
-            padding: 8px;
+        .target-input {
+            width: 80px;
+            padding: 6px;
+            text-align: center;
             border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
             background: var(--bg-primary);
             color: var(--text-primary);
-            border-radius: 4px;
         }
         
-        .modal-footer {
+        .target-input:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+        
+        .modal-actions {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
             justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .platform-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .task-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .task-controls {
+                justify-content: center;
+            }
+            
+            .task-stats {
+                text-align: center;
+            }
+            
+            .weekly-with-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .weekly-controls-group {
+                justify-content: space-between;
+            }
+            
+            .overview-cards {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🚀 Networking & Lead Gen Agenda</h1>
+            <h1>🎯 Networking & Lead Gen Agenda</h1>
             <div class="header-controls">
                 <div class="week-selector">
-                    <button class="btn" id="prevWeekBtn" aria-label="Previous week">← Previous</button>
-                    <div class="week-display" id="weekDisplay">Week of Nov 03, 2025</div>
-                    <button class="btn" id="nextWeekBtn" aria-label="Next week">Next →</button>
+                    <button class="btn" onclick="changeWeek(-1)" aria-label="Previous week">← Prev</button>
+                    <div class="week-display" id="weekDisplay">Loading...</div>
+                    <button class="btn" onclick="changeWeek(1)" aria-label="Next week">Next →</button>
                 </div>
-                <button class="btn btn-primary" id="editTargetsBtn">⚙️ Edit Targets</button>
-                <button class="btn btn-danger" id="resetWeekBtn">🗑️ Reset Week</button>
+                <button class="btn btn-primary" onclick="openTargetsModal()">Edit Targets</button>
+                <button class="btn btn-danger" onclick="resetWeek()">Reset Week</button>
             </div>
         </header>
         
-        <div class="tabs">
-            <button class="tab active" data-tab="overview">Overview</button>
-            <button class="tab" data-tab="linkedin">LinkedIn</button>
-            <button class="tab" data-tab="alignable">Alignable</button>
-            <button class="tab" data-tab="salesNav">Sales Navigator</button>
-            <button class="tab" data-tab="advice">General Advice</button>
-            <button class="tab" data-tab="drafts">Drafts Copy</button>
+        <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="overview" role="tab" aria-selected="true">📊 Overview</button>
+            <button class="tab" data-tab="linkedin" role="tab" aria-selected="false">💼 LinkedIn</button>
+            <button class="tab" data-tab="salesNav" role="tab" aria-selected="false">🔍 Sales Navigator</button>
+            <button class="tab" data-tab="email" role="tab" aria-selected="false">📧 Email</button>
+            <button class="tab" data-tab="networking" role="tab" aria-selected="false">🤝 Networking</button>
         </div>
         
-        <div id="overview" class="tab-content active">
-            <div class="overview-cards" id="overviewCards"></div>
-            <div class="charts-grid">
-                <div class="chart-container">
-                    <h3>Weekly Totals by Platform</h3>
-                    <canvas id="platformChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Completion Rate by Platform</h3>
-                    <canvas id="completionChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <div id="linkedin" class="tab-content">
-            <div class="platform-layout">
-                <div class="main-content" id="linkedinContent"></div>
-                <div class="sidebar" id="linkedinSidebar"></div>
-            </div>
-        </div>
-        
-        <div id="alignable" class="tab-content">
-            <div class="platform-layout">
-                <div class="main-content" id="alignableContent"></div>
-                <div class="sidebar" id="alignableSidebar"></div>
-            </div>
-        </div>
-        
-        <div id="salesNav" class="tab-content">
-            <div class="platform-layout">
-                <div class="main-content" id="salesNavContent"></div>
-                <div class="sidebar" id="salesNavSidebar"></div>
-            </div>
-        </div>
-        
-        <div id="advice" class="tab-content">
-            <div class="advice-content" id="adviceContent"></div>
-        </div>
-        
-        <div id="drafts" class="tab-content">
-            <div class="advice-content" id="draftsContent"></div>
-        </div>
+        <div id="overviewContent" class="tab-content active" role="tabpanel"></div>
+        <div id="linkedinContent" class="tab-content" role="tabpanel"></div>
+        <div id="salesNavContent" class="tab-content" role="tabpanel"></div>
+        <div id="emailContent" class="tab-content" role="tabpanel"></div>
+        <div id="networkingContent" class="tab-content" role="tabpanel"></div>
     </div>
     
-    <div class="modal" id="editTargetsModal">
+    <div id="targetsModal" class="modal" role="dialog" aria-labelledby="targetsModalTitle" aria-modal="true">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Edit Targets</h2>
-                <button class="close-btn" id="closeModalBtn" aria-label="Close modal">&times;</button>
+                <h2 id="targetsModalTitle">Edit Weekly Targets</h2>
+                <button class="modal-close" onclick="closeTargetsModal()" aria-label="Close modal">&times;</button>
             </div>
             <div id="targetsForm"></div>
-            <div class="modal-footer">
-                <button class="btn" id="restoreDefaultsBtn">Restore Defaults</button>
-                <button class="btn btn-primary" id="saveTargetsBtn">Save Changes</button>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeTargetsModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveTargets()">Save Targets</button>
             </div>
         </div>
     </div>
-    
+
     <script>
-        // ═══════════════════════════════════════════════════════════════════════════
-        // DATA MODEL
-        // ═══════════════════════════════════════════════════════════════════════════
+        const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+        const DAY_LABELS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
         
         const CONFIG = {
             linkedin: {
                 name: 'LinkedIn',
                 color: '#0077b5',
                 tasks: [
-                    { id: 'comments', label: 'Comments on ICP posts', type: 'daily', defaultTarget: 10, tooltip: 'Thoughtful comments on posts from your Ideal Customer Profile connections' },
-                    { id: 'reactions', label: 'Reactions', type: 'daily', defaultTarget: 20, tooltip: 'Likes, celebrates, loves, and other reactions on relevant posts' },
-                    { id: 'connections', label: 'Connection Requests', type: 'daily', defaultTarget: 10, tooltip: 'Personalized connection requests to potential leads' },
-                    { id: 'dms', label: 'Personalized DMs started', type: 'daily', defaultTarget: 5, tooltip: 'New direct message conversations initiated' },
-                    { id: 'followups', label: 'Follow-ups/replies', type: 'daily', defaultTarget: 5, tooltip: 'Responses to ongoing DM conversations' },
-                    { id: 'posts', label: 'Posts published', type: 'weekly', defaultTarget: 3, tooltip: 'Original content posts shared on your profile' }
-                ],
-                guidance: [
-                    'Comment on ICP posts before 9 AM for maximum visibility',
-                    'Personalize every connection request with specific context',
-                    'Follow the 3:1 rule — engage 3 times before asking for anything',
-                    'Use voice notes or video in DMs to stand out',
-                    'Post on Tuesday-Thursday between 8-10 AM for best reach',
-                    'Save high-quality posts to reference in future conversations',
-                    'Track response rates and adjust messaging based on what works'
-                ]
-            },
-            alignable: {
-                name: 'Alignable',
-                color: '#20c997',
-                tasks: [
-                    { id: 'messages', label: 'Messages replied/sent', type: 'daily', defaultTarget: 5, tooltip: 'Reply to DMs, thank people for introductions, follow up with non-responders' },
-                    { id: 'groupComments', label: 'Comments on posts in groups', type: 'daily', defaultTarget: 5, tooltip: 'Value-add comments in key interest groups' },
-                    { id: 'posts', label: 'Posts created/shared', type: 'daily', defaultTarget: 1, tooltip: 'Create or share posts that add relationship or business value' },
-                    { id: 'newConnections', label: 'New connections made', type: 'daily', defaultTarget: 3, tooltip: 'New personalized connection requests sent' },
-                    { id: 'introductions', label: 'Introductions made', type: 'daily', defaultTarget: 1, tooltip: 'Connect people in your network who could benefit from each other' },
-                    { id: 'appreciation', label: 'Appreciation messages sent', type: 'daily', defaultTarget: 1, tooltip: 'Send messages of appreciation to connections' },
-                    { id: 'warmLeadFollowups', label: 'Warm lead follow-ups', type: 'daily', defaultTarget: 1, tooltip: 'Gently nudge warm leads toward booking a call' },
-                    { id: 'smartConnectsWeekly', label: 'Smart Connects Engaged', type: 'weekly', defaultTarget: 3, tooltip: 'Quality connections with aligned professionals for building rapport' },
-                    { id: 'networkingCalls', label: 'Networking Calls Booked', type: 'weekly', defaultTarget: 10, tooltip: '15-20 min discovery chats to explore synergy and referrals' },
-                    { id: 'referralPartners', label: 'New Referral Partners Acquired', type: 'weekly', defaultTarget: 2, tooltip: 'Build steady collaboration pipelines with aligned service providers' }
-                ],
-                guidance: [
-                    'Follow the 90-minute daily routine: Check-In → Engage → Connect → Give → Track',
-                    'Comment quality matters — skip "great post" and add real insight',
-                    'Personalize every connection request with specific context',
-                    'Make 1-2 introductions daily to stay top of mind',
-                    'Use warm lead follow-up templates to book discovery calls',
-                    'Track all interactions in notes — capture insights and next steps',
-                    'Focus on relationship-centered professionals and aligned service providers'
+                    { id: 'posts', label: 'Posts', type: 'daily', defaultTarget: 1, tooltip: 'Original posts or shares with commentary' },
+                    { id: 'comments', label: 'Comments', type: 'daily', defaultTarget: 5, tooltip: 'Meaningful comments on others\' posts' },
+                    { id: 'connections', label: 'Connection Requests', type: 'daily', defaultTarget: 10, tooltip: 'Personalized connection requests sent' }
                 ]
             },
             salesNav: {
                 name: 'Sales Navigator',
-                color: '#C12638',
+                color: '#0066cc',
                 tasks: [
-                    { id: 'savedSearchReview', label: 'Saved search or list opened', type: 'daily', defaultTarget: 1, tooltip: 'Open one saved search or list - consistency creates signal' },
-                    { id: 'leadsScanned', label: 'Leads scanned (Qnèctra Scanner)', type: 'daily', defaultTarget: 5, tooltip: 'Scan 5-10 leads using the right-side panel only' },
-                    { id: 'qualifiedSaves', label: 'Qualified leads saved', type: 'daily', defaultTarget: 2, tooltip: 'Quality beats volume - save strong fits only' },
-                    { id: 'notesAdded', label: 'Notes added to saved leads', type: 'daily', defaultTarget: 2, tooltip: 'Short, observational notes on tools, language, structure' },
-                    { id: 'listReview', label: 'Saved leads reviewed & cleaned', type: 'weekly', defaultTarget: 1, tooltip: 'Remove false positives - if they would not buy, they do not belong' },
-                    { id: 'patternDocumentation', label: 'Recurring patterns documented', type: 'weekly', defaultTarget: 1, tooltip: 'Document patterns in tools, offers, pain points' },
-                    { id: 'listRefinement', label: 'Lead list created/refined', type: 'weekly', defaultTarget: 1, tooltip: 'Each list should answer one question only' }
-                ],
-                guidance: [
-                    'Use Sales Nav as a signal-capture and ICP validation system — not a mass outreach tool',
-                    'Optimize for signal, not outcomes — your job is to observe, not convert',
-                    'Consistency beats intensity — short, regular usage (15-30 min daily) outperforms sporadic deep dives',
-                    'Start broad, narrow late — perfect filters upfront always hide signal',
-                    'Lists are experiments, not storage — each list should answer one question',
-                    'Credits are inventory, not pressure — never use credits out of habit or because they are expiring',
-                    'Notes compound value — a saved lead without a note is unfinished work',
-                    'Avoid premature outreach — early outreach pollutes signal and forces positioning too soon',
-                    'Review weekly, decide monthly — never collapse these time horizons',
-                    'If Sales Nav feels noisy, your ICP is not finished — pause, refine, continue'
+                    { id: 'searches', label: 'Saved Searches Reviewed', type: 'daily', defaultTarget: 2, tooltip: 'Review and act on saved search results' },
+                    { id: 'inmails', label: 'InMails Sent', type: 'weekly', defaultTarget: 5, tooltip: 'Personalized InMail messages' },
+                    { id: 'leads', label: 'Leads Added', type: 'daily', defaultTarget: 5, tooltip: 'New leads added to your list' }
+                ]
+            },
+            email: {
+                name: 'Email Outreach',
+                color: '#28a745',
+                tasks: [
+                    { id: 'cold', label: 'Cold Emails', type: 'daily', defaultTarget: 10, tooltip: 'Initial outreach emails' },
+                    { id: 'followups', label: 'Follow-ups', type: 'daily', defaultTarget: 5, tooltip: 'Follow-up emails to previous contacts' },
+                    { id: 'responses', label: 'Responses', type: 'daily', defaultTarget: 3, tooltip: 'Replies to incoming emails' }
+                ]
+            },
+            networking: {
+                name: 'Networking Events',
+                color: '#6f42c1',
+                tasks: [
+                    { id: 'events', label: 'Events Attended', type: 'weekly', defaultTarget: 2, tooltip: 'In-person or virtual networking events' },
+                    { id: 'conversations', label: 'Meaningful Conversations', type: 'weekly', defaultTarget: 10, tooltip: 'Quality conversations at events or calls' },
+                    { id: 'followups', label: 'Post-Event Follow-ups', type: 'weekly', defaultTarget: 5, tooltip: 'Follow-up messages after events' }
                 ]
             }
         };
         
-        const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
-        const DAY_LABELS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-        const STORAGE_KEY = 'networking_agenda_v1';
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // STATE
-        // ═══════════════════════════════════════════════════════════════════════════
-        
         let currentWeekMonday = null;
-        let data = { weeks: {}, config: {} };
-        let charts = { platform: null, completion: null };
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // STORAGE
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function loadData() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                data = JSON.parse(stored);
-            }
-            if (!data.weeks) data.weeks = {};
-            if (!data.config) data.config = {};
-        }
-        
-        function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        }
-        
-        function getWeekData(weekKey) {
-            if (!data.weeks[weekKey]) {
-                data.weeks[weekKey] = initializeWeekData();
-            }
-            return data.weeks[weekKey];
-        }
-        
-        function initializeWeekData() {
-            const weekData = {};
-            Object.keys(CONFIG).forEach(platform => {
-                weekData[platform] = {};
-                DAYS.forEach(day => {
-                    weekData[platform][day] = {};
-                    CONFIG[platform].tasks.forEach(task => {
-                        weekData[platform][day][task.id] = 0;
-                    });
-                });
-            });
-            return weekData;
-        }
-        
-        function getTarget(platform, taskId) {
-            const configKey = `${platform}_${taskId}`;
-            if (data.config[configKey] !== undefined) {
-                return data.config[configKey];
-            }
-            const task = CONFIG[platform].tasks.find(t => t.id === taskId);
-            return task ? task.defaultTarget : 0;
-        }
-        
-        function setTarget(platform, taskId, value) {
-            const configKey = `${platform}_${taskId}`;
-            data.config[configKey] = value;
-            saveData();
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // UTIL
-        // ═══════════════════════════════════════════════════════════════════════════
+        let activeTab = 'overview';
+        let overviewChart = null;
         
         function getMondayOfWeek(date) {
             const d = new Date(date);
@@ -922,27 +791,132 @@
         }
         
         function formatDate(date) {
-            const options = { month: 'short', day: '2-digit', year: 'numeric' };
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
             return date.toLocaleDateString('en-US', options);
         }
         
-        function getWeekKey(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+        function getWeekKey(monday) {
+            return monday.toISOString().split('T')[0];
         }
         
-        function changeWeek(offset) {
-            const newDate = new Date(currentWeekMonday);
-            newDate.setDate(newDate.getDate() + (offset * 7));
-            currentWeekMonday = getMondayOfWeek(newDate);
+        function getWeekRange(monday) {
+            const friday = new Date(monday);
+            friday.setDate(friday.getDate() + 4);
+            return `${formatDate(monday)} - ${formatDate(friday)}`;
+        }
+        
+        function loadData() {
+            const stored = localStorage.getItem('networking_agenda_v1');
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch (e) {
+                    console.error('Failed to parse stored data:', e);
+                    return { weeks: {}, config: {} };
+                }
+            }
+            return { weeks: {}, config: {} };
+        }
+        
+        function saveData(data) {
+            localStorage.setItem('networking_agenda_v1', JSON.stringify(data));
+        }
+        
+        function getWeekData(weekKey) {
+            const data = loadData();
+            if (!data.weeks[weekKey]) {
+                data.weeks[weekKey] = {};
+                Object.keys(CONFIG).forEach(platform => {
+                    data.weeks[weekKey][platform] = {};
+                    DAYS.forEach(day => {
+                        data.weeks[weekKey][platform][day] = {};
+                    });
+                });
+                saveData(data);
+            }
+            return data.weeks[weekKey];
+        }
+        
+        function getTarget(platform, taskId) {
+            const data = loadData();
+            const configKey = `${platform}_${taskId}`;
+            if (data.config[configKey] !== undefined) {
+                return data.config[configKey];
+            }
+            const task = CONFIG[platform].tasks.find(t => t.id === taskId);
+            return task ? task.defaultTarget : 0;
+        }
+        
+        function setTarget(platform, taskId, value) {
+            const data = loadData();
+            const configKey = `${platform}_${taskId}`;
+            data.config[configKey] = parseInt(value) || 0;
+            saveData(data);
+        }
+        
+        function updateCounter(platform, day, taskId, delta) {
+            const weekKey = getWeekKey(currentWeekMonday);
+            const data = loadData();
+            const current = data.weeks[weekKey][platform][day][taskId] || 0;
+            const newValue = Math.max(0, current + delta);
+            data.weeks[weekKey][platform][day][taskId] = newValue;
+            saveData(data);
             render();
         }
         
-        // ═══════════════════════════════════════════════════════════════════════════
-        // CALCULATIONS
-        // ═══════════════════════════════════════════════════════════════════════════
+        function setCounter(platform, day, taskId, value) {
+            const weekKey = getWeekKey(currentWeekMonday);
+            const data = loadData();
+            data.weeks[weekKey][platform][day][taskId] = Math.max(0, parseInt(value) || 0);
+            saveData(data);
+            render();
+        }
+        
+        function updateWeeklyCounter(platform, taskId, delta) {
+            const weekKey = getWeekKey(currentWeekMonday);
+            const data = loadData();
+            let total = 0;
+            DAYS.forEach(day => {
+                total += data.weeks[weekKey][platform][day][taskId] || 0;
+            });
+            const newTotal = Math.max(0, total + delta);
+            const perDay = Math.floor(newTotal / 5);
+            const remainder = newTotal % 5;
+            DAYS.forEach((day, idx) => {
+                data.weeks[weekKey][platform][day][taskId] = perDay + (idx < remainder ? 1 : 0);
+            });
+            saveData(data);
+            render();
+        }
+        
+        function setWeeklyCounter(platform, taskId, value) {
+            const weekKey = getWeekKey(currentWeekMonday);
+            const data = loadData();
+            const newTotal = Math.max(0, parseInt(value) || 0);
+            const perDay = Math.floor(newTotal / 5);
+            const remainder = newTotal % 5;
+            DAYS.forEach((day, idx) => {
+                data.weeks[weekKey][platform][day][taskId] = perDay + (idx < remainder ? 1 : 0);
+            });
+            saveData(data);
+            render();
+        }
+        
+        function changeWeek(delta) {
+            currentWeekMonday.setDate(currentWeekMonday.getDate() + (delta * 7));
+            render();
+        }
+        
+        function resetWeek() {
+            if (!confirm('Are you sure you want to reset all data for this week? This cannot be undone.')) {
+                return;
+            }
+            const weekKey = getWeekKey(currentWeekMonday);
+            const data = loadData();
+            delete data.weeks[weekKey];
+            saveData(data);
+            render();
+        }
         
         function calculateDayPercentage(platform, day) {
             const weekKey = getWeekKey(currentWeekMonday);
@@ -956,7 +930,7 @@
                 if (task.type === 'daily') {
                     const completed = dayData[task.id] || 0;
                     const target = getTarget(platform, task.id);
-                    totalCompleted += completed;
+                    totalCompleted += Math.min(completed, target);
                     totalTarget += target;
                 }
             });
@@ -986,7 +960,8 @@
                     target = getTarget(platform, task.id);
                 }
                 
-                const percentage = target > 0 ? Math.round((completed / target) * 100) : 0;
+                const cappedCompleted = Math.min(completed, target);
+                const percentage = target > 0 ? Math.round((cappedCompleted / target) * 100) : 0;
                 summary.push({
                     label: task.label,
                     type: task.type,
@@ -1028,7 +1003,8 @@
                         taskTarget = getTarget(platform, task.id);
                     }
                     
-                    platformCompleted += taskCompleted;
+                    const cappedTaskCompleted = Math.min(taskCompleted, taskTarget);
+                    platformCompleted += cappedTaskCompleted;
                     platformTarget += taskTarget;
                 });
                 
@@ -1047,7 +1023,7 @@
             
             const highlights = [];
             Object.entries(platformData).forEach(([platform, stats]) => {
-                if (stats.percentage >= 120) {
+                if (stats.percentage >= 100) {
                     highlights.push({ platform: CONFIG[platform].name, percentage: stats.percentage, good: true });
                 } else if (stats.percentage <= 60 && stats.percentage > 0) {
                     highlights.push({ platform: CONFIG[platform].name, percentage: stats.percentage, good: false });
@@ -1057,43 +1033,44 @@
             return { totalCompleted, totalTarget, overallPercentage, platformData, highlights };
         }
         
-        // ═══════════════════════════════════════════════════════════════════════════
-        // RENDER
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function render() {
-            document.getElementById('weekDisplay').textContent = `Week of ${formatDate(currentWeekMonday)}`;
-            renderOverview();
-            renderPlatform('linkedin');
-            renderPlatform('alignable');
-            renderPlatform('salesNav');
-            renderAdvice();
-            renderDrafts();
-        }
-        
         function renderOverview() {
             const overview = calculateOverviewData();
-            const cardsHtml = `
-                <div class="card">
-                    <h3>Overall Progress</h3>
-                    <div class="card-value">${overview.overallPercentage}%</div>
-                    <div class="card-subtitle">${overview.totalCompleted} / ${overview.totalTarget} activities</div>
-                </div>
-                <div class="card">
-                    <h3>Performance Highlights</h3>
-                    ${overview.highlights.length === 0 ? '<div class="card-subtitle">All platforms within normal range</div>' : ''}
-                    <div class="highlights">
+            const highlightsHtml = overview.highlights.length > 0 
+                ? `<div class="highlights">
+                    <h3>📌 Highlights</h3>
+                    <ul>
                         ${overview.highlights.map(h => `
-                            <div class="highlight-item ${h.good ? 'highlight-good' : 'highlight-bad'}">
+                            <li>
                                 ${h.platform}: ${h.percentage}% ${h.good ? '🔥' : '⚠️'}
-                            </div>
+                            </li>
                         `).join('')}
+                    </ul>
+                </div>`
+                : '';
+            
+            const html = `
+                <div class="overview-cards">
+                    <div class="card">
+                        <div class="card-label">Overall Completion</div>
+                        <div class="card-value">${overview.overallPercentage}%</div>
+                        <div class="card-detail">${overview.totalCompleted} / ${overview.totalTarget} tasks</div>
                     </div>
+                    ${Object.entries(overview.platformData).map(([key, data]) => `
+                        <div class="card">
+                            <div class="card-label">${CONFIG[key].name}</div>
+                            <div class="card-value">${data.percentage}%</div>
+                            <div class="card-detail">${data.completed} / ${data.target} tasks</div>
+                        </div>
+                    `).join('')}
+                </div>
+                ${highlightsHtml}
+                <div class="chart-container">
+                    <canvas id="overviewChart"></canvas>
                 </div>
             `;
-            document.getElementById('overviewCards').innerHTML = cardsHtml;
             
-            updateCharts(overview);
+            document.getElementById('overviewContent').innerHTML = html;
+            renderOverviewChart(overview);
         }
         
         function renderPlatform(platformKey) {
@@ -1101,7 +1078,6 @@
             const weekKey = getWeekKey(currentWeekMonday);
             const weekData = getWeekData(weekKey);
             
-            // Store which days are currently expanded before re-rendering
             const expandedDays = [];
             DAYS.forEach((day, idx) => {
                 const dayElement = document.querySelector(`#${platformKey}Content .day-item:nth-child(${idx + 1}) .day-tasks`);
@@ -1116,7 +1092,8 @@
                     if (task.type !== 'daily') return '';
                     const completed = weekData[platformKey][day][task.id] || 0;
                     const target = getTarget(platformKey, task.id);
-                    const taskPercentage = target > 0 ? Math.round((completed / target) * 100) : 0;
+                    const rawPercentage = target > 0 ? Math.round((completed / target) * 100) : 0;
+                    const taskPercentage = Math.min(rawPercentage, 100);
                     return `
                         <div class="task-row">
                             <div class="task-label">
@@ -1164,7 +1141,6 @@
             const weeklySummary = calculateWeeklySummary(platformKey);
             const weeklyHtml = weeklySummary.map(item => {
                 if (item.type === 'daily') {
-                    // Daily tasks: show aggregate with no controls
                     return `
                         <div class="weekly-summary-row">
                             <div class="weekly-task-name">${item.label} (daily)</div>
@@ -1174,7 +1150,6 @@
                         </div>
                     `;
                 } else {
-                    // Weekly tasks: show with +/- controls
                     return `
                         <div class="weekly-summary-row weekly-with-controls">
                             <div class="weekly-task-name">${item.label} (weekly)</div>
@@ -1203,468 +1178,166 @@
                 </div>
             `;
             
-            const sidebarHtml = `
-                <h3>💡 ${platform.name} Guidance</h3>
-                <ul>
-                    ${platform.guidance.map(tip => `<li>${tip}</li>`).join('')}
-                </ul>
+            document.getElementById(`${platformKey}Content`).innerHTML = `
+                <div class="platform-layout">
+                    <div class="main-content">${contentHtml}</div>
+                    <div class="sidebar">
+                        <h3>💡 Tips</h3>
+                        <ul>
+                            ${platform.tasks.map(task => `<li>${task.tooltip}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
             `;
+        }
+        
+        function renderOverviewChart(overview) {
+            const ctx = document.getElementById('overviewChart');
+            if (!ctx) return;
             
-            document.getElementById(`${platformKey}Content`).innerHTML = contentHtml;
-            document.getElementById(`${platformKey}Sidebar`).innerHTML = sidebarHtml;
-        }
-        
-        function renderAdvice() {
-            const adviceHtml = `
-                <div class="advice-section">
-                    <h3>⏰ Daily Cadence</h3>
-                    <ul>
-                        <li><strong>Morning (8-10 AM):</strong> LinkedIn comments and engagement when feeds are hot</li>
-                        <li><strong>Mid-Morning (10-12 PM):</strong> Sales Navigator research and lead curation</li>
-                        <li><strong>Afternoon (1-3 PM):</strong> Personalized outreach and DMs across platforms</li>
-                        <li><strong>Late Afternoon (3-5 PM):</strong> Follow-ups, forum participation, event planning</li>
-                        <li><strong>Batch similar tasks:</strong> Send all connection requests at once, write all DMs together</li>
-                        <li><strong>Quality over quantity:</strong> 10 thoughtful interactions beat 50 generic ones</li>
-                    </ul>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>🎯 Sales Navigator Operating Principles</h3>
-                    <h4>What Sales Navigator Is For</h4>
-                    <ul>
-                        <li>Sales Navigator is a <strong>signal discovery and market intelligence tool</strong></li>
-                        <li>Success means: Sharpens ICP clarity, reduces false positives, reveals repeatable patterns, builds a clean lead bench</li>
-                        <li>It is <strong>not</strong> successful based on replies, meetings, or revenue at this stage</li>
-                    </ul>
-                    
-                    <h4>Core Operating Rules</h4>
-                    <ul>
-                        <li><strong>Optimize for signal, not outcomes:</strong> Your job is to observe, not convert. If your understanding of the market is improving month over month, the platform is working</li>
-                        <li><strong>Consistency beats intensity:</strong> Short, regular usage (15-30 min most days) outperforms long sporadic sessions, endless filter tweaking, or "let me just check one more thing"</li>
-                        <li><strong>Start broad, narrow late:</strong> Begin with a correct but imperfect ICP universe. Narrow through lists, manual qualification, notes and pattern recognition. Perfect filters upfront always hide signal</li>
-                        <li><strong>Lists are experiments, not storage:</strong> Each list should answer one question (e.g., "Who runs group programs?", "Who uses Skool?"). If a list doesn't teach you something, refactor or delete it</li>
-                        <li><strong>Credits are inventory, not pressure:</strong> Never use credits out of habit, because they're expiring, or to "see what happens". Always batch credits around a clear objective, specific list, and low-risk action</li>
-                        <li><strong>Notes compound value:</strong> A saved lead without a note is unfinished work. Good notes are short, observational, and specific (tools, language, structure). Future decisions depend on past notes</li>
-                        <li><strong>Avoid premature outreach:</strong> Early outreach pollutes signal, forces positioning too soon, and creates false feedback. Silence ≠ failure. Confusion = failure</li>
-                        <li><strong>Review weekly, decide monthly:</strong> Daily: execute. Weekly: learn. Monthly: decide. Never collapse these time horizons</li>
-                        <li><strong>Noise is a signal:</strong> If Sales Nav feels noisy, your ICP isn't finished, lists need refinement, or you're asking the platform for certainty too early. Pause, refine, continue</li>
-                    </ul>
-                    
-                    <h4>The True Success Metric</h4>
-                    <ul>
-                        <li>Sales Navigator is earning its cost if you can honestly say: <strong>"I understand this market better than I did last month"</strong></li>
-                        <li>Operating posture: Signal > Activity, Clarity > Volume, Discipline > Hustle</li>
-                    </ul>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>💬 Comment Quality Framework</h3>
-                    <ul>
-                        <li><strong>Signal > Fluff:</strong> Add a new perspective, don't just agree</li>
-                        <li><strong>Cite data or experience:</strong> "In our testing..." or "Research shows..."</li>
-                        <li><strong>Ask thoughtful questions:</strong> Invite the poster or others to expand</li>
-                        <li><strong>Keep it concise:</strong> 2-3 sentences max for most comments</li>
-                        <li><strong>Tag strategically:</strong> Mention others who'd benefit from the discussion</li>
-                        <li><strong>Avoid sales-y language:</strong> Build credibility first, pitch later</li>
-                    </ul>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>✉️ Personalized Outreach Template</h3>
-                    <h4>Message 1: The Hook</h4>
-                    <ul>
-                        <li>Reference something specific (their post, company news, mutual connection)</li>
-                        <li>Give before you ask — share a resource or insight</li>
-                        <li>Keep it under 100 words</li>
-                    </ul>
-                    <h4>Message 2-3: Build Context</h4>
-                    <ul>
-                        <li>Share a relevant case study or example</li>
-                        <li>Ask about their current challenges or goals</li>
-                        <li>Provide value without pitching</li>
-                    </ul>
-                    <h4>Message 4-5: Soft CTA</h4>
-                    <ul>
-                        <li>"Would a 15-min call be useful to discuss X?"</li>
-                        <li>"I have a framework for Y — want me to send it over?"</li>
-                        <li>Make it low-friction and specific</li>
-                    </ul>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>📞 DM → Call Conversion Framework</h3>
-                    <ul>
-                        <li><strong>Qualify first:</strong> Ensure they match your ICP before suggesting a call</li>
-                        <li><strong>Position the call as valuable for them:</strong> "I have a couple ideas that might help with [their challenge]"</li>
-                        <li><strong>Offer specific time options:</strong> "Tuesday at 2 PM or Thursday at 10 AM?"</li>
-                        <li><strong>Use a scheduling link:</strong> Reduce friction with Calendly or similar</li>
-                        <li><strong>Send a confirmation with an agenda:</strong> "Looking forward to discussing [X, Y, Z]"</li>
-                        <li><strong>Follow up if no response:</strong> Wait 3-4 days, then bump with a value add</li>
-                    </ul>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>🤝 Platform Etiquette & Best Practices</h3>
-                    <ul>
-                        <li><strong>Pace yourself:</strong> Don't send 50 connection requests in one hour — spread them out</li>
-                        <li><strong>Never copy-paste obviously:</strong> Even templates need personalization</li>
-                        <li><strong>Reciprocity matters:</strong> Engage with others' content before asking them to engage with yours</li>
-                        <li><strong>Track what works:</strong> Note which messages get replies and double down</li>
-                        <li><strong>Respect "no":</strong> If someone doesn't respond after 2-3 attempts, move on</li>
-                        <li><strong>Always lead with value:</strong> Be the person who gives more than they take</li>
-                        <li><strong>Build relationships, not transactions:</strong> Think 6-12 month timelines, not overnight wins</li>
-                    </ul>
-                </div>
-            `;
-            document.getElementById('adviceContent').innerHTML = adviceHtml;
-        }
-        
-        function renderDrafts() {
-            const draftsHtml = `
-                <div class="advice-section">
-                    <h3>📝 Business Introduction Drafts</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Use these drafts when introducing your business to non-technical prospects in various contexts.</p>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>🎯 Long Version (Detailed Conversation)</h3>
-                    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 6px; border-left: 4px solid var(--accent-blue); line-height: 1.8;">
-                        <p style="margin-bottom: 15px;">I'm Chris. I spent 20+ years running sales and support operations — building the systems and processes that let teams scale without falling apart. I've seen what works and what becomes an expensive mess.</p>
-                        
-                        <p style="margin-bottom: 15px;">Now through Qnectra, I've taken all that experience and turned it into a service for small business owners: you get a senior operations leader who's built this stuff dozens of times, without paying for a full-time executive.</p>
-                        
-                        <p style="margin-bottom: 0;">Most owners either hire someone junior who's still figuring it out, or they try to do it all themselves and burn out. I come in part-time, diagnose what's slowing you down, and build the foundation so your business runs predictably — without you being the bottleneck.</p>
-                    </div>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>💼 Medium Version (Networking/Discovery Call)</h3>
-                    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 6px; border-left: 4px solid var(--accent-green); line-height: 1.8;">
-                        <p style="margin-bottom: 15px;">I'm Chris. I spent 20+ years running sales and support operations, building the systems and processes that let companies scale smoothly. Now through Qnectra, I've packaged that expertise for small business owners who need it but can't afford a full-time executive.</p>
-                        
-                        <p style="margin-bottom: 0;">I work with owners who are stuck — maybe your systems don't talk to each other, your team keeps reinventing the wheel, or you're making tech decisions you're not confident about. Instead of hiring someone who's still learning or doing it all yourself, you bring me in part-time. I figure out what's broken, fix it, and set you up to grow without the chaos.</p>
-                    </div>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>⚡ Short Version (Quick Introduction)</h3>
-                    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 6px; border-left: 4px solid var(--accent-orange); line-height: 1.8;">
-                        <p style="margin-bottom: 0;">I'm Chris. I help small business owners scale without the chaos. I spent 20+ years running operations and building systems that work — now you get that expertise part-time, without paying for a full-time executive you might not need yet.</p>
-                    </div>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>🚀 Extra Short (Elevator Pitch)</h3>
-                    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 6px; border-left: 4px solid var(--accent-purple); line-height: 1.8;">
-                        <p style="margin-bottom: 0;">I help small business owners who are drowning in operations — broken systems, wasted time, growth that feels chaotic. I spent 20 years building operations from the inside; now I come in part-time, figure out what's holding you back, and fix it.</p>
-                    </div>
-                </div>
-                
-                <div class="advice-section">
-                    <h3>💡 Usage Tips</h3>
-                    <ul>
-                        <li><strong>Long Version:</strong> Use in detailed conversations, podcast interviews, or when someone asks "So what exactly do you do?"</li>
-                        <li><strong>Medium Version:</strong> Perfect for networking events, discovery calls, or LinkedIn DMs</li>
-                        <li><strong>Short Version:</strong> Great for quick introductions, email signatures, or bio sections</li>
-                        <li><strong>Extra Short:</strong> Use when you have 30 seconds or less — at events, chance encounters, or quick handshakes</li>
-                        <li><strong>Personalize always:</strong> These are frameworks — adjust based on what you learn about the person first</li>
-                    </ul>
-                </div>
-            `;
-            document.getElementById('draftsContent').innerHTML = draftsHtml;
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════════════
-        // CHARTS
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function updateCharts(overview) {
-            const platformLabels = Object.keys(CONFIG).map(k => CONFIG[k].name);
-            const platformCompleted = Object.keys(CONFIG).map(k => overview.platformData[k].completed);
-            const platformTargets = Object.keys(CONFIG).map(k => overview.platformData[k].target);
-            const platformColors = Object.keys(CONFIG).map(k => CONFIG[k].color);
+            if (overviewChart) {
+                overviewChart.destroy();
+            }
             
-            // Chart 1: Platform Totals
-            const ctx1 = document.getElementById('platformChart').getContext('2d');
-            if (charts.platform) charts.platform.destroy();
-            charts.platform = new Chart(ctx1, {
+            const labels = Object.keys(CONFIG).map(k => CONFIG[k].name);
+            const completionRates = Object.keys(CONFIG).map(k => overview.platformData[k].percentage);
+            
+            overviewChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: platformLabels,
-                    datasets: [
-                        {
-                            label: 'Completed',
-                            data: platformCompleted,
-                            backgroundColor: platformColors.map(c => c + 'cc'),
-                            borderColor: platformColors,
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Target',
-                            data: platformTargets,
-                            backgroundColor: platformColors.map(c => c + '33'),
-                            borderColor: platformColors,
-                            borderWidth: 2,
-                            borderDash: [5, 5]
-                        }
-                    ]
+                    labels: labels,
+                    datasets: [{
+                        label: 'Completion %',
+                        data: completionRates,
+                        backgroundColor: Object.keys(CONFIG).map(k => CONFIG[k].color),
+                        borderRadius: 8
+                    }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: true, position: 'top' },
-                        tooltip: { mode: 'index', intersect: false }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary') } },
-                        x: { ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary') } }
-                    }
-                }
-            });
-            
-            // Chart 2: Completion Rates
-            const completionRates = Object.keys(CONFIG).map(k => overview.platformData[k].percentage);
-            const ctx2 = document.getElementById('completionChart').getContext('2d');
-            if (charts.completion) charts.completion.destroy();
-            charts.completion = new Chart(ctx2, {
-                type: 'radar',
-                data: {
-                    labels: platformLabels,
-                    datasets: [
-                        {
-                            label: 'Completion %',
-                            data: completionRates,
-                            backgroundColor: 'rgba(0, 102, 204, 0.2)',
-                            borderColor: 'rgba(0, 102, 204, 1)',
-                            borderWidth: 2,
-                            pointBackgroundColor: platformColors,
-                            pointBorderColor: '#fff',
-                            pointRadius: 5
+                        legend: {
+                            display: false
                         }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false }
                     },
                     scales: {
-                        r: {
+                        y: {
                             beginAtZero: true,
-                            max: 120,
+                            max: 100,
                             ticks: {
-                                stepSize: 20,
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary'),
                                 callback: function(value) { return value + '%'; }
-                            },
-                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--border-color') },
-                            pointLabels: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary') }
+                            }
                         }
                     }
                 }
             });
         }
         
-        // ═══════════════════════════════════════════════════════════════════════════
-        // EVENTS
-        // ═══════════════════════════════════════════════════════════════════════════
-        
-        function updateCounter(platform, day, taskId, delta) {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            const current = weekData[platform][day][taskId] || 0;
-            const newValue = Math.max(0, current + delta);
-            weekData[platform][day][taskId] = newValue;
-            saveData();
-            render();
-        }
-        
-        function setCounter(platform, day, taskId, value) {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            weekData[platform][day][taskId] = Math.max(0, parseInt(value) || 0);
-            saveData();
-            render();
-        }
-        
-        function updateWeeklyCounter(platform, taskId, delta) {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            
-            // Get current total
-            let total = 0;
-            DAYS.forEach(day => {
-                total += weekData[platform][day][taskId] || 0;
-            });
-            
-            // Calculate new total
-            const newTotal = Math.max(0, total + delta);
-            
-            // Distribute the new total across days (put all on Monday for simplicity)
-            DAYS.forEach(day => {
-                weekData[platform][day][taskId] = 0;
-            });
-            weekData[platform]['monday'][taskId] = newTotal;
-            
-            saveData();
-            render();
-        }
-        
-        function setWeeklyCounter(platform, taskId, value) {
-            const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
-            
-            const newTotal = Math.max(0, parseInt(value) || 0);
-            
-            // Distribute the new total across days (put all on Monday for simplicity)
-            DAYS.forEach(day => {
-                weekData[platform][day][taskId] = 0;
-            });
-            weekData[platform]['monday'][taskId] = newTotal;
-            
-            saveData();
-            render();
-        }
-        
-        function toggleDay(element) {
-            const tasksDiv = element.nextElementSibling;
-            const isExpanded = tasksDiv.classList.contains('expanded');
-            tasksDiv.classList.toggle('expanded');
-            element.setAttribute('aria-expanded', !isExpanded);
-        }
-        
-        function openEditTargetsModal() {
-            const modal = document.getElementById('editTargetsModal');
-            const form = document.getElementById('targetsForm');
-            
-            let formHtml = '';
-            Object.entries(CONFIG).forEach(([platformKey, platform]) => {
-                formHtml += `<div class="target-group"><h3>${platform.name}</h3>`;
-                platform.tasks.forEach(task => {
-                    const currentTarget = getTarget(platformKey, task.id);
-                    formHtml += `
-                        <div class="target-item">
-                            <label for="target_${platformKey}_${task.id}">${task.label} (${task.type})</label>
-                            <input type="number" id="target_${platformKey}_${task.id}" 
-                                   value="${currentTarget}" min="0" 
-                                   data-platform="${platformKey}" data-task="${task.id}">
-                        </div>
-                    `;
-                });
-                formHtml += '</div>';
-            });
-            
-            form.innerHTML = formHtml;
-            modal.classList.add('active');
-        }
-        
-        function closeEditTargetsModal() {
-            document.getElementById('editTargetsModal').classList.remove('active');
-        }
-        
-        function saveTargets() {
-            const inputs = document.querySelectorAll('#targetsForm input[type="number"]');
-            inputs.forEach(input => {
-                const platform = input.dataset.platform;
-                const task = input.dataset.task;
-                const value = parseInt(input.value) || 0;
-                setTarget(platform, task, value);
-            });
-            closeEditTargetsModal();
-            render();
-        }
-        
-        function restoreDefaults() {
-            if (!confirm('Are you sure you want to restore all targets to defaults?')) return;
-            data.config = {};
-            saveData();
-            closeEditTargetsModal();
-            render();
-        }
-        
-        function resetWeek() {
-            if (!confirm(`Reset all data for week of ${formatDate(currentWeekMonday)}?`)) return;
-            const weekKey = getWeekKey(currentWeekMonday);
-            delete data.weeks[weekKey];
-            saveData();
-            render();
+        function toggleDay(header) {
+            const tasks = header.nextElementSibling;
+            tasks.classList.toggle('expanded');
+            header.setAttribute('aria-expanded', tasks.classList.contains('expanded'));
         }
         
         function switchTab(tabName) {
+            activeTab = tabName;
             document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.tab === tabName);
+                const isActive = tab.dataset.tab === tabName;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', isActive);
             });
             document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.toggle('active', content.id === tabName);
+                content.classList.toggle('active', content.id === `${tabName}Content`);
             });
+            render();
         }
         
-        // ═══════════════════════════════════════════════════════════════════════════
-        // INIT & SELF-TEST
-        // ═══════════════════════════════════════════════════════════════════════════
+        function openTargetsModal() {
+            const formHtml = Object.entries(CONFIG).map(([platformKey, platform]) => `
+                <div class="target-group">
+                    <h3>${platform.name}</h3>
+                    ${platform.tasks.map(task => `
+                        <div class="target-row">
+                            <div class="target-label">
+                                ${task.label} ${task.type === 'daily' ? '(per day)' : '(per week)'}
+                            </div>
+                            <input type="number" class="target-input" 
+                                   id="target_${platformKey}_${task.id}" 
+                                   value="${getTarget(platformKey, task.id)}"
+                                   min="0">
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+            
+            document.getElementById('targetsForm').innerHTML = formHtml;
+            document.getElementById('targetsModal').classList.add('active');
+        }
+        
+        function closeTargetsModal() {
+            document.getElementById('targetsModal').classList.remove('active');
+        }
+        
+        function saveTargets() {
+            Object.entries(CONFIG).forEach(([platformKey, platform]) => {
+                platform.tasks.forEach(task => {
+                    const input = document.getElementById(`target_${platformKey}_${task.id}`);
+                    if (input) {
+                        setTarget(platformKey, task.id, input.value);
+                    }
+                });
+            });
+            closeTargetsModal();
+            render();
+        }
+        
+        function render() {
+            document.getElementById('weekDisplay').textContent = getWeekRange(currentWeekMonday);
+            
+            if (activeTab === 'overview') {
+                renderOverview();
+            } else {
+                renderPlatform(activeTab);
+            }
+        }
         
         function init() {
-            loadData();
             currentWeekMonday = getMondayOfWeek(new Date());
-            
-            document.getElementById('prevWeekBtn').addEventListener('click', () => changeWeek(-1));
-            document.getElementById('nextWeekBtn').addEventListener('click', () => changeWeek(1));
-            document.getElementById('resetWeekBtn').addEventListener('click', resetWeek);
-            document.getElementById('editTargetsBtn').addEventListener('click', openEditTargetsModal);
-            document.getElementById('closeModalBtn').addEventListener('click', closeEditTargetsModal);
-            document.getElementById('saveTargetsBtn').addEventListener('click', saveTargets);
-            document.getElementById('restoreDefaultsBtn').addEventListener('click', restoreDefaults);
             
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => switchTab(tab.dataset.tab));
             });
             
+            document.getElementById('targetsModal').addEventListener('click', (e) => {
+                if (e.target.id === 'targetsModal') {
+                    closeTargetsModal();
+                }
+            });
+            
             render();
         }
         
-        // Self-test helper for developers
         window.seedSampleDataForCurrentWeek = function() {
             const weekKey = getWeekKey(currentWeekMonday);
-            const weekData = getWeekData(weekKey);
+            const data = loadData();
             
             Object.keys(CONFIG).forEach(platform => {
                 CONFIG[platform].tasks.forEach(task => {
-                    if (task.type === 'daily') {
-                        DAYS.forEach((day, idx) => {
-                            // Simulate realistic progress: earlier days more complete
-                            const completionFactor = Math.max(0.4, 1 - (idx * 0.15));
-                            const target = getTarget(platform, task.id);
-                            const completed = Math.floor(target * completionFactor * (0.8 + Math.random() * 0.4));
-                            weekData[platform][day][task.id] = completed;
-                        });
-                    } else {
-                        // Weekly tasks: distribute across week
-                        const target = getTarget(platform, task.id);
-                        const completed = Math.floor(target * (0.6 + Math.random() * 0.4));
-                        const perDay = Math.floor(completed / 5);
-                        const remainder = completed % 5;
-                        DAYS.forEach((day, idx) => {
-                            weekData[platform][day][task.id] = perDay + (idx < remainder ? 1 : 0);
-                        });
-                    }
+                    const target = getTarget(platform, task.id);
+                    DAYS.forEach(day => {
+                        const variance = Math.random() * 0.4 + 0.8;
+                        const value = Math.round(target * variance);
+                        data.weeks[weekKey][platform][day][task.id] = value;
+                    });
                 });
             });
             
-            saveData();
+            saveData(data);
             render();
-            console.log('✅ Sample data seeded for current week!');
+            console.log('Sample data seeded for current week');
         };
         
-        // Make functions globally accessible
-        window.updateCounter = updateCounter;
-        window.setCounter = setCounter;
-        window.updateWeeklyCounter = updateWeeklyCounter;
-        window.setWeeklyCounter = setWeeklyCounter;
-        window.toggleDay = toggleDay;
-        
-        // Start the app
         init();
     </script>
 </body>
