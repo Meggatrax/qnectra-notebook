@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SMC ’86 Catch-up + Opportunity Call Flow</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --panel2:#111b27;
+      --text:#e7edf7;
+      --muted:#9fb0c7;
+      --muted2:#7f93ad;
+      --stroke:#1f2a3a;
+      --accent:#78ffd6;
+      --accent2:#7aa7ff;
+      --warn:#ffd36e;
+      --ok:#6ef0a7;
+      --bad:#ff6e6e;
+
+      --radius:16px;
+      --shadow: 0 10px 35px rgba(0,0,0,.35);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 18% -10%, rgba(122,167,255,.18), transparent 55%),
+        radial-gradient(900px 500px at 85% 0%, rgba(120,255,214,.12), transparent 50%),
+        linear-gradient(180deg, #070a0f 0%, var(--bg) 30%, #070a0f 100%);
+      min-height:100vh;
+    }
+    .wrap{ max-width:1200px; margin:0 auto; padding:26px 18px 70px; }
+    .topbar{
+      display:flex; flex-wrap:wrap; gap:12px;
+      align-items:flex-end; justify-content:space-between;
+      margin-bottom:14px;
+    }
+    .title{ display:flex; flex-direction:column; gap:4px; }
+    .title h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.2px;
+      font-weight:800;
+    }
+    .title .sub{ color:var(--muted); font-size:12.5px; line-height:1.35; }
+
+    .chipRow{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    .chip{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--stroke);
+      border-radius:999px;
+      padding:8px 10px;
+      display:flex; gap:8px; align-items:center;
+      box-shadow: 0 4px 18px rgba(0,0,0,.25);
+    }
+    .chip label{ color:var(--muted2); font-size:12px; }
+    .chip input, .chip select{
+      background:transparent; border:none; outline:none; color:var(--text);
+      font-size:12px; padding:2px 4px;
+    }
+    .chip input{ min-width:160px; }
+    .chip select option{ background: var(--panel); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+      margin-top:12px;
+    }
+    @media (max-width: 980px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap;
+      padding:12px 16px;
+      border-bottom:1px solid var(--stroke);
+      background: rgba(15,22,32,.45);
+    }
+    .tab{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      padding:8px 10px;
+      font-size:12px;
+      border-radius:999px;
+      cursor:pointer;
+      user-select:none;
+      transition: all .15s ease;
+    }
+    .tab.active{
+      border-color: rgba(120,255,214,.45);
+      color: var(--text);
+      background: rgba(120,255,214,.08);
+    }
+
+    .cardHead{
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      background: linear-gradient(180deg, rgba(17,27,39,.75), rgba(15,22,32,.35));
+      border-bottom:1px solid var(--stroke);
+    }
+    .cardHead .h{ display:flex; flex-direction:column; gap:4px; }
+    .cardHead .h strong{ font-size:13.5px; letter-spacing:.2px; }
+    .cardHead .h span{ color:var(--muted); font-size:12px; }
+    .cardBody{ padding:14px 16px; }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .btn{
+      cursor:pointer;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      padding:9px 11px;
+      border-radius:12px;
+      font-size:12px;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+    }
+    .btn:hover{ background: rgba(255,255,255,.06); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      border-color: rgba(122,167,255,.45);
+      background: rgba(122,167,255,.10);
+    }
+    .btn.good{
+      border-color: rgba(110,240,167,.45);
+      background: rgba(110,240,167,.08);
+    }
+    .btn.warn{
+      border-color: rgba(255,211,110,.55);
+      background: rgba(255,211,110,.08);
+    }
+    .pill{
+      font-size:11px; color:var(--muted);
+      border:1px solid var(--stroke);
+      padding:3px 8px;
+      border-radius:999px;
+      background: rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+    .badge{
+      font-size:11px; color: var(--muted2);
+      border:1px solid var(--stroke);
+      padding:4px 8px;
+      border-radius:999px;
+      background: rgba(0,0,0,.12);
+      display:inline-flex; gap:6px; align-items:center;
+      white-space:nowrap;
+    }
+    .badge.ok{ border-color: rgba(110,240,167,.45); color: rgba(110,240,167,.95); background: rgba(110,240,167,.06); }
+    .badge.warn{ border-color: rgba(255,211,110,.55); color: rgba(255,211,110,.95); background: rgba(255,211,110,.06); }
+
+    .small{ font-size:12px; color: var(--muted); line-height:1.45; }
+    .hr{ height:1px; background: var(--stroke); margin:12px 0; }
+
+    details{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.02);
+      border-radius: 14px;
+      padding:10px 12px;
+      margin:10px 0;
+    }
+    details[open]{ background: rgba(255,255,255,.03); }
+    summary{
+      cursor:pointer;
+      list-style:none;
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      font-size:13px; font-weight:700;
+      user-select:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+
+    .list{ display:flex; flex-direction:column; gap:8px; margin-top:10px; }
+    .item{
+      display:flex; gap:10px; align-items:flex-start;
+      padding:10px 10px;
+      border:1px solid var(--stroke);
+      border-radius: 14px;
+      background: rgba(0,0,0,.14);
+    }
+    .item input[type="checkbox"]{
+      width:18px; height:18px; margin-top:2px;
+      accent-color: var(--accent);
+    }
+    .item .t{ flex:1; }
+    .item .t b{ display:block; font-size:12.8px; margin-bottom:4px; }
+    .item .t p{ margin:0; font-size:12px; color:var(--muted); line-height:1.4; }
+
+    .stageGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    .stage{
+      border:1px solid var(--stroke);
+      border-radius: 14px;
+      padding:12px 12px;
+      background: rgba(0,0,0,.16);
+      position:relative;
+    }
+    .stage .top{
+      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+    }
+    .stage .name{ font-weight:800; font-size:13px; }
+    .stage .time{ color:var(--muted2); font-size:11px; }
+    .stage .desc{ margin-top:8px; color:var(--muted); font-size:12px; line-height:1.45; }
+    .stage.active{
+      border-color: rgba(120,255,214,.40);
+      box-shadow: 0 0 0 3px rgba(120,255,214,.08) inset;
+      background: rgba(120,255,214,.06);
+    }
+
+    .mono{
+      font-family: var(--mono);
+      font-size:12px;
+      color: rgba(231,237,247,.95);
+      background: rgba(0,0,0,.25);
+      border:1px solid var(--stroke);
+      border-radius: 14px;
+      padding:12px;
+      overflow:auto;
+      line-height:1.5;
+      white-space:pre-wrap;
+    }
+
+    .kpiGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    @media (max-width: 520px){ .kpiGrid{ grid-template-columns:1fr; } }
+    .kpi{
+      border:1px solid var(--stroke);
+      border-radius: 14px;
+      padding:12px 12px;
+      background: rgba(0,0,0,.16);
+    }
+    .kpi .label{ color: var(--muted2); font-size:11px; }
+    .kpi .value{ margin-top:6px; font-size:16px; font-weight:900; letter-spacing:.2px; }
+    .kpi .hint{ margin-top:6px; font-size:11.5px; color: var(--muted); line-height:1.35; }
+
+    textarea{
+      width:100%;
+      min-height:160px;
+      resize:vertical;
+      border-radius:14px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      padding:12px;
+      outline:none;
+      font-size:12.5px;
+      line-height:1.4;
+    }
+
+    .toast{
+      position:fixed;
+      bottom:18px; left:50%;
+      transform: translateX(-50%);
+      background: rgba(15,22,32,.95);
+      border:1px solid var(--stroke);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      font-size:12px;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title">
+        <h1>SMC ’86 Call Flow — Catch-up + Opportunity Exploration</h1>
+        <div class="sub">Reusable structure for classmates (decades apart): <b>Reconnect → Frame → Their world → Your world → Explore needs → Next steps</b>.</div>
+      </div>
+
+      <div class="chipRow">
+        <div class="chip">
+          <label for="contact">Contact</label>
+          <input id="contact" placeholder="e.g., Terrence Elliott" />
+        </div>
+        <div class="chip">
+          <label for="duration">Call length</label>
+          <select id="duration">
+            <option value="15">15 min</option>
+            <option value="20">20 min</option>
+            <option value="30" selected>30 min</option>
+          </select>
+        </div>
+        <div class="chip">
+          <label for="tone">Tone</label>
+          <select id="tone">
+            <option value="warm" selected>Warm + direct</option>
+            <option value="operator">Operator-to-operator</option>
+            <option value="formal">Formal + concise</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: Main -->
+      <div class="card">
+        <div class="tabs">
+          <div class="tab active" data-tab="flow">Flow</div>
+          <div class="tab" data-tab="questions">Questions</div>
+          <div class="tab" data-tab="checklist">Checklist</div>
+          <div class="tab" data-tab="templates">Mini-scripts</div>
+        </div>
+
+        <!-- FLOW -->
+        <div class="cardBody" id="tab_flow">
+          <div class="row" style="justify-content:space-between;">
+            <div class="small">
+              <b>Goal:</b> make it feel like a real catch-up while still leaving with <b>2–3 insights</b>, <b>2 intros</b>, and a <b>clear next step</b>.
+            </div>
+            <div class="row">
+              <div class="btn primary" id="startTimer">Start</div>
+              <div class="btn" id="pauseTimer">Pause</div>
+              <div class="btn warn" id="resetAll">Reset</div>
+            </div>
+          </div>
+
+          <div class="kpiGrid">
+            <div class="kpi">
+              <div class="label">Timer</div>
+              <div class="value" id="timer">00:00</div>
+              <div class="hint" id="timerHint">Use this to keep the exploration portion from drifting.</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Current stage</div>
+              <div class="value" id="stageName">Reconnect</div>
+              <div class="hint" id="stageHint">Start warm. Earn permission before you “go business.”</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Next prompt</div>
+              <div class="value" id="nextPrompt">—</div>
+              <div class="hint" id="nextPromptHint">Click “Next stage” when you’re ready.</div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="row" style="justify-content:space-between; align-items:center;">
+            <div class="row">
+              <span class="badge" id="planBadge">0/6 stages</span>
+              <span class="pill" id="callMeta">30 min • Warm + direct</span>
+            </div>
+            <div class="row">
+              <div class="btn good" id="prevStage">← Prev</div>
+              <div class="btn good" id="nextStage">Next →</div>
+              <div class="btn" id="expandFlow">Expand</div>
+              <div class="btn" id="collapseFlow">Collapse</div>
+            </div>
+          </div>
+
+          <div class="stageGrid" id="stageGrid"></div>
+        </div>
+
+        <!-- QUESTIONS -->
+        <div class="cardBody" id="tab_questions" style="display:none;">
+          <div class="row" style="justify-content:space-between;">
+            <div class="small">
+              Pick 5 questions per call. Use “Shuffle” to surface a tight set.
+            </div>
+            <div class="row">
+              <div class="btn primary" id="shuffleQ">Shuffle 5</div>
+              <div class="btn" id="copyQ">Copy selected</div>
+            </div>
+          </div>
+
+          <details class="group" open>
+            <summary>Power questions <span class="badge" id="qBadge">0 selected</span></summary>
+            <div class="list" id="qList"></div>
+          </details>
+        </div>
+
+        <!-- CHECKLIST -->
+        <div class="cardBody" id="tab_checklist" style="display:none;">
+          <div class="small">A lightweight “leave the call with…” checklist. Reusable for every classmate.</div>
+
+          <details class="group" open>
+            <summary>Before the call <span class="badge" id="preBadge">0/4</span></summary>
+            <div class="list" id="preList"></div>
+          </details>
+
+          <details class="group">
+            <summary>During the call <span class="badge" id="duringBadge">0/5</span></summary>
+            <div class="list" id="duringList"></div>
+          </details>
+
+          <details class="group">
+            <summary>Close + next steps <span class="badge" id="closeBadge">0/4</span></summary>
+            <div class="list" id="closeList"></div>
+          </details>
+        </div>
+
+        <!-- TEMPLATES -->
+        <div class="cardBody" id="tab_templates" style="display:none;">
+          <div class="small">Short lines you can glance at mid-call. Copy/paste friendly.</div>
+
+          <details class="group" open>
+            <summary>30-second framing <span class="badge ok">Ready</span></summary>
+            <div class="row" style="justify-content:flex-end; margin-bottom:10px;">
+              <div class="btn good" data-copy="#frameTxt">Copy</div>
+            </div>
+            <div class="mono" id="frameTxt">Just to frame this: part catch-up, part exploration. I’m considering bringing my business to St. Lucia in a focused way, and I’m talking to a few SMC ’86 classmates to understand what’s real on the ground—where there’s real urgency, and what a sensible “starter” project would look like.</div>
+          </details>
+
+          <details class="group">
+            <summary>1-minute Qnèctra intro <span class="badge">Short</span></summary>
+            <div class="row" style="justify-content:flex-end; margin-bottom:10px;">
+              <div class="btn good" data-copy="#introTxt">Copy</div>
+            </div>
+            <div class="mono" id="introTxt">Quick context on me: I run Qnèctra, a fractional operations and systems consultancy. I help organizations modernize workflows, data, and tech operations—and introduce practical automation and AI where it creates real leverage: faster cycle time, less rework, and clearer visibility.</div>
+          </details>
+
+          <details class="group">
+            <summary>Close with a clear next step <span class="badge">Options</span></summary>
+            <div class="row" style="justify-content:flex-end; margin-bottom:10px;">
+              <div class="btn good" data-copy="#closeTxt">Copy</div>
+            </div>
+            <div class="mono" id="closeTxt">This was really helpful. Two quick asks:
+1) Who are 2–3 people you think I should speak with next?
+2) If I draft a tight 4–6 week pilot concept, can I run it by you for a quick sanity check?
+
+Either way, it’s been great reconnecting after all these years.</div>
+          </details>
+        </div>
+      </div>
+
+      <!-- RIGHT: Notes + Export -->
+      <div class="card">
+        <div class="cardHead">
+          <div class="h">
+            <strong>Call Notes</strong>
+            <span>Saved locally. Capture insights + intros + next steps.</span>
+          </div>
+          <div class="badge" id="saveBadge">Saved</div>
+        </div>
+
+        <div class="cardBody">
+          <div class="row" style="justify-content:space-between;">
+            <div class="small"><b>Suggested note structure:</b> (1) Their world (2) Pain + urgency (3) Buyers/decision path (4) Intros (5) Next step.</div>
+            <div class="row">
+              <div class="btn primary" id="export">Export JSON</div>
+              <div class="btn" id="print">Print</div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <textarea id="notes" placeholder="Their world:
+- ...
+
+Pain + urgency:
+- ...
+
+Where AI/automation helps most:
+- ...
+
+Decision path / budget:
+- ...
+
+Intros:
+- 1)
+- 2)
+
+Next step:
+- ..."></textarea>
+
+          <div class="hr"></div>
+
+          <details class="group" open>
+            <summary>Selected questions (auto) <span class="badge" id="selBadge">0</span></summary>
+            <div class="mono" id="selQuestions">—</div>
+            <div class="row" style="justify-content:flex-end; margin-top:10px;">
+              <div class="btn good" id="copySelectedBlock">Copy block</div>
+            </div>
+          </details>
+
+          <details class="group">
+            <summary>Quick prompts (one-liners) <span class="badge">glance</span></summary>
+            <div class="mono" id="glance">• What’s changed most in your market over the last 3–5 years?
+• Where do projects slow down—handoffs, approvals, data, procurement, training?
+• Who can actually approve change (and who can quietly veto it)?
+• If we wanted to prove value fast, what’s the smallest pilot people would say yes to?</div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Copied.</div>
+
+  <script>
+    // -----------------------------
+    // Local storage
+    // -----------------------------
+    const LS_KEY = "qnectra_smc86_callflow_v1";
+    const state = {
+      contact: "",
+      duration: 30,
+      tone: "warm",
+      stageIndex: 0,
+      stagesDone: {},
+      checks: {},
+      selectedQuestions: {},
+      notes: "",
+      timer: { running:false, elapsed:0, startedAt:null }
+    };
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(LS_KEY);
+        if(!raw) return;
+        const saved = JSON.parse(raw);
+        if(saved && typeof saved === "object") Object.assign(state, saved);
+      }catch(e){}
+    }
+    function saveState(){
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+      document.getElementById("saveBadge").textContent = "Saved";
+      setTimeout(()=> document.getElementById("saveBadge").textContent = "Saved", 200);
+    }
+
+    // -----------------------------
+    // Data
+    // -----------------------------
+    const stages = [
+      {
+        name: "Reconnect",
+        time: "3–5 min",
+        desc: "Warm catch-up. Comfort + rapport before business. Light nostalgia is optional (20 seconds).",
+        prompts: [
+          "It’s wild—SMC ’86 feels like another lifetime. How have you been?",
+          "Where are you based these days—still on island most of the time?",
+          "What’s been keeping you busy the last few years?"
+        ]
+      },
+      {
+        name: "Frame",
+        time: "30 sec",
+        desc: "Set expectations. Remove sales energy. Signal intent: catch-up + exploration.",
+        prompts: [
+          "Part catch-up, part exploration—I’m considering bringing my business to St. Lucia in a focused way.",
+          "I’m speaking with a few classmates to understand what’s real on the ground and where I can be useful."
+        ]
+      },
+      {
+        name: "Their world",
+        time: "6–8 min",
+        desc: "Let them talk. Learn their reality: focus, changes, friction, where time and rework show up.",
+        prompts: [
+          "Tell me about your business now—what are you really focused on these days?",
+          "What’s changed most in the market over the last 3–5 years?",
+          "Where do you feel the most friction right now—delivery, staffing, vendors, customers, or operations?"
+        ]
+      },
+      {
+        name: "Your world",
+        time: "2–3 min",
+        desc: "Short, operator-level. One-minute Qnèctra + outcomes. No pitch deck.",
+        prompts: [
+          "I run Qnèctra—fractional operations and systems modernization.",
+          "We modernize workflows, data, and tech ops—and introduce practical automation/AI where it creates leverage: faster cycle time, less rework, clearer reporting."
+        ]
+      },
+      {
+        name: "Explore opportunities",
+        time: "8–10 min",
+        desc: "Find 1–2 angles, a real buyer path, and a sensible starter pilot. Use questions (market/pain/buying/entry).",
+        prompts: [
+          "If you were in my position, where would you focus first on island?",
+          "Where is there real urgency to modernize—not just talk?",
+          "Who has budget + authority to move, and how do decisions get made?"
+        ]
+      },
+      {
+        name: "Close",
+        time: "60 sec",
+        desc: "Clear next step + intros. Keep it warm. One ask is better than three.",
+        prompts: [
+          "Who are 2–3 people you think I should speak with next?",
+          "If I draft a tight 4–6 week pilot concept, can I run it by you for a quick sanity check?",
+          "Really appreciate this—it’s been great reconnecting."
+        ]
+      }
+    ];
+
+    const questions = [
+      "What’s the most valuable problem to solve on island right now?",
+      "Where do things break operationally—handoffs, approvals, data, staffing?",
+      "What’s painfully manual that shouldn’t be?",
+      "Who actually has budget and authority to modernize?",
+      "How do decisions get made—fast, slow, procurement-heavy?",
+      "What’s the fastest win that would build trust?",
+      "What projects have failed before—and why?",
+      "If you could fix one system or process, what would it be?",
+      "Which industries are investing this year?",
+      "Who are 2–3 people I should talk to next?"
+    ];
+
+    const checklist = {
+      pre: [
+        { key:"pre_one_liner", title:"Write your 1-sentence update", desc:"Where you are now + what you’re building." },
+        { key:"pre_qnectra", title:"Write your 1-sentence Qnèctra", desc:"Who you help + outcome (cycle time, rework, visibility)." },
+        { key:"pre_ask", title:"Define your ask", desc:"Honest perspective on where you can be useful + 2 intros." },
+        { key:"pre_3_bullets", title:"List 3 ways you can help", desc:"Automation, workflow, data/governance, tech ops, etc." }
+      ],
+      during: [
+        { key:"dur_frame", title:"Say the frame early", desc:"Catch-up + exploration; no pitch energy." },
+        { key:"dur_listen", title:"Let them talk first", desc:"Ask about their world + friction + changes." },
+        { key:"dur_probe", title:"Probe for buyer path", desc:"Authority, budget, procurement, veto holders." },
+        { key:"dur_angles", title:"Identify 1–2 opportunity angles", desc:"Where AI/automation creates leverage quickly." },
+        { key:"dur_intro_list", title:"Capture intros in notes", desc:"Names + roles + why they matter." }
+      ],
+      close: [
+        { key:"cl_next_step", title:"Lock one next step", desc:"Follow-up call, pilot outline, or intros." },
+        { key:"cl_two_intros", title:"Ask for 2–3 intros", desc:"Make it specific: who should you speak to next?" },
+        { key:"cl_thanks", title:"Close warmly", desc:"Appreciation + reconnect vibe." },
+        { key:"cl_log", title:"Log the key takeaways", desc:"2–3 insights, decision path, constraints." }
+      ]
+    };
+
+    // -----------------------------
+    // UI helpers
+    // -----------------------------
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const panels = {
+      flow: document.getElementById("tab_flow"),
+      questions: document.getElementById("tab_questions"),
+      checklist: document.getElementById("tab_checklist"),
+      templates: document.getElementById("tab_templates")
+    };
+
+    function setTab(name){
+      tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+      Object.entries(panels).forEach(([k, el]) => el.style.display = (k===name ? "" : "none"));
+    }
+    tabs.forEach(t => t.addEventListener("click", () => setTab(t.dataset.tab)));
+
+    function toast(msg="Copied."){
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(()=> el.classList.remove("show"), 900);
+    }
+
+    // Copy buttons
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-copy]");
+      if(!btn) return;
+      const sel = btn.getAttribute("data-copy");
+      const node = document.querySelector(sel);
+      if(!node) return;
+      navigator.clipboard.writeText(node.textContent.trim()).then(()=> toast("Copied to clipboard."));
+    });
+
+    // -----------------------------
+    // Render: Flow stages
+    // -----------------------------
+    const stageGrid = document.getElementById("stageGrid");
+    const planBadge = document.getElementById("planBadge");
+    const stageName = document.getElementById("stageName");
+    const stageHint = document.getElementById("stageHint");
+    const nextPrompt = document.getElementById("nextPrompt");
+    const nextPromptHint = document.getElementById("nextPromptHint");
+
+    function renderStages(expand=true){
+      stageGrid.innerHTML = "";
+      stages.forEach((s, idx) => {
+        const div = document.createElement("div");
+        div.className = "stage" + (idx === state.stageIndex ? " active" : "");
+        const done = !!state.stagesDone[idx];
+        const badgeClass = done ? "badge ok" : "badge";
+        div.innerHTML = `
+          <div class="top">
+            <div>
+              <div class="name">${idx+1}. ${escapeHtml(s.name)} ${done ? "✓" : ""}</div>
+              <div class="time">${escapeHtml(s.time)}</div>
+            </div>
+            <div class="${badgeClass}" title="Mark stage complete">
+              ${done ? "Done" : "In progress"}
+            </div>
+          </div>
+          <div class="desc">${escapeHtml(s.desc)}</div>
+          <div class="hr"></div>
+          <div class="small"><b>Prompts:</b></div>
+          <div class="mono">${s.prompts.map(p=> "• " + escapeHtml(p)).join("\n")}</div>
+          <div class="row" style="justify-content:flex-end; margin-top:10px;">
+            <div class="btn good" data-stage="${idx}" data-action="mark">${done ? "Unmark" : "Mark done"}</div>
+            <div class="btn" data-stage="${idx}" data-action="go">Go to stage</div>
+          </div>
+        `;
+        stageGrid.appendChild(div);
+        if(!expand) div.style.display = (idx === state.stageIndex ? "" : "none");
+      });
+
+      // header indicators
+      const doneCount = Object.values(state.stagesDone).filter(Boolean).length;
+      planBadge.textContent = `${doneCount}/${stages.length} stages`;
+      const current = stages[state.stageIndex];
+      stageName.textContent = current.name;
+      stageHint.textContent = current.desc;
+
+      const np = current.prompts[0] || "—";
+      nextPrompt.textContent = np.length > 26 ? np.slice(0, 26) + "…" : np;
+      nextPromptHint.textContent = np;
+    }
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".btn[data-action]");
+      if(!btn) return;
+      const idx = Number(btn.getAttribute("data-stage"));
+      const action = btn.getAttribute("data-action");
+      if(Number.isNaN(idx)) return;
+
+      if(action === "mark"){
+        state.stagesDone[idx] = !state.stagesDone[idx];
+        saveState();
+        renderStages(flowExpanded);
+      }
+      if(action === "go"){
+        state.stageIndex = idx;
+        saveState();
+        renderStages(flowExpanded);
+      }
+    });
+
+    // Expand/collapse flow
+    let flowExpanded = true;
+    document.getElementById("expandFlow").addEventListener("click", () => {
+      flowExpanded = true;
+      renderStages(true);
+    });
+    document.getElementById("collapseFlow").addEventListener("click", () => {
+      flowExpanded = false;
+      renderStages(false);
+    });
+
+    // Prev/Next stage
+    document.getElementById("prevStage").addEventListener("click", () => {
+      state.stageIndex = Math.max(0, state.stageIndex - 1);
+      saveState();
+      renderStages(flowExpanded);
+    });
+    document.getElementById("nextStage").addEventListener("click", () => {
+      state.stageIndex = Math.min(stages.length - 1, state.stageIndex + 1);
+      saveState();
+      renderStages(flowExpanded);
+    });
+
+    // -----------------------------
+    // Render: Questions
+    // -----------------------------
+    const qList = document.getElementById("qList");
+    const qBadge = document.getElementById("qBadge");
+    const selQuestions = document.getElementById("selQuestions");
+    const selBadge = document.getElementById("selBadge");
+
+    function renderQuestions(){
+      qList.innerHTML = "";
+      questions.forEach((q, idx) => {
+        const key = `q_${idx}`;
+        const checked = !!state.selectedQuestions[key];
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <input type="checkbox" ${checked ? "checked" : ""} data-qkey="${key}" />
+          <div class="t">
+            <b>${escapeHtml(q)}</b>
+            <p>Use when you need clarity or a decision path.</p>
+          </div>
+          <span class="pill">Q</span>
+        `;
+        qList.appendChild(div);
+      });
+
+      const selected = getSelectedQuestions();
+      qBadge.textContent = `${selected.length} selected`;
+      selBadge.textContent = `${selected.length}`;
+      selQuestions.textContent = selected.length ? selected.map(q => "• " + q).join("\n") : "—";
+    }
+
+    function getSelectedQuestions(){
+      const out = [];
+      questions.forEach((q, idx) => {
+        const key = `q_${idx}`;
+        if(state.selectedQuestions[key]) out.push(q);
+      });
+      return out;
+    }
+
+    qList.addEventListener("change", (e) => {
+      const cb = e.target.closest("input[type='checkbox'][data-qkey]");
+      if(!cb) return;
+      state.selectedQuestions[cb.dataset.qkey] = cb.checked;
+      saveState();
+      renderQuestions();
+    });
+
+    document.getElementById("shuffleQ").addEventListener("click", () => {
+      // clear, then pick 5 random
+      state.selectedQuestions = {};
+      const idxs = [...Array(questions.length).keys()];
+      for(let i=idxs.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [idxs[i], idxs[j]] = [idxs[j], idxs[i]];
+      }
+      idxs.slice(0,5).forEach(i => state.selectedQuestions[`q_${i}`] = true);
+      saveState();
+      renderQuestions();
+      toast("Shuffled 5 questions.");
+    });
+
+    document.getElementById("copyQ").addEventListener("click", () => {
+      const selected = getSelectedQuestions();
+      const text = selected.length ? selected.map(q => "• " + q).join("\n") : "";
+      navigator.clipboard.writeText(text).then(()=> toast("Selected questions copied."));
+    });
+
+    document.getElementById("copySelectedBlock").addEventListener("click", () => {
+      const text = document.getElementById("selQuestions").textContent.trim();
+      navigator.clipboard.writeText(text).then(()=> toast("Copied block."));
+    });
+
+    // -----------------------------
+    // Render: Checklist
+    // -----------------------------
+    function renderChecklist(){
+      renderChecklistGroup("preList", checklist.pre, "preBadge");
+      renderChecklistGroup("duringList", checklist.during, "duringBadge");
+      renderChecklistGroup("closeList", checklist.close, "closeBadge");
+    }
+
+    function renderChecklistGroup(containerId, items, badgeId){
+      const el = document.getElementById(containerId);
+      el.innerHTML = "";
+      let done = 0;
+      items.forEach(it => {
+        const checked = !!state.checks[it.key];
+        if(checked) done++;
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <input type="checkbox" ${checked ? "checked" : ""} data-ckey="${it.key}" />
+          <div class="t">
+            <b>${escapeHtml(it.title)}</b>
+            <p>${escapeHtml(it.desc)}</p>
+          </div>
+          <span class="pill">✓</span>
+        `;
+        el.appendChild(div);
+      });
+      document.getElementById(badgeId).textContent = `${done}/${items.length}`;
+    }
+
+    document.addEventListener("change", (e) => {
+      const cb = e.target.closest("input[type='checkbox'][data-ckey]");
+      if(!cb) return;
+      state.checks[cb.dataset.ckey] = cb.checked;
+      saveState();
+      renderChecklist();
+    });
+
+    // -----------------------------
+    // Inputs + meta
+    // -----------------------------
+    const contact = document.getElementById("contact");
+    const duration = document.getElementById("duration");
+    const tone = document.getElementById("tone");
+    const callMeta = document.getElementById("callMeta");
+
+    function updateMeta(){
+      callMeta.textContent = `${state.duration} min • ${toneLabel(state.tone)}`;
+      contact.value = state.contact || "";
+      duration.value = String(state.duration);
+      tone.value = state.tone;
+    }
+    function toneLabel(t){
+      if(t==="operator") return "Operator-to-operator";
+      if(t==="formal") return "Formal + concise";
+      return "Warm + direct";
+    }
+
+    contact.addEventListener("input", () => {
+      state.contact = contact.value;
+      saveState();
+    });
+    duration.addEventListener("change", () => {
+      state.duration = Number(duration.value) || 30;
+      saveState();
+      updateMeta();
+    });
+    tone.addEventListener("change", () => {
+      state.tone = tone.value;
+      saveState();
+      updateMeta();
+    });
+
+    // -----------------------------
+    // Notes
+    // -----------------------------
+    const notes = document.getElementById("notes");
+    notes.addEventListener("input", () => {
+      state.notes = notes.value;
+      saveState();
+    });
+
+    // -----------------------------
+    // Export / Print
+    // -----------------------------
+    document.getElementById("export").addEventListener("click", () => {
+      const payload = {
+        contact: state.contact,
+        duration: state.duration,
+        tone: state.tone,
+        stageIndex: state.stageIndex,
+        stagesDone: state.stagesDone,
+        checklist: state.checks,
+        selectedQuestions: getSelectedQuestions(),
+        notes: state.notes,
+        exportedAt: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `smc86-call-${(state.contact || "contact").replaceAll(" ","_").toLowerCase()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast("Exported JSON.");
+    });
+    document.getElementById("print").addEventListener("click", () => window.print());
+
+    // -----------------------------
+    // Timer
+    // -----------------------------
+    const timerEl = document.getElementById("timer");
+    const timerHint = document.getElementById("timerHint");
+    let tickHandle = null;
+
+    function formatTime(sec){
+      sec = Math.max(0, Math.floor(sec));
+      const m = String(Math.floor(sec/60)).padStart(2,"0");
+      const s = String(sec%60).padStart(2,"0");
+      return `${m}:${s}`;
+    }
+
+    function timerNowElapsed(){
+      if(!state.timer.running || !state.timer.startedAt) return state.timer.elapsed || 0;
+      const delta = (Date.now() - state.timer.startedAt) / 1000;
+      return (state.timer.elapsed || 0) + delta;
+    }
+
+    function renderTimer(){
+      const elapsed = timerNowElapsed();
+      timerEl.textContent = formatTime(elapsed);
+
+      // soft guidance based on call length
+      const total = state.duration * 60;
+      const remaining = Math.max(0, total - elapsed);
+      if(elapsed === 0) timerHint.textContent = "Start when you begin the call.";
+      else if(remaining < 90) timerHint.textContent = "Wrap + lock next step.";
+      else if(elapsed > total * 0.6) timerHint.textContent = "Move into Explore + Close.";
+      else timerHint.textContent = "Keep it flowing; don’t rush the reconnect.";
+
+      saveState();
+    }
+
+    function startTick(){
+      if(tickHandle) return;
+      tickHandle = setInterval(renderTimer, 500);
+    }
+    function stopTick(){
+      if(!tickHandle) return;
+      clearInterval(tickHandle);
+      tickHandle = null;
+    }
+
+    document.getElementById("startTimer").addEventListener("click", () => {
+      if(!state.timer.running){
+        state.timer.running = true;
+        state.timer.startedAt = Date.now();
+        saveState();
+        startTick();
+        toast("Timer started.");
+      }
+    });
+
+    document.getElementById("pauseTimer").addEventListener("click", () => {
+      if(state.timer.running){
+        const elapsed = timerNowElapsed();
+        state.timer.elapsed = elapsed;
+        state.timer.running = false;
+        state.timer.startedAt = null;
+        saveState();
+        stopTick();
+        renderTimer();
+        toast("Timer paused.");
+      }
+    });
+
+    // Reset all
+    document.getElementById("resetAll").addEventListener("click", () => {
+      if(!confirm("Reset everything (stages, checklist, questions, notes, timer)?")) return;
+      state.stageIndex = 0;
+      state.stagesDone = {};
+      state.checks = {};
+      state.selectedQuestions = {};
+      state.notes = "";
+      state.timer = { running:false, elapsed:0, startedAt:null };
+      saveState();
+      notes.value = "";
+      stopTick();
+      renderTimer();
+      renderStages(flowExpanded);
+      renderChecklist();
+      renderQuestions();
+      toast("Reset complete.");
+    });
+
+    // -----------------------------
+    // Copy selected questions / prompts area
+    // -----------------------------
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".btn[data-copytext]");
+      if(!btn) return;
+      const text = btn.getAttribute("data-copytext") || "";
+      navigator.clipboard.writeText(text).then(()=> toast("Copied."));
+    });
+
+    // -----------------------------
+    // Utils + init
+    // -----------------------------
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    loadState();
+
+    // init inputs
+    contact.value = state.contact || "";
+    duration.value = String(state.duration || 30);
+    tone.value = state.tone || "warm";
+    notes.value = state.notes || "";
+
+    updateMeta();
+    renderStages(true);
+    renderQuestions();
+    renderChecklist();
+    renderTimer();
+
+    // resume ticking if timer was running
+    if(state.timer.running && state.timer.startedAt){
+      startTick();
+    }
+
+    // Keep call meta in sync
+    setInterval(() => {
+      document.getElementById("callMeta").textContent = `${state.duration} min • ${toneLabel(state.tone)}`;
+    }, 2000);
+  </script>
+</body>
+</html>
