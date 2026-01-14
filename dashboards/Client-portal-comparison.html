@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coaching Client Portal Platforms – Comparison</title>
+  <style>
+    :root{
+      --bg:#0b0b10;
+      --card:#11111a;
+      --card2:#0f0f17;
+      --text:#f5f5f7;
+      --muted:#b6b6c6;
+      --line:#26263a;
+      --accent:#c12638;
+      --accent2:#6f7cff;
+      --good:#3ddc97;
+      --warn:#ffcc66;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at 15% 10%, rgba(193,38,56,.18), transparent 45%),
+                  radial-gradient(circle at 80% 0%, rgba(111,124,255,.14), transparent 45%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.55;
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:28px 16px 56px;
+    }
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(17,17,26,.7);
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    h1{
+      margin:14px 0 6px;
+      font-size:26px;
+      letter-spacing:.02em;
+    }
+    .sub{
+      margin:0 0 16px;
+      color:var(--muted);
+      max-width:900px;
+    }
+    .card{
+      background: linear-gradient(145deg, rgba(17,17,26,.95), rgba(10,10,16,.95));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:16px;
+      margin-top:16px;
+      box-shadow: 0 12px 36px rgba(0,0,0,.35);
+    }
+    .note{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:6px;
+    }
+    .table-wrap{
+      overflow:auto;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(15,15,23,.7);
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:980px;
+    }
+    thead th{
+      position:sticky;
+      top:0;
+      z-index:1;
+      background:rgba(15,15,23,.95);
+      color:#eaeaf2;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      padding:12px 12px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      white-space:nowrap;
+    }
+    tbody td{
+      padding:12px 12px;
+      border-bottom:1px solid rgba(38,38,58,.8);
+      vertical-align:top;
+      color:#e7e7f0;
+      font-size:14px;
+    }
+    tbody tr:hover td{
+      background:rgba(193,38,56,.06);
+    }
+    .muted{ color:var(--muted); font-size:13px; }
+    .price{ font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .tag{
+      display:inline-block;
+      padding:3px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(17,17,26,.75);
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+      margin:2px 6px 2px 0;
+    }
+    .tag.accent{ border-color:rgba(193,38,56,.55); color:#ffd9df; background:rgba(193,38,56,.10); }
+    .tag.blue{ border-color:rgba(111,124,255,.55); color:#dde1ff; background:rgba(111,124,255,.10); }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      margin-top:12px;
+    }
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+    h2{
+      margin:0 0 8px;
+      font-size:18px;
+      letter-spacing:.02em;
+    }
+    h3{
+      margin:0 0 6px;
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:#d6d6e5;
+    }
+    ul{ margin:8px 0 0 18px; }
+    li{ margin:6px 0; }
+    .one-liners{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:10px;
+    }
+    @media (max-width: 860px){
+      .one-liners{ grid-template-columns: 1fr; }
+    }
+    .callout{
+      background:linear-gradient(145deg, rgba(17,17,26,.85), rgba(12,12,18,.85));
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 12px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .callout strong{ color:#ffffff; }
+    footer{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:12px;
+      border-top:1px dashed rgba(38,38,58,.9);
+      padding-top:12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="pill">Workshop prep · Coaching portals · Platform scan</span>
+    <h1>Coaching platforms with client portals (for coaches + clients)</h1>
+    <p class="sub">
+      Platforms coaches commonly use to manage clients <strong>and</strong> give clients a login/portal experience.
+      Pricing below is <strong>public list pricing (ballpark)</strong> and may vary by billing cycle, limits, or promos.
+    </p>
+
+    <div class="card">
+      <h2>Comparison table</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Best fit</th>
+              <th>Ideal stage</th>
+              <th>Starting price</th>
+              <th>Coach-side management</th>
+              <th>Client portal experience</th>
+              <th>Notable strengths</th>
+              <th>Limitations / watch-outs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>CoachAccountable</strong></td>
+              <td>Coaching-first delivery + accountability</td>
+              <td>Solo → small team</td>
+              <td class="price">$20/mo (small client count)</td>
+              <td>Engagements, plans, actions, progress tracking, reminders, coaching record</td>
+              <td>Dedicated client portal; clients see plans, actions, progress, materials</td>
+              <td>Very “coaching-native” workflow (follow-through, continuity)</td>
+              <td>Less of a marketing suite; branding/design is functional vs premium-brand-forward</td>
+            </tr>
+            <tr>
+              <td><strong>Simply.Coach</strong></td>
+              <td>Structured coaching practice with secure delivery</td>
+              <td>Solo → multi-coach</td>
+              <td class="price">$9/mo (starter tier)</td>
+              <td>Client mgmt, contracts, forms, goals/action plans (varies by plan)</td>
+              <td>Client dashboards/workspaces for scheduling + engagement</td>
+              <td>Coaching-specific + emphasis on organized delivery</td>
+              <td>Not full marketing automation; UI flexibility depends on plan/features</td>
+            </tr>
+            <tr>
+              <td><strong>Practice Better</strong></td>
+              <td>Wellness / health-adjacent coaching practices</td>
+              <td>Solo → team practice</td>
+              <td class="price">$25/mo (Starter, annual)</td>
+              <td>Scheduling, intake forms, notes, progress, secure messaging</td>
+              <td>Robust portal for booking, forms, messaging, documents</td>
+              <td>Strong portal + privacy posture for wellness workflows</td>
+              <td>Wellness-oriented; may be heavy for exec/business coaching</td>
+            </tr>
+            <tr>
+              <td><strong>Kajabi</strong> (Coaching Product)</td>
+              <td>Coaching + content business (programs, assets)</td>
+              <td>Solo → scale</td>
+              <td class="price">$179/mo (Basic, monthly)</td>
+              <td>Offers, payments/subscriptions, content delivery, coaching product</td>
+              <td>Member login experience for programs + content</td>
+              <td>Best-in-class for packaged programs + monetization</td>
+              <td>Less “CRM-like” for coaching ops; workflow customization may need workarounds</td>
+            </tr>
+            <tr>
+              <td><strong>SuiteDash</strong></td>
+              <td>White-labeled services-firm portal (coaching + ops)</td>
+              <td>Small team → agency-style</td>
+              <td class="price">$19/mo (entry tier)</td>
+              <td>CRM, projects/tasks, files, invoicing, e-sign, scheduling</td>
+              <td>White-labeled portal + branded login</td>
+              <td>Strong “professional services portal” feel</td>
+              <td>Feature-dense; coaching flow is less opinionated</td>
+            </tr>
+            <tr>
+              <td><strong>CoachVantage</strong></td>
+              <td>All-in-one coaching ops with portal + scheduling</td>
+              <td>Solo → small team</td>
+              <td class="price">$49/mo (common plan)</td>
+              <td>Workflow mgmt, scheduling, resources, progress/goals</td>
+              <td>Client portal for booking + resources</td>
+              <td>Practical all-in-one for 1:1 programs</td>
+              <td>Branding/UX more functional than premium; verify limits by plan</td>
+            </tr>
+            <tr>
+              <td><strong>Delenta</strong></td>
+              <td>Brand-forward coaching platform, multi-coach support</td>
+              <td>Solo → multi-coach org</td>
+              <td class="price">~$9–$29+/mo (plan-dependent)</td>
+              <td>CRM, scheduling, payments, programs; team features</td>
+              <td>Branded portals for clients/coaches/sponsors (scale positioning)</td>
+              <td>All-in-one + branding + scale posture</td>
+              <td>Plan details/limits vary; rollout discipline matters to avoid clutter</td>
+            </tr>
+            <tr>
+              <td><strong>upcoach</strong></td>
+              <td>Integrated suite: coaching + courses + engagement</td>
+              <td>Solo → scale</td>
+              <td class="price">$99/mo (Pro, billed annually)</td>
+              <td>Payments, CRM, courses, coaching activities, messaging</td>
+              <td>Clients access programs/activities in one place</td>
+              <td>Balanced all-in-one for programs + coaching activities</td>
+              <td>Some features skew to cohort/community (optional); fees/limits may apply by plan</td>
+            </tr>
+            <tr>
+              <td><strong>Passion.io</strong></td>
+              <td>Mobile-first coaching delivery (branded app)</td>
+              <td>Brand-driven coach → scale</td>
+              <td class="price">$99/mo (Launch, annual)</td>
+              <td>App-based delivery, engagement features, monetization</td>
+              <td>Branded iOS/Android + web app experience</td>
+              <td>Strongest “your own app” story + mobile engagement</td>
+              <td>More app platform than coaching CRM; fees (web checkout / in-app) matter</td>
+            </tr>
+            <tr>
+              <td><strong>Thinkific</strong></td>
+              <td>Course-led coaching (education + add-on coaching)</td>
+              <td>Solo → course business</td>
+              <td class="price">$49/mo (Basic, monthly)</td>
+              <td>Course/product mgmt, learning business tooling</td>
+              <td>Student dashboard for courses/community</td>
+              <td>Great learning portal for curriculum-led offers</td>
+              <td>Not a coaching CRM; accountability/notes/action items often need add-ons/integrations</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="note">
+        Sources for pricing: CoachAccountable, Simply.Coach, Practice Better, Kajabi, upcoach, Passion.io, Thinkific (vendor pages). :contentReference[oaicite:0]{index=0}
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Workshop pilot recommendations (pick your demo angle)</h2>
+
+      <div class="grid">
+        <div class="callout">
+          <h3>1) Executive / Leadership coaching (Elevate Advisory)</h3>
+          <ul>
+            <li><strong>CoachAccountable</strong> — best for accountability + continuity.</li>
+            <li><strong>Simply.Coach</strong> — structured 1:1 delivery + “client workspace” framing.</li>
+            <li><strong>SuiteDash</strong> — premium “advisory firm” portal vibe (white-label).</li>
+          </ul>
+        </div>
+
+        <div class="callout">
+          <h3>2) Wellness / practitioner-style coaching</h3>
+          <ul>
+            <li><strong>Practice Better</strong> — forms + scheduling + secure client comms are central.</li>
+          </ul>
+        </div>
+
+        <div class="callout">
+          <h3>3) Program / course-led coaching</h3>
+          <ul>
+            <li><strong>Kajabi</strong> — strong all-in-one monetization + member experience. :contentReference[oaicite:1]{index=1}</li>
+            <li><strong>Thinkific</strong> — clean learning portal; coaching layers on top. :contentReference[oaicite:2]{index=2}</li>
+          </ul>
+        </div>
+
+        <div class="callout">
+          <h3>4) Mobile-first / high engagement coaching</h3>
+          <ul>
+            <li><strong>Passion.io</strong> — branded app story lands fast in workshops. :contentReference[oaicite:3]{index=3}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="one-liners">
+        <div class="callout">
+          <strong>Coaching-native tools</strong> optimize <em>between-session follow-through</em>.
+        </div>
+        <div class="callout">
+          <strong>Course platforms</strong> optimize <em>structured learning delivery</em>.
+        </div>
+        <div class="callout">
+          <strong>White-label client portals</strong> optimize <em>professional services experience</em>.
+        </div>
+        <div class="callout">
+          <strong>App builders</strong> optimize <em>engagement + retention on mobile</em>.
+        </div>
+      </div>
+
+      <footer>
+        If you want, I can also add: “Best for 1:1 only,” “Best for multi-coach teams,” “API/integration readiness,” and “Time-to-launch” as extra columns.
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
