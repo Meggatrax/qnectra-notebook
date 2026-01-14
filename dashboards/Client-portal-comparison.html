@@ -1,293 +1,1044 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Client Portal Platforms – Coaching + General Services</title>
-  <style>
-    :root{
-      --bg:#0b0b10; --card:#11111a; --text:#f5f5f7; --muted:#b6b6c6;
-      --line:#26263a; --accent:#c12638; --accent2:#6f7cff; --radius:16px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(circle at 15% 10%, rgba(193,38,56,.18), transparent 45%),
-        radial-gradient(circle at 80% 0%, rgba(111,124,255,.14), transparent 45%),
-        var(--bg);
-      color:var(--text);
-      line-height:1.55;
-    }
-    .wrap{max-width:1120px;margin:0 auto;padding:28px 16px 56px;}
-    .pill{
-      display:inline-flex;gap:8px;align-items:center;
-      padding:6px 12px;border-radius:999px;border:1px solid var(--line);
-      background:rgba(17,17,26,.7);color:var(--muted);
-      font-size:12px;letter-spacing:.08em;text-transform:uppercase;
-    }
-    h1{margin:14px 0 6px;font-size:26px;letter-spacing:.02em;}
-    .sub{margin:0 0 16px;color:var(--muted);max-width:980px;}
-    .card{
-      background: linear-gradient(145deg, rgba(17,17,26,.95), rgba(10,10,16,.95));
-      border:1px solid var(--line);border-radius:var(--radius);
-      padding:16px;margin-top:16px;box-shadow:0 12px 36px rgba(0,0,0,.35);
-    }
-    h2{margin:0 0 10px;font-size:18px;letter-spacing:.02em;}
-    .hint{margin:0 0 10px;color:var(--muted);font-size:13px;}
-    .table-wrap{
-      overflow:auto;border-radius:12px;border:1px solid var(--line);
-      background:rgba(15,15,23,.7);
-    }
-    table{width:100%;border-collapse:collapse;min-width:980px;}
-    thead th{
-      position:sticky;top:0;z-index:1;background:rgba(15,15,23,.95);
-      color:#eaeaf2;font-size:12px;text-transform:uppercase;letter-spacing:.08em;
-      padding:12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;
-    }
-    tbody td{
-      padding:12px;border-bottom:1px solid rgba(38,38,58,.8);
-      vertical-align:top;color:#e7e7f0;font-size:14px;
-    }
-    tbody tr:hover td{background:rgba(193,38,56,.06);}
-    .price{font-variant-numeric:tabular-nums;white-space:nowrap;}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;}
-    @media (max-width: 860px){.grid{grid-template-columns:1fr;}}
-    .callout{
-      background:linear-gradient(145deg, rgba(17,17,26,.85), rgba(12,12,18,.85));
-      border:1px solid var(--line);border-radius:14px;padding:12px;color:var(--muted);font-size:13px;
-    }
-    .callout strong{color:#fff;}
-    footer{
-      margin-top:16px;color:var(--muted);font-size:12px;
-      border-top:1px dashed rgba(38,38,58,.9);padding-top:12px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coaching Client Portal Platforms — Interactive Comparison</title>
+    <style>
+        :root {
+            --bg: #0b0f14;
+            --panel: #0f1620;
+            --panel2: #111b27;
+            --text: #e7edf7;
+            --muted: #9fb0c7;
+            --muted2: #7f93ad;
+            --stroke: #1f2a3a;
+            --accent: #78ffd6;
+            --accent2: #7aa7ff;
+            --warn: #ffd36e;
+            --ok: #6ef0a7;
+            --bad: #ff6e6e;
+            --radius: 16px;
+            --shadow: 0 10px 35px rgba(0,0,0,.35);
+            --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            color: var(--text);
+            background:
+                radial-gradient(1200px 600px at 18% -10%, rgba(122,167,255,.18), transparent 55%),
+                radial-gradient(900px 500px at 85% 0%, rgba(120,255,214,.12), transparent 50%),
+                linear-gradient(180deg, #070a0f 0%, var(--bg) 30%, #070a0f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+            border: 1px solid var(--stroke);
+            padding: 30px;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            color: var(--accent);
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        .filter-section {
+            background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+            border: 1px solid var(--stroke);
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.25);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--muted2);
+            font-size: 13px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--stroke);
+            background: rgba(255,255,255,.03);
+            color: var(--muted);
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255,255,255,.06);
+            border-color: rgba(120,255,214,.35);
+        }
+
+        .filter-btn.active {
+            background: rgba(120,255,214,.10);
+            border-color: rgba(120,255,214,.45);
+            color: var(--text);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px 15px;
+            border: 1px solid var(--stroke);
+            border-radius: 12px;
+            font-size: 13px;
+            background: rgba(0,0,0,.25);
+            color: var(--text);
+            transition: border-color 0.2s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .search-box::placeholder {
+            color: var(--muted2);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+            border: 1px solid var(--stroke);
+            border-radius: var(--radius);
+            padding: 0;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 45px rgba(0,0,0,.4);
+        }
+
+        .card-header {
+            background: linear-gradient(180deg, rgba(17,27,39,.75), rgba(15,22,32,.35));
+            border-bottom: 1px solid var(--stroke);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 15px;
+        }
+
+        .platform-name {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 0.3px;
+        }
+
+        .price-tag {
+            background: linear-gradient(135deg, rgba(122,167,255,.2), rgba(120,255,214,.15));
+            border: 1px solid rgba(122,167,255,.3);
+            color: var(--accent2);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85em;
+            white-space: nowrap;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(120,255,214,.08);
+            border: 1px solid rgba(120,255,214,.25);
+            color: var(--accent);
+            border-radius: 999px;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .best-fit {
+            color: var(--muted);
+            font-size: 0.9em;
+            margin-bottom: 18px;
+            line-height: 1.6;
+            padding: 12px;
+            background: rgba(0,0,0,.2);
+            border-radius: 12px;
+            border: 1px solid var(--stroke);
+        }
+
+        .best-fit strong {
+            color: var(--text);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--muted);
+            padding: 6px;
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .feature-icon.yes {
+            background: linear-gradient(135deg, var(--ok), #5ad891);
+            color: #0b0f14;
+            box-shadow: 0 2px 8px rgba(110,240,167,.25);
+        }
+
+        .feature-icon.no {
+            background: linear-gradient(135deg, var(--bad), #ff5252);
+            color: #0b0f14;
+            box-shadow: 0 2px 8px rgba(255,110,110,.25);
+        }
+
+        .feature-icon.partial {
+            background: linear-gradient(135deg, var(--warn), #ffb347);
+            color: #0b0f14;
+            box-shadow: 0 2px 8px rgba(255,211,110,.25);
+        }
+
+        .notes-section {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid var(--stroke);
+        }
+
+        .notes-label {
+            font-weight: 600;
+            color: var(--accent2);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .notes-input {
+            width: 100%;
+            min-height: 70px;
+            padding: 12px;
+            border: 1px solid var(--stroke);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 12px;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+            background: rgba(0,0,0,.25);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: var(--accent2);
+            background: rgba(0,0,0,.3);
+        }
+
+        .notes-input::placeholder {
+            color: var(--muted2);
+        }
+
+        .strengths-section, .limitations-section {
+            margin: 15px 0;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--stroke);
+        }
+
+        .strengths-section {
+            background: rgba(110,240,167,.06);
+            border-color: rgba(110,240,167,.20);
+        }
+
+        .limitations-section {
+            background: rgba(255,211,110,.06);
+            border-color: rgba(255,211,110,.20);
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .strengths-section .section-title {
+            color: var(--ok);
+        }
+
+        .limitations-section .section-title {
+            color: var(--warn);
+        }
+
+        .section-content {
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
+        .export-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--ok), #5ad891);
+            color: #0b0f14;
+            border: 1px solid rgba(110,240,167,.3);
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(110,240,167,.3);
+            transition: all 0.2s ease;
+            z-index: 1000;
+            letter-spacing: 0.3px;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(110,240,167,.4);
+        }
+
+        .export-btn:active {
+            transform: translateY(0);
+        }
+
+        .legend {
+            background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+            border: 1px solid var(--stroke);
+            padding: 18px 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.25);
+        }
+
+        .legend-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text);
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+
+        .legend-items {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .export-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 12px;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--panel);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--stroke);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--muted2);
+        }
+    </style>
 </head>
 <body>
-  <div class="wrap">
-    <span class="pill">Workshop prep · Client portals · Platform scan</span>
-    <h1>Client portal platforms: coaching-native + general services</h1>
-    <p class="sub">
-      A combined view: <strong>coaching-first</strong> platforms (built around sessions, accountability, and progress) plus
-      <strong>general client-portal</strong> platforms (built around service delivery: onboarding, files, billing, approvals).
-      Pricing is intentionally shown as <em>ballpark</em>.
-    </p>
+    <div class="container">
+        <header>
+            <h1>🎯 Coaching Client Portal Platforms</h1>
+            <p class="subtitle">Interactive comparison tool for coaching software with client portal capabilities — analyze features, compare platforms, and add your personalized notes</p>
+        </header>
 
-    <!-- Coaching-native -->
-    <div class="card">
-      <h2>Coaching-native platforms</h2>
-      <p class="hint">Best when your “product” is transformation + follow-through between sessions.</p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Platform</th>
-              <th>Best fit</th>
-              <th>Ideal stage</th>
-              <th>Starting price</th>
-              <th>Coach-side management</th>
-              <th>Client portal experience</th>
-              <th>Strengths</th>
-              <th>Watch-outs</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>CoachAccountable</strong></td>
-              <td>Accountability + continuity</td>
-              <td>Solo → small team</td>
-              <td class="price">$20/mo (small client count)</td>
-              <td>Plans, actions, progress, reminders, coaching record</td>
-              <td>Dedicated client portal with actions + progress</td>
-              <td>Most “coaching-native” follow-through</td>
-              <td>Not a full marketing suite; branding is functional</td>
-            </tr>
-            <tr>
-              <td><strong>Simply.Coach</strong></td>
-              <td>Structured 1:1 coaching delivery</td>
-              <td>Solo → multi-coach</td>
-              <td class="price">$9/mo (starter tier)</td>
-              <td>Client mgmt, forms/contracts, goals/action plans (plan dependent)</td>
-              <td>Client dashboards/workspaces</td>
-              <td>Clean delivery posture</td>
-              <td>Plan feature limits matter</td>
-            </tr>
-            <tr>
-              <td><strong>Practice Better</strong></td>
-              <td>Wellness / practitioner coaching</td>
-              <td>Solo → practice</td>
-              <td class="price">$25/mo (starter, annual)</td>
-              <td>Scheduling, intake, notes, progress, secure messaging</td>
-              <td>Robust portal for booking/forms/messages/docs</td>
-              <td>Great for forms + secure comms</td>
-              <td>May feel heavy outside wellness</td>
-            </tr>
-            <tr>
-              <td><strong>Kajabi</strong></td>
-              <td>Coaching + content programs</td>
-              <td>Solo → scale</td>
-              <td class="price">$179/mo (basic)</td>
-              <td>Offers, payments, subscriptions, content delivery</td>
-              <td>Member login for program access</td>
-              <td>Monetization + content delivery</td>
-              <td>Less coaching-CRM behavior tracking</td>
-            </tr>
-            <tr>
-              <td><strong>SuiteDash</strong></td>
-              <td>White-label “services firm” portal</td>
-              <td>Small team → agency</td>
-              <td class="price">$19/mo (entry tier)</td>
-              <td>CRM, tasks, files, invoicing, e-sign, scheduling</td>
-              <td>White-labeled portal + branded login</td>
-              <td>Premium services vibe</td>
-              <td>Feature-dense; needs discipline</td>
-            </tr>
-            <tr>
-              <td><strong>CoachVantage</strong></td>
-              <td>All-in-one coaching ops + portal</td>
-              <td>Solo → small team</td>
-              <td class="price">$49/mo (common plan)</td>
-              <td>Workflow mgmt, scheduling, resources, goals</td>
-              <td>Client portal for booking + resources</td>
-              <td>Practical all-in-one</td>
-              <td>Verify plan limits / UX expectations</td>
-            </tr>
-            <tr>
-              <td><strong>Delenta</strong></td>
-              <td>Brand-forward coaching + scale</td>
-              <td>Solo → multi-coach</td>
-              <td class="price">~$9–$29+/mo</td>
-              <td>CRM, scheduling, payments, programs; team features</td>
-              <td>Branded portals (incl sponsor/coaches depending on plan)</td>
-              <td>Brand + scale posture</td>
-              <td>Plan details/limits vary</td>
-            </tr>
-            <tr>
-              <td><strong>upcoach</strong></td>
-              <td>Suite: coaching + courses + engagement</td>
-              <td>Solo → scale</td>
-              <td class="price">$99/mo (annual)</td>
-              <td>CRM, payments, courses, coaching activities, messaging</td>
-              <td>Clients access programs/activities in one place</td>
-              <td>Balanced all-in-one</td>
-              <td>Some features skew cohort/community (optional)</td>
-            </tr>
-            <tr>
-              <td><strong>Passion.io</strong></td>
-              <td>Mobile-first “branded app” coaching</td>
-              <td>Brand-driven → scale</td>
-              <td class="price">$99/mo (annual)</td>
-              <td>App delivery + engagement + monetization</td>
-              <td>Branded iOS/Android + web experience</td>
-              <td>Best “own app” story</td>
-              <td>Not a classic CRM; fees matter</td>
-            </tr>
-            <tr>
-              <td><strong>Thinkific</strong></td>
-              <td>Course-led coaching</td>
-              <td>Solo → course business</td>
-              <td class="price">$49/mo (basic)</td>
-              <td>Course/product management</td>
-              <td>Student dashboard for courses</td>
-              <td>Great learning portal</td>
-              <td>Accountability/notes often need add-ons</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>🔍 SEARCH:</label>
+                <input type="text" class="search-box" id="searchBox" placeholder="Search platforms, features, or capabilities...">
+                
+                <label>📊 CATEGORY:</label>
+                <button class="filter-btn active" data-category="all">All Platforms</button>
+                <button class="filter-btn" data-category="coaching">Coaching-First</button>
+                <button class="filter-btn" data-category="services">Professional Services</button>
+                <button class="filter-btn" data-category="course">Course-Led</button>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-title">📋 Feature Status Legend</div>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="feature-icon yes">✓</div>
+                    <span>Full Support / Native Feature</span>
+                </div>
+                <div class="legend-item">
+                    <div class="feature-icon partial">~</div>
+                    <span>Partial Support / Limited / Via Integration</span>
+                </div>
+                <div class="legend-item">
+                    <div class="feature-icon no">✗</div>
+                    <span>Not Available / Not Supported</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid" id="platformGrid">
+            <!-- Platform cards will be inserted here by JavaScript -->
+        </div>
+
+        <button class="export-btn" onclick="exportNotes()">💾 Export My Notes</button>
     </div>
 
-    <!-- General client portal -->
-    <div class="card">
-      <h2>General client-portal platforms (less coaching-centric)</h2>
-      <p class="hint">Best when your business is “deliver a service project” (onboarding → files → approvals → billing).</p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Platform</th>
-              <th>Best fit</th>
-              <th>Ideal stage</th>
-              <th>Starting price</th>
-              <th>Business-side management</th>
-              <th>Client portal experience</th>
-              <th>Strengths</th>
-              <th>Watch-outs</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>ClientManager.io</strong></td>
-              <td>Freelancers + agencies wanting “simple all-in-one”</td>
-              <td>Solo → small team</td>
-              <td class="price">$59/mo (monthly list)</td>
-              <td>Client mgmt + proposals/contracts + invoicing</td>
-              <td>Client portal for collaboration/onboarding</td>
-              <td>Simple, portal + docs + billing in one place</td>
-              <td>Confirm reporting depth + integrations for scale</td>
-            </tr>
-            <tr>
-              <td><strong>HoneyBook</strong></td>
-              <td>Service businesses managing projects end-to-end</td>
-              <td>Solo → small team</td>
-              <td class="price">$19/mo (starter)</td>
-              <td>Pipeline + contracts + invoices + scheduling + automation</td>
-              <td>Branded client portal per project (files/messages/details)</td>
-              <td>Strong client experience for service delivery</td>
-              <td>Not coaching-native; less about behavioral follow-through</td>
-            </tr>
-            <tr>
-              <td><strong>Dubsado</strong></td>
-              <td>Service providers needing polished workflows</td>
-              <td>Solo → small team</td>
-              <td class="price">Client portals supported (pricing varies)</td>
-              <td>Workflows, forms, proposals/contracts, invoicing, scheduling</td>
-              <td>Client portals for forms/docs, appointments, invoices</td>
-              <td>Polished portal + automation vibe</td>
-              <td>More project/service delivery than coaching tracking</td>
-            </tr>
-            <tr>
-              <td><strong>Copilot (copilot.app)</strong></td>
-              <td>Pro services needing a flexible, secure portal layer</td>
-              <td>Small team → scale</td>
-              <td class="price">Varies</td>
-              <td>Workflow components depending on modules</td>
-              <td>“Most flexible” secure client portal platform</td>
-              <td>Premium portal-first positioning</td>
-              <td>May require more configuration</td>
-            </tr>
-            <tr>
-              <td><strong>Assembly</strong></td>
-              <td>CRM + client portal for professional services</td>
-              <td>Solo → small team</td>
-              <td class="price">Varies</td>
-              <td>Client mgmt, files, payments</td>
-              <td>Modern portal to connect, pay, and share files</td>
-              <td>Portal-first simplicity</td>
-              <td>Validate depth for your service model</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <script>
+        const platforms = [
+            {
+                name: "CoachAccountable",
+                category: "coaching",
+                price: "$20/mo",
+                bestFit: "Coaching-first delivery + accountability (1:1 or small groups)",
+                stage: "Solo → small team",
+                features: {
+                    crm: "partial",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "yes",
+                    esignature: "no",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "no",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "yes",
+                    mobileApp: "yes"
+                },
+                strengths: "Very 'coaching-native' workflow (follow-through, continuity). Strong action tracking and accountability features. Zapier integrations available.",
+                limitations: "Less of a marketing suite; design/branding is functional vs. premium-brand-forward. No native e-signature."
+            },
+            {
+                name: "Simply.Coach",
+                category: "coaching",
+                price: "$9/mo",
+                bestFit: "Structured coaching practice with secure delivery",
+                stage: "Solo → multi-coach",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "yes",
+                    esignature: "partial",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "yes",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "yes",
+                    mobileApp: "yes"
+                },
+                strengths: "Coaching-specific with emphasis on organized delivery. Good value for structured programs. Zapier integrations available. SMS reminders.",
+                limitations: "Not a full marketing automation platform; UI flexibility depends on plan/features."
+            },
+            {
+                name: "Practice Better",
+                category: "coaching",
+                price: "$25/mo",
+                bestFit: "Wellness / health-adjacent coaching practices",
+                stage: "Solo → team practice",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "yes",
+                    esignature: "yes",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "yes",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "yes",
+                    mobileApp: "yes"
+                },
+                strengths: "Strong portal + privacy posture for wellness workflows. Robust intake forms, secure messaging, insurance billing integration. Beta API available.",
+                limitations: "Geared toward wellness; may feel heavy for exec/business coaching."
+            },
+            {
+                name: "Kajabi",
+                category: "course",
+                price: "$179/mo",
+                bestFit: "Coaching + content business (programs, courses, assets)",
+                stage: "Solo → scale",
+                features: {
+                    crm: "partial",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "yes",
+                    esignature: "no",
+                    scheduling: "partial",
+                    payments: "yes",
+                    contracts: "no",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "yes",
+                    mobileApp: "yes"
+                },
+                strengths: "Best-in-class for packaged programs + monetization. Strong marketing automation and member experience. API on Pro plan.",
+                limitations: "Less 'CRM-like' for ongoing coaching ops; deeper workflow customization may need workarounds."
+            },
+            {
+                name: "SuiteDash",
+                category: "services",
+                price: "$19/mo",
+                bestFit: "White-labeled services-firm portal (coaching + ops)",
+                stage: "Small team → agency-style",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "yes",
+                    esignature: "yes",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "yes",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "yes",
+                    mobileApp: "no"
+                },
+                strengths: "Strong 'professional services portal' feel. Comprehensive feature set with white-label options. Built-in e-signature and dynamic documents.",
+                limitations: "Feature-dense; coaching-specific flow is less opinionated. API only on Pinnacle (highest) tier."
+            },
+            {
+                name: "CoachVantage",
+                category: "coaching",
+                price: "$49/mo",
+                bestFit: "All-in-one coaching ops with portal + scheduling",
+                stage: "Solo → small team",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "partial",
+                    esignature: "no",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "no",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "yes",
+                    mobileApp: "no"
+                },
+                strengths: "Practical all-in-one for 1:1 programs. Good workflow management and resource library. Group coaching features.",
+                limitations: "Branding/UX more functional than premium; verify limits by plan."
+            },
+            {
+                name: "Delenta",
+                category: "coaching",
+                price: "$9-$29/mo",
+                bestFit: "Brand-forward coaching platform, multi-coach support",
+                stage: "Solo → multi-coach org",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "partial",
+                    esignature: "no",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "no",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "yes",
+                    mobileApp: "no"
+                },
+                strengths: "Strong 'all-in-one + branding + scale' posture. Good for multi-coach organizations. Custom landing pages.",
+                limitations: "Plan details/limits vary; rollout discipline matters to avoid clutter."
+            },
+            {
+                name: "upcoach",
+                category: "coaching",
+                price: "$99/mo",
+                bestFit: "Integrated suite: coaching + courses + client engagement",
+                stage: "Solo → scale",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "partial",
+                    esignature: "no",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "no",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "yes",
+                    mobileApp: "yes"
+                },
+                strengths: "Balanced all-in-one for programs + coaching activities. Good community features. Mobile app included.",
+                limitations: "Some features skew to cohort/community (optional); transaction fees/limits may apply by plan."
+            },
+            {
+                name: "Passion.io",
+                category: "coaching",
+                price: "$99/mo",
+                bestFit: "Mobile-first coaching delivery (branded app)",
+                stage: "Brand-driven coach → scale",
+                features: {
+                    crm: "partial",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "no",
+                    esignature: "no",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "no",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "yes",
+                    mobileApp: "yes"
+                },
+                strengths: "Strongest 'your own app' story + mobile engagement. Branded iOS/Android experience. Great for community building.",
+                limitations: "More of an app platform than a coaching CRM; fees (web checkout / in-app) matter. No public API."
+            },
+            {
+                name: "Thinkific",
+                category: "course",
+                price: "$49/mo",
+                bestFit: "Course-led coaching (education + add-on coaching)",
+                stage: "Solo → course business",
+                features: {
+                    crm: "partial",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "yes",
+                    esignature: "no",
+                    scheduling: "no",
+                    payments: "yes",
+                    contracts: "no",
+                    automation: "partial",
+                    fileSharing: "yes",
+                    progressTracking: "yes",
+                    mobileApp: "no"
+                },
+                strengths: "Great learning portal for curriculum-led offers. Strong course creation tools. GraphQL API available. CRM integrations (Salesforce, etc).",
+                limitations: "Not a coaching CRM; action items, coaching notes, accountability often need add-ons/integrations."
+            },
+            {
+                name: "HoneyBook",
+                category: "services",
+                price: "$19/mo",
+                bestFit: "Service businesses managing projects end-to-end (lead → contract → payment)",
+                stage: "Solo → small team",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "partial",
+                    esignature: "yes",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "yes",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "partial",
+                    mobileApp: "yes"
+                },
+                strengths: "Strong end-to-end client experience. Excellent pipeline + contracts + automation. Good for service-based coaches.",
+                limitations: "Not coaching-native; accountability tracking may need add-ons. Limited API access."
+            },
+            {
+                name: "Dubsado",
+                category: "services",
+                price: "$20/mo",
+                bestFit: "Service providers needing polished workflows (forms, contracts, invoices)",
+                stage: "Solo → small team",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "partial",
+                    esignature: "yes",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "yes",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "partial",
+                    mobileApp: "no"
+                },
+                strengths: "Polished portal + automation feel. Strong workflow customization. Drag-and-drop form builder.",
+                limitations: "More project/service delivery than coaching-native tracking. Limited API/integrations."
+            },
+            {
+                name: "ClientManager.io",
+                category: "services",
+                price: "Varies",
+                bestFit: "Freelancers + agencies needing CRM + client portal + proposals/contracts",
+                stage: "Solo → small team",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "partial",
+                    esignature: "yes",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "yes",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "partial",
+                    mobileApp: "no"
+                },
+                strengths: "Simple all-in-one without heavy complexity. Good for straightforward client management needs.",
+                limitations: "Verify reporting depth + integrations for more complex ops. Less coaching-specific features."
+            },
+            {
+                name: "Copilot",
+                category: "services",
+                price: "Varies",
+                bestFit: "Pro services wanting a modern, flexible portal (files, payments, comms)",
+                stage: "Small team → scale",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "yes",
+                    esignature: "partial",
+                    scheduling: "yes",
+                    payments: "yes",
+                    contracts: "partial",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "partial",
+                    mobileApp: "no"
+                },
+                strengths: "Premium portal positioning. Modern, flexible approach. Good for high-end professional services.",
+                limitations: "Confirm pricing + feature depth for your use case. May be overkill for simple coaching needs."
+            },
+            {
+                name: "Assembly",
+                category: "services",
+                price: "Varies",
+                bestFit: "Modern CRM + client portal for professional services",
+                stage: "Solo → small team",
+                features: {
+                    crm: "yes",
+                    invoicing: "yes",
+                    portal: "yes",
+                    api: "partial",
+                    esignature: "no",
+                    scheduling: "partial",
+                    payments: "yes",
+                    contracts: "no",
+                    automation: "yes",
+                    fileSharing: "yes",
+                    progressTracking: "partial",
+                    mobileApp: "no"
+                },
+                strengths: "Portal-first simplicity. Modern interface. Clean, straightforward user experience.",
+                limitations: "Confirm depth for complex coaching workflows. Limited coaching-specific features."
+            }
+        ];
 
-      <div class="grid">
-        <div class="callout">
-          <strong>Workshop angle (general audience):</strong>
-          If your workshop includes agencies/freelancers, demoing a “service delivery portal” (HoneyBook/Dubsado/ClientManager.io) can
-          land faster than a coaching-native platform.
-        </div>
-        <div class="callout">
-          <strong>Workshop angle (coaching audience):</strong>
-          Coaching-native tools win when you need repeatable accountability + continuity between sessions.
-        </div>
-      </div>
+        function createFeatureIcon(status) {
+            const icons = {
+                yes: '✓',
+                no: '✗',
+                partial: '~'
+            };
+            return `<div class="feature-icon ${status}">${icons[status]}</div>`;
+        }
 
-      <footer>
-        Want me to add columns for: API/integration readiness, time-to-launch, white-label depth, and “best for 1:1 vs cohorts”?
-      </footer>
-    </div>
-  </div>
+        function createPlatformCard(platform) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.category = platform.category;
+            card.dataset.name = platform.name.toLowerCase();
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div>
+                        <div class="platform-name">${platform.name}</div>
+                        <div class="category-badge">${platform.stage}</div>
+                    </div>
+                    <div class="price-tag">${platform.price}</div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="best-fit">
+                        <strong>Best For:</strong> ${platform.bestFit}
+                    </div>
+                    
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.crm)}
+                            <span>CRM</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.invoicing)}
+                            <span>Invoicing</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.portal)}
+                            <span>Client Portal</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.api)}
+                            <span>API Access</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.esignature)}
+                            <span>E-Signature</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.scheduling)}
+                            <span>Scheduling</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.payments)}
+                            <span>Payments</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.contracts)}
+                            <span>Contracts</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.automation)}
+                            <span>Automation</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.fileSharing)}
+                            <span>File Sharing</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.progressTracking)}
+                            <span>Progress Tracking</span>
+                        </div>
+                        <div class="feature-item">
+                            ${createFeatureIcon(platform.features.mobileApp)}
+                            <span>Mobile App</span>
+                        </div>
+                    </div>
+                    
+                    <div class="strengths-section">
+                        <div class="section-title">✨ KEY STRENGTHS</div>
+                        <div class="section-content">${platform.strengths}</div>
+                    </div>
+                    
+                    <div class="limitations-section">
+                        <div class="section-title">⚠️ LIMITATIONS</div>
+                        <div class="section-content">${platform.limitations}</div>
+                    </div>
+                    
+                    <div class="notes-section">
+                        <div class="notes-label">📝 My Personal Notes</div>
+                        <textarea 
+                            class="notes-input" 
+                            placeholder="Add your observations, client recommendations, or implementation notes here..."
+                            data-platform="${platform.name}"
+                        ></textarea>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function renderPlatforms() {
+            const grid = document.getElementById('platformGrid');
+            grid.innerHTML = '';
+            platforms.forEach(platform => {
+                grid.appendChild(createPlatformCard(platform));
+            });
+            
+            // Restore saved notes
+            const savedNotes = JSON.parse(localStorage.getItem('platformNotes') || '{}');
+            Object.keys(savedNotes).forEach(platformName => {
+                const textarea = document.querySelector(`[data-platform="${platformName}"]`);
+                if (textarea) {
+                    textarea.value = savedNotes[platformName];
+                }
+            });
+        }
+
+        // Save notes to localStorage
+        document.addEventListener('input', (e) => {
+            if (e.target.classList.contains('notes-input')) {
+                const platformName = e.target.dataset.platform;
+                const notes = JSON.parse(localStorage.getItem('platformNotes') || '{}');
+                notes[platformName] = e.target.value;
+                localStorage.setItem('platformNotes', JSON.stringify(notes));
+            }
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const category = btn.dataset.category;
+                const cards = document.querySelectorAll('.card');
+                
+                cards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Search functionality
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                const cardText = card.textContent.toLowerCase();
+                
+                if (cardText.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Export notes function
+        function exportNotes() {
+            const notes = JSON.parse(localStorage.getItem('platformNotes') || '{}');
+            let exportText = 'COACHING PLATFORM COMPARISON — MY NOTES\n';
+            exportText += '═'.repeat(70) + '\n\n';
+            
+            platforms.forEach(platform => {
+                exportText += `${platform.name}\n`;
+                exportText += '─'.repeat(platform.name.length) + '\n';
+                exportText += `Price: ${platform.price}\n`;
+                exportText += `Best For: ${platform.bestFit}\n`;
+                exportText += `Stage: ${platform.stage}\n\n`;
+                
+                exportText += 'Features:\n';
+                Object.entries(platform.features).forEach(([key, value]) => {
+                    const status = value === 'yes' ? '✓' : value === 'partial' ? '~' : '✗';
+                    const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                    exportText += `  ${status} ${label}\n`;
+                });
+                
+                exportText += `\nStrengths: ${platform.strengths}\n`;
+                exportText += `Limitations: ${platform.limitations}\n`;
+                
+                if (notes[platform.name]) {
+                    exportText += `\n📝 My Notes:\n${notes[platform.name]}\n`;
+                }
+                
+                exportText += '\n' + '═'.repeat(70) + '\n\n';
+            });
+            
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `coaching_platform_notes_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize
+        renderPlatforms();
+    </script>
 </body>
 </html>
