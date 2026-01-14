@@ -383,6 +383,56 @@
       border-color: rgba(52,211,153,0.3);
       color: var(--good);
     }
+    /* Mark as Done styles */
+    .doneCheckbox{
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      background: rgba(0,0,0,0.3);
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .doneCheckbox:hover{
+      border-color: rgba(52,211,153,0.6);
+    }
+    .doneCheckbox:checked{
+      background: var(--good);
+      border-color: var(--good);
+    }
+    .doneCheckbox:checked::after{
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #0b0f19;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    details.done{
+      background: rgba(52,211,153,0.25);
+      border-color: rgba(52,211,153,0.5);
+      box-shadow: 0 0 0 1px rgba(52,211,153,0.2), var(--shadow);
+    }
+    details.done summary{
+      background: rgba(52,211,153,0.18);
+    }
+    details.done .week{
+      background: rgba(52,211,153,0.35);
+      border-color: rgba(52,211,153,0.6);
+      color: var(--good);
+      font-weight: 900;
+    }
+    details.done .sumTitle{
+      color: rgba(255,255,255,0.95);
+    }
+    details.done .content{
+      background: rgba(52,211,153,0.08);
+    }
   </style>
 </head>
 
@@ -525,16 +575,17 @@
 
       <div class="strategy" id="weeks">
         <!-- Month 1 -->
-        <details1 data-week=" data-month="m1" data-pillar="cx" data-keywords="onboarding first 7 days experience promise retention"">
+        <details data-month="m1" data-pillar="cx" data-keywords="onboarding first 7 days experience promise retention" data-week="1">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 1</div>
+              <div class="sumText">
                 <p class="sumTitle">Your onboarding is part of your offer.</p>
                 <p class="sumMeta">Month 1 · Client Experience Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m1" data-pillar="cx" data-keywords="onboarding first 7 days experience promise retention"" title="Mark as done" aria-label="Mark week  data-month="m1" data-pillar="cx" data-keywords="onboarding first 7 days experience promise retention" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="1" title="Mark as done" aria-label="Mark week 1 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -554,16 +605,17 @@
           </div>
         </details>
 
-        <details2 data-week=" data-month="m1" data-pillar="cx" data-keywords="manual follow-up tax forms payment scheduling documents reminders"">
+        <details data-month="m1" data-pillar="cx" data-keywords="manual follow-up tax forms payment scheduling documents reminders" data-week="2">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 2</div>
+              <div class="sumText">
                 <p class="sumTitle">The “manual follow-up tax” (and how to kill it).</p>
                 <p class="sumMeta">Month 1 · Client Experience Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m1" data-pillar="cx" data-keywords="manual follow-up tax forms payment scheduling documents reminders"" title="Mark as done" aria-label="Mark week  data-month="m1" data-pillar="cx" data-keywords="manual follow-up tax forms payment scheduling documents reminders" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="2" title="Mark as done" aria-label="Mark week 2 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -583,16 +635,17 @@
           </div>
         </details>
 
-        <details3 data-week=" data-month="m1" data-pillar="cx" data-keywords="portal promise premium clarity self-serve resources next steps progress"">
+        <details data-month="m1" data-pillar="cx" data-keywords="portal promise premium clarity self-serve resources next steps progress" data-week="3">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 3</div>
+              <div class="sumText">
                 <p class="sumTitle">Client portals aren’t a feature. They’re a promise.</p>
                 <p class="sumMeta">Month 1 · Client Experience Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m1" data-pillar="cx" data-keywords="portal promise premium clarity self-serve resources next steps progress"" title="Mark as done" aria-label="Mark week  data-month="m1" data-pillar="cx" data-keywords="portal promise premium clarity self-serve resources next steps progress" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="3" title="Mark as done" aria-label="Mark week 3 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -612,16 +665,17 @@
           </div>
         </details>
 
-        <details4 data-week=" data-month="m1" data-pillar="cx" data-keywords="welcome kickoff expectations communication progress tracker onboarding assets"">
+        <details data-month="m1" data-pillar="cx" data-keywords="welcome kickoff expectations communication progress tracker onboarding assets" data-week="4">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 4</div>
+              <div class="sumText">
                 <p class="sumTitle">The 5 onboarding assets every coaching business needs.</p>
                 <p class="sumMeta">Month 1 · Client Experience Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m1" data-pillar="cx" data-keywords="welcome kickoff expectations communication progress tracker onboarding assets"" title="Mark as done" aria-label="Mark week  data-month="m1" data-pillar="cx" data-keywords="welcome kickoff expectations communication progress tracker onboarding assets" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="4" title="Mark as done" aria-label="Mark week 4 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -644,16 +698,17 @@
         </details>
 
         <!-- Month 2 -->
-        <details5 data-week=" data-month="m2" data-pillar="dr" data-keywords="delivery memory SOP consistency quality scale playbook"">
+        <details data-month="m2" data-pillar="dr" data-keywords="delivery memory SOP consistency quality scale playbook" data-week="5">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 5</div>
+              <div class="sumText">
                 <p class="sumTitle">Stop delivering from memory.</p>
                 <p class="sumMeta">Month 2 · Delivery & Retention Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m2" data-pillar="dr" data-keywords="delivery memory SOP consistency quality scale playbook"" title="Mark as done" aria-label="Mark week  data-month="m2" data-pillar="dr" data-keywords="delivery memory SOP consistency quality scale playbook" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="5" title="Mark as done" aria-label="Mark week 5 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -673,16 +728,17 @@
           </div>
         </details>
 
-        <details6 data-week=" data-month="m2" data-pillar="dr" data-keywords="progress tracking retention insurance outcomes visibility confidence"">
+        <details data-month="m2" data-pillar="dr" data-keywords="progress tracking retention insurance outcomes visibility confidence" data-week="6">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 6</div>
+              <div class="sumText">
                 <p class="sumTitle">Progress tracking is retention insurance.</p>
                 <p class="sumMeta">Month 2 · Delivery & Retention Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m2" data-pillar="dr" data-keywords="progress tracking retention insurance outcomes visibility confidence"" title="Mark as done" aria-label="Mark week  data-month="m2" data-pillar="dr" data-keywords="progress tracking retention insurance outcomes visibility confidence" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="6" title="Mark as done" aria-label="Mark week 6 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -702,16 +758,17 @@
           </div>
         </details>
 
-        <details7 data-week=" data-month="m2" data-pillar="dr" data-keywords="support requests systems signal taxonomy fix root cause FAQs"">
+        <details data-month="m2" data-pillar="dr" data-keywords="support requests systems signal taxonomy fix root cause FAQs" data-week="7">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 7</div>
+              <div class="sumText">
                 <p class="sumTitle">Support requests are a systems signal.</p>
                 <p class="sumMeta">Month 2 · Delivery & Retention Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m2" data-pillar="dr" data-keywords="support requests systems signal taxonomy fix root cause FAQs"" title="Mark as done" aria-label="Mark week  data-month="m2" data-pillar="dr" data-keywords="support requests systems signal taxonomy fix root cause FAQs" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="7" title="Mark as done" aria-label="Mark week 7 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -731,16 +788,17 @@
           </div>
         </details>
 
-        <details8 data-week=" data-month="m2" data-pillar="dr" data-keywords="renewal decided before last session value recap cadence next horizon"">
+        <details data-month="m2" data-pillar="dr" data-keywords="renewal decided before last session value recap cadence next horizon" data-week="8">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 8</div>
+              <div class="sumText">
                 <p class="sumTitle">The renewal is decided before the last session.</p>
                 <p class="sumMeta">Month 2 · Delivery & Retention Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m2" data-pillar="dr" data-keywords="renewal decided before last session value recap cadence next horizon"" title="Mark as done" aria-label="Mark week  data-month="m2" data-pillar="dr" data-keywords="renewal decided before last session value recap cadence next horizon" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="8" title="Mark as done" aria-label="Mark week 8 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -761,16 +819,17 @@
         </details>
 
         <!-- Month 3 -->
-        <details9 data-week=" data-month="m3" data-pillar="rev" data-keywords="pipeline manufacturing line stages exit criteria forecasting"">
+        <details data-month="m3" data-pillar="rev" data-keywords="pipeline manufacturing line stages exit criteria forecasting" data-week="9">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 9</div>
+              <div class="sumText">
                 <p class="sumTitle">Your pipeline isn’t “sales.” It’s a manufacturing line.</p>
                 <p class="sumMeta">Month 3 · Revenue Systems Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m3" data-pillar="rev" data-keywords="pipeline manufacturing line stages exit criteria forecasting"" title="Mark as done" aria-label="Mark week  data-month="m3" data-pillar="rev" data-keywords="pipeline manufacturing line stages exit criteria forecasting" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="9" title="Mark as done" aria-label="Mark week 9 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -790,16 +849,17 @@
           </div>
         </details>
 
-        <details10 data-week=" data-month="m3" data-pillar="rev" data-keywords="attribution consistent minimal setup utm source tracking decisions"">
+        <details data-month="m3" data-pillar="rev" data-keywords="attribution consistent minimal setup utm source tracking decisions" data-week="10">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 10</div>
+              <div class="sumText">
                 <p class="sumTitle">Attribution doesn’t need to be perfect—just consistent.</p>
                 <p class="sumMeta">Month 3 · Revenue Systems Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m3" data-pillar="rev" data-keywords="attribution consistent minimal setup utm source tracking decisions"" title="Mark as done" aria-label="Mark week  data-month="m3" data-pillar="rev" data-keywords="attribution consistent minimal setup utm source tracking decisions" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="10" title="Mark as done" aria-label="Mark week 10 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -819,16 +879,17 @@
           </div>
         </details>
 
-        <details11 data-week=" data-month="m3" data-pillar="rev" data-keywords="automations protect relationships reminders routing human touch"">
+        <details data-month="m3" data-pillar="rev" data-keywords="automations protect relationships reminders routing human touch" data-week="11">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 11</div>
+              <div class="sumText">
                 <p class="sumTitle">Automations should protect relationships, not replace them.</p>
                 <p class="sumMeta">Month 3 · Revenue Systems Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m3" data-pillar="rev" data-keywords="automations protect relationships reminders routing human touch"" title="Mark as done" aria-label="Mark week  data-month="m3" data-pillar="rev" data-keywords="automations protect relationships reminders routing human touch" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="11" title="Mark as done" aria-label="Mark week 11 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -848,16 +909,17 @@
           </div>
         </details>
 
-        <details12 data-week=" data-month="m3" data-pillar="rev" data-keywords="client journey map 90 days one page intake onboarding delivery renewal referral"">
+        <details data-month="m3" data-pillar="rev" data-keywords="client journey map 90 days one page intake onboarding delivery renewal referral" data-week="12">
           <summary>
             <div class="sumLeft">
-<div class="sumText">
+              <div class="week">Week 12</div>
+              <div class="sumText">
                 <p class="sumTitle">The Client Journey Map (your next 90 days in one page).</p>
                 <p class="sumMeta">Month 3 · Revenue Systems Ops</p>
               </div>
-                        </div>
+            </div>
             <div class="sumRight">
-              <input type="checkbox" class="doneCheckbox" data-week=" data-month="m3" data-pillar="rev" data-keywords="client journey map 90 days one page intake onboarding delivery renewal referral"" title="Mark as done" aria-label="Mark week  data-month="m3" data-pillar="rev" data-keywords="client journey map 90 days one page intake onboarding delivery renewal referral" as done">
+              <input type="checkbox" class="doneCheckbox" data-week="12" title="Mark as done" aria-label="Mark week 12 as done">
               <div class="caret">▾</div>
             </div>
           </summary>
@@ -1043,9 +1105,8 @@ CTA rotation:
           detailsEl.classList.add('done');
         }
         
-        // Add event listener
+        // Add event listener for change
         cb.addEventListener('change', (e) => {
-          e.stopPropagation(); // Prevent summary toggle
           const isDone = cb.checked;
           updateWeekStatus(weekNum, isDone);
           
