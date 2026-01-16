@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Opportunity Blueprint — Working Product Doc</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1a2e;
+      --panel2:#0d1628;
+      --text:#eaf0ff;
+      --muted:#a9b6d3;
+      --faint:#6f7fa6;
+      --brand:#6aa9ff;
+      --brand2:#79f2c0;
+      --warn:#ffcc66;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(106,169,255,.18), transparent 60%),
+                  radial-gradient(900px 500px at 80% 10%, rgba(121,242,192,.14), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      font-family:var(--sans);
+      line-height:1.45;
+    }
+    .wrap{ max-width:1100px; margin:32px auto; padding:0 18px 44px; }
+    header{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 14px;
+      position: sticky;
+      top: 12px;
+      backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+    h1{ margin:0 0 6px; font-size: 20px; letter-spacing:.2px; }
+    .sub{ margin:0; color:var(--muted); font-size: 13px; }
+    .tabs{
+      display:flex;
+      gap:10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .tab-btn{
+      appearance:none;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-size: 13px;
+      transition: .15s ease;
+      user-select:none;
+    }
+    .tab-btn:hover{ border-color: rgba(106,169,255,.45); background: rgba(106,169,255,.10); }
+    .tab-btn[aria-selected="true"]{
+      border-color: rgba(106,169,255,.65);
+      background: rgba(106,169,255,.18);
+      box-shadow: 0 0 0 3px rgba(106,169,255,.12);
+    }
+
+    .content{
+      margin-top: 18px;
+      display:grid;
+      gap:16px;
+    }
+    .panel{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    h2{ margin:0 0 8px; font-size: 16px; }
+    h3{ margin: 16px 0 6px; font-size: 14px; color: var(--text); }
+    p{ margin: 10px 0; color: var(--muted); }
+    ul{ margin: 8px 0 0 18px; color: var(--muted); }
+    li{ margin: 6px 0; }
+    .grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .grid-3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    @media (max-width: 880px){
+      .grid-2,.grid-3{ grid-template-columns: 1fr; }
+      header{ position: static; }
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size: 12px;
+      margin: 4px 6px 0 0;
+    }
+    .pill b{ color: var(--text); font-weight:600; }
+    .hint{
+      font-size: 12px;
+      color: var(--faint);
+      margin-top: 6px;
+    }
+    .callout{
+      border:1px solid rgba(121,242,192,.25);
+      background: rgba(121,242,192,.07);
+      border-radius: 12px;
+      padding: 12px 12px;
+      color: var(--muted);
+    }
+    .callout b{ color: var(--text); }
+    .warn{
+      border:1px solid rgba(255,204,102,.25);
+      background: rgba(255,204,102,.07);
+      border-radius: 12px;
+      padding: 12px 12px;
+      color: var(--muted);
+    }
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin: 10px 0 0;
+    }
+    input[type="search"]{
+      flex: 1 1 320px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+    }
+    input[type="search"]::placeholder{ color: rgba(169,182,211,.65); }
+    .smallbtn{
+      appearance:none;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-size: 13px;
+    }
+    .smallbtn:hover{ border-color: rgba(106,169,255,.45); background: rgba(106,169,255,.10); }
+    details{
+      border:1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,.02);
+      padding: 10px 12px;
+      margin-top: 10px;
+    }
+    summary{
+      cursor:pointer;
+      color: var(--text);
+      font-weight:600;
+    }
+    .meta{
+      margin-top: 6px;
+      color: var(--faint);
+      font-size: 12px;
+      font-family: var(--mono);
+      white-space: pre-wrap;
+    }
+    .badge{
+      display:inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-left: 8px;
+    }
+    .badge.quick{ border-color: rgba(121,242,192,.35); color: rgba(121,242,192,.95); }
+    .badge.med{ border-color: rgba(106,169,255,.35); color: rgba(106,169,255,.95); }
+    .badge.hard{ border-color: rgba(255,204,102,.35); color: rgba(255,204,102,.95); }
+    .badge.risk{ border-color: rgba(255,140,140,.35); color: rgba(255,140,140,.95); }
+    .sr-only{
+      position:absolute;
+      width:1px;height:1px;
+      padding:0;margin:-1px;
+      overflow:hidden;clip:rect(0,0,0,0);
+      white-space:nowrap;border:0;
+    }
+    footer{
+      margin-top: 16px;
+      color: var(--faint);
+      font-size: 12px;
+      text-align:center;
+    }
+    .kpi{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .kpi div{
+      border:1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(0,0,0,.14);
+      padding: 10px 12px;
+      color: var(--muted);
+    }
+    .kpi b{ color: var(--text); }
+    .muted{ color: var(--muted); }
+    .faint{ color: var(--faint); }
+    .mono{ font-family: var(--mono); }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <h1>AI Opportunity Blueprint <span class="badge med">Working Product Doc</span></h1>
+      <p class="sub">
+        Efficiency-first, fixed-fee engagement delivering a practical 90-day roadmap to reduce manual work, cut delays, and lower errors using AI.
+      </p>
+
+      <div class="tabs" role="tablist" aria-label="AI Opportunity Blueprint tabs">
+        <button class="tab-btn" role="tab" id="tab-btn-1" aria-controls="tab-1" aria-selected="true" tabindex="0">1) Product Definition</button>
+        <button class="tab-btn" role="tab" id="tab-btn-2" aria-controls="tab-2" aria-selected="false" tabindex="-1">2) Discovery Questions</button>
+        <button class="tab-btn" role="tab" id="tab-btn-3" aria-controls="tab-3" aria-selected="false" tabindex="-1">3) Project Types Library</button>
+      </div>
+
+      <div class="toolbar" aria-label="Global tools">
+        <label class="sr-only" for="globalSearch">Search</label>
+        <input id="globalSearch" type="search" placeholder="Search across the current tab (e.g., onboarding, invoices, customer service, approvals)..." />
+        <button class="smallbtn" id="clearSearch" type="button">Clear</button>
+        <button class="smallbtn" id="printBtn" type="button">Print</button>
+      </div>
+      <div class="hint">Tip: Use search to quickly find relevant sections in the current tab. Print creates a clean PDF via your browser.</div>
+    </header>
+
+    <!-- TAB 1 -->
+    <section class="content" id="tab-1" role="tabpanel" aria-labelledby="tab-btn-1">
+      <div class="panel">
+        <h2>Product Core (Efficiency-Focused)</h2>
+        <div class="callout">
+          <b>Positioning (plain-language):</b>
+          A fixed-fee engagement that analyzes how your business runs today and delivers a 90-day, AI-powered efficiency plan—showing where you can save time, reduce errors, and speed up service.
+        </div>
+
+        <h3>What the Blueprint is (and is not)</h3>
+        <ul>
+          <li><b>Is:</b> a practical operational assessment + an execution-ready 90-day plan (5–8 projects) with quantified efficiency impact.</li>
+          <li><b>Is not:</b> a vague “AI talk” or tool shopping exercise. You’ll know exactly what to do first, why it matters, and what impact to expect.</li>
+        </ul>
+
+        <h3>Efficiency Outcomes (the promise)</h3>
+        <div class="kpi">
+          <div><b>Reduce time waste</b><br><span class="faint">Cut repetitive tasks, handoffs, follow-ups, and rework.</span></div>
+          <div><b>Reduce errors</b><br><span class="faint">Standardize outputs, add checks, improve consistency.</span></div>
+          <div><b>Increase speed</b><br><span class="faint">Shorten cycle times: onboarding, approvals, quotes, invoicing, resolution.</span></div>
+          <div><b>Increase capacity</b><br><span class="faint">Handle more volume with the same team—without burnout.</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Framework Anchor: 4 Stages of Progressive AI Implementation</h2>
+        <p class="muted">
+          The AI Opportunity Blueprint is anchored to your Pillar 2 progression. We use these stages to classify initiatives and sequence work over 90 days.
+        </p>
+
+        <div class="grid-2">
+          <div class="panel" style="margin:0; background: rgba(0,0,0,.12);">
+            <h3>1) Automation</h3>
+            <p class="muted"><b>Goal:</b> stop repeating rules-based work manually.</p>
+            <ul>
+              <li>Automate routing, reminders, document handling, data entry.</li>
+              <li>Eliminate “copy/paste operations” between tools.</li>
+              <li>Standardize templates and intake forms.</li>
+            </ul>
+            <p class="hint"><span class="mono">Efficiency story:</span> remove the top repetitive tasks and reduce rework.</p>
+          </div>
+
+          <div class="panel" style="margin:0; background: rgba(0,0,0,.12);">
+            <h3>2) Augmentation</h3>
+            <p class="muted"><b>Goal:</b> make staff faster and more accurate with AI copilots.</p>
+            <ul>
+              <li>Draft emails, proposals, summaries, SOPs, case notes.</li>
+              <li>Support routine decisions with checklists and recommendations.</li>
+              <li>Reduce “search time” across documents and inboxes.</li>
+            </ul>
+            <p class="hint"><span class="mono">Efficiency story:</span> reduce cognitive load and speed up throughput.</p>
+          </div>
+
+          <div class="panel" style="margin:0; background: rgba(0,0,0,.12);">
+            <h3>3) Intelligence</h3>
+            <p class="muted"><b>Goal:</b> stop waiting weeks to see operational problems.</p>
+            <ul>
+              <li>Dashboards and weekly operational reports in minutes, not hours.</li>
+              <li>Alerts for bottlenecks, SLA breaches, aging items, spikes.</li>
+              <li>Trend visibility for staffing and workload planning.</li>
+            </ul>
+            <p class="hint"><span class="mono">Efficiency story:</span> earlier visibility = fewer fire drills and less overtime.</p>
+          </div>
+
+          <div class="panel" style="margin:0; background: rgba(0,0,0,.12);">
+            <h3>4) Orchestration</h3>
+            <p class="muted"><b>Goal:</b> make systems and teams flow end-to-end with fewer handoffs.</p>
+            <ul>
+              <li>Connect steps across the customer journey (intake → service → billing).</li>
+              <li>Reduce re-keying and “lost in handoff” delays.</li>
+              <li>Automate cross-functional coordination with approvals and routing.</li>
+            </ul>
+            <p class="hint"><span class="mono">Efficiency story:</span> remove friction between departments and tools.</p>
+          </div>
+        </div>
+
+        <div class="warn" style="margin-top:12px;">
+          <b>St. Lucia market messaging:</b> lead with efficiency (time saved, delays reduced, fewer errors). Avoid “moat” language in client-facing material unless the client is sophisticated and receptive.
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Deliverables (What the Client Receives)</h2>
+        <div class="grid-2">
+          <div>
+            <h3>1) Operational Bottleneck Map</h3>
+            <ul>
+              <li>Where time is being lost</li>
+              <li>Where errors happen repeatedly</li>
+              <li>Where customers/teams are waiting</li>
+            </ul>
+
+            <h3>2) 90-Day AI Efficiency Roadmap (5–8 projects)</h3>
+            <ul>
+              <li>Problem → AI approach → expected impact → effort</li>
+              <li>Sequenced to deliver quick wins early</li>
+            </ul>
+          </div>
+          <div>
+            <h3>3) Efficiency-Adjusted P&amp;L View</h3>
+            <ul>
+              <li>Hours saved → cost reduction estimate (conservative)</li>
+              <li>Cycle time reductions (faster invoicing/approvals)</li>
+              <li>Capacity created (handle more volume with same team)</li>
+            </ul>
+
+            <h3>4) Buy / Configure / Train Recommendations</h3>
+            <ul>
+              <li>What to buy or configure (minimal, practical)</li>
+              <li>What to train staff on (to make adoption real)</li>
+              <li>What not to do (avoid wasted spend)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Delivery Flow (Simple, Business-Friendly)</h2>
+        <div class="grid-3">
+          <div>
+            <h3>Phase 1 — Rapid Discovery (1–2 days)</h3>
+            <ul>
+              <li>Review org structure and key workflows</li>
+              <li>Short interviews with MD/Owner + 2–4 leads</li>
+              <li>Collect examples: forms, spreadsheets, emails, reports</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Phase 2 — Analysis &amp; Design (offsite)</h3>
+            <ul>
+              <li>Map opportunities to 4 stages</li>
+              <li>Quantify impact (hours, days, errors)</li>
+              <li>Draft 90-day roadmap (5–8 initiatives)</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Phase 3 — Blueprint Readout (2–3 hours)</h3>
+            <ul>
+              <li>Walk through bottlenecks + roadmap</li>
+              <li>Confirm priorities and constraints</li>
+              <li>Agree next step: client-led vs you-led implementation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Next Build Assets (What makes this repeatable)</h2>
+        <ul>
+          <li><b>Discovery Question Set</b> (tab 2): mapped to business functions to drive consistent interviews.</li>
+          <li><b>Project Types Library</b> (tab 3): reusable initiative patterns to speed delivery and improve consistency.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TAB 2 -->
+    <section class="content" id="tab-2" role="tabpanel" aria-labelledby="tab-btn-2" hidden>
+      <div class="panel">
+        <h2>Discovery Questions (Mapped to Business Functions)</h2>
+        <p class="muted">
+          Use these to run interviews quickly, surface bottlenecks, and capture inputs needed to quantify efficiency impact.
+          Each function includes question prompts and suggested artifacts to request.
+        </p>
+
+        <div class="callout">
+          <b>How to use:</b> Ask questions in plain language, capture examples (emails, forms, spreadsheets), and quantify frequency + time spent.
+          Always ask: <span class="mono">“How often?” “How long does it take?” “What causes rework?”</span>
+        </div>
+
+        <div class="toolbar">
+          <label class="sr-only" for="funcFilter">Function filter</label>
+          <select id="funcFilter" class="smallbtn" aria-label="Filter by business function">
+            <option value="all">Show all functions</option>
+            <option value="leadership">Leadership / Owner / GM</option>
+            <option value="sales">Sales</option>
+            <option value="marketing">Marketing</option>
+            <option value="customer">Customer Service / Front Desk</option>
+            <option value="operations">Operations / Service Delivery</option>
+            <option value="finance">Finance / Accounting</option>
+            <option value="hr">HR / People Ops</option>
+            <option value="procurement">Procurement / Inventory</option>
+            <option value="it">IT / Systems</option>
+          </select>
+
+          <button class="smallbtn" id="expandAllQ" type="button">Expand all</button>
+          <button class="smallbtn" id="collapseAllQ" type="button">Collapse all</button>
+        </div>
+
+        <p class="hint">Filtering hides/show sections; search (top bar) searches within the currently visible tab.</p>
+      </div>
+
+      <div class="panel qblock" data-func="leadership">
+        <details>
+          <summary>Leadership / Owner / GM <span class="badge med">Priority alignment</span></summary>
+          <div class="muted">
+            <h3>Questions</h3>
+            <ul>
+              <li>What are your top 3 operational frustrations right now (speed, quality, cost)?</li>
+              <li>Where do customers complain about delays or inconsistency?</li>
+              <li>Which processes most often “stall” and require your intervention?</li>
+              <li>What activities feel critical but are not measured well today?</li>
+              <li>If you could remove one operational bottleneck this quarter, what would it be?</li>
+              <li>What does “success in 90 days” look like in measurable terms?</li>
+              <li>What are the non-negotiables (compliance, privacy, customer experience standards)?</li>
+            </ul>
+
+            <h3>Artifacts to request</h3>
+            <ul>
+              <li>High-level P&amp;L or cost categories</li>
+              <li>Current KPIs / weekly reports (if any)</li>
+              <li>Customer complaint themes / logs (if available)</li>
+              <li>Org chart (even informal) + role descriptions</li>
+            </ul>
+
+            <p class="hint"><span class="mono">Capture:</span> strategic priorities + constraints + where leadership time is being consumed.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel qblock" data-func="sales">
+        <details>
+          <summary>Sales <span class="badge quick">Quick wins likely</span></summary>
+          <div class="muted">
+            <h3>Questions</h3>
+            <ul>
+              <li>How do leads arrive today (phone, email, WhatsApp, walk-in, referrals)?</li>
+              <li>What slows down getting a quote/proposal out?</li>
+              <li>How often do prospects “go cold” due to slow follow-up?</li>
+              <li>What information do you repeatedly ask customers for?</li>
+              <li>How do you track pipeline today (CRM, spreadsheet, memory)?</li>
+              <li>Which steps require copy/paste between systems?</li>
+              <li>What are common errors in quotes/contracts (pricing, terms, missing details)?</li>
+              <li>What is your average time from inquiry → quote → close?</li>
+            </ul>
+
+            <h3>Artifacts to request</h3>
+            <ul>
+              <li>Sample quotes/proposals</li>
+              <li>Lead sources list + typical intake messages</li>
+              <li>Pipeline spreadsheet / CRM screenshots</li>
+              <li>Sales email templates and follow-up scripts</li>
+            </ul>
+
+            <p class="hint"><span class="mono">Capture:</span> cycle time, drop-off points, repetitive writing, and tracking gaps.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel qblock" data-func="marketing">
+        <details>
+          <summary>Marketing <span class="badge med">Throughput & consistency</span></summary>
+          <div class="muted">
+            <h3>Questions</h3>
+            <ul>
+              <li>What content do you need every month, and what takes the longest to produce?</li>
+              <li>How do you manage social posting and replies today?</li>
+              <li>Where do approvals bottleneck (owner review, compliance, brand)?</li>
+              <li>How do you capture and reuse customer FAQs and testimonials?</li>
+              <li>Do you have a consistent way to turn inquiries into nurture sequences?</li>
+              <li>What reporting takes time (campaign performance, lead sources)?</li>
+            </ul>
+
+            <h3>Artifacts to request</h3>
+            <ul>
+              <li>Brand guidelines / preferred tone</li>
+              <li>Past posts/campaigns</li>
+              <li>FAQ documents, brochures, menus, service lists</li>
+              <li>Monthly reporting spreadsheets</li>
+            </ul>
+
+            <p class="hint"><span class="mono">Capture:</span> content production bottlenecks, approvals, and inquiry-to-lead handoff.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel qblock" data-func="customer">
+        <details>
+          <summary>Customer Service / Front Desk <span class="badge quick">High-volume efficiency</span></summary>
+          <div class="muted">
+            <h3>Questions</h3>
+            <ul>
+              <li>What are your top 20 customer questions?</li>
+              <li>How many inquiries per day/week and through which channels?</li>
+              <li>What causes repeat contacts (customer has to call back)?</li>
+              <li>Which requests require searching multiple systems to answer?</li>
+              <li>What is the handoff process to other departments, and where does it break?</li>
+              <li>How do you log issues and track resolution?</li>
+              <li>What’s your current first-response time and resolution time?</li>
+            </ul>
+
+            <h3>Artifacts to request</h3>
+            <ul>
+              <li>Chat/WhatsApp/email inquiry samples (redacted)</li>
+              <li>Call scripts / SOPs</li>
+              <li>Issue logs / ticket spreadsheets</li>
+              <li>Knowledge base docs (if any)</li>
+            </ul>
+
+            <p class="hint"><span class="mono">Capture:</span> volume, common intents, and time lost searching/handing off.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel qblock" data-func="operations">
+        <details>
+          <summary>Operations / Service Delivery <span class="badge med">Cycle time & rework</span></summary>
+          <div class="muted">
+            <h3>Questions</h3>
+            <ul>
+              <li>What are the core workflows from start → finish (step-by-step)?</li>
+              <li>Where do jobs/cases/tasks get stuck or delayed?</li>
+              <li>What information is missing most often at handoff?</li>
+              <li>Which tasks require checking multiple documents to proceed?</li>
+              <li>How do you schedule work and assign tasks today?</li>
+              <li>What are the top causes of rework, refunds, or escalations?</li>
+              <li>What activities are “invisible” but consume lots of time (coordination, follow-ups)?</li>
+              <li>What is the typical turnaround time and where does variance come from?</li>
+            </ul>
+
+            <h3>Artifacts to request</h3>
+            <ul>
+              <li>Process maps/SOPs (even informal)</li>
+              <li>Job sheets, checklists, standard forms</li>
+              <li>Scheduling boards / spreadsheets</li>
+              <li>Exception logs / escalation examples</li>
+            </ul>
+
+            <p class="hint"><span class="mono">Capture:</span> steps, bottlenecks, rework drivers, and coordination overhead.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel qblock" data-func="finance">
+        <details>
+          <summary>Finance / Accounting <span class="badge med">Cashflow speed</span></summary>
+          <div class="muted">
+            <h3>Questions</h3>
+            <ul>
+              <li>How does invoicing happen today (who triggers it, what data is needed)?</li>
+              <li>Where do invoices get delayed or disputed?</li>
+              <li>How do you track receivables and follow-ups?</li>
+              <li>What reporting takes the longest (monthly close, cashflow, expenses)?</li>
+              <li>What is your most manual recurring process (reconciliation, approvals, payroll inputs)?</li>
+              <li>What errors occur repeatedly (coding, missing POs, wrong amounts)?</li>
+              <li>How do expense approvals work, and what slows them down?</li>
+              <li>How much time is spent chasing missing documentation?</li>
+            </ul>
+
+            <h3>Artifacts to request</h3>
+            <ul>
+              <li>Invoice templates + sample invoices (redacted)</li>
+              <li>A/R aging report or spreadsheet</li>
+              <li>Expense approval policy and forms</li>
+              <li>Monthly reporting pack (if available)</li>
+            </ul>
+
+            <p class="hint"><span class="mono">Capture:</span> days to invoice, days to collect, and hours spent on close/reporting.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel qblock" data-func="hr">
+        <details>
+          <summary>HR / People Ops <span class="badge med">Admin reduction</span></summary>
+          <div class="muted">
+            <h3>Questions</h3>
+            <ul>
+              <li>What HR admin tasks consume the most time (onboarding, letters, scheduling)?</li>
+              <li>How is employee onboarding done (forms, policies, training tracking)?</li>
+              <li>How are SOPs and training materials created and kept current?</li>
+              <li>What causes repeated questions from staff (policies, leave, procedures)?</li>
+              <li>How are performance notes tracked and compiled?</li>
+              <li>Where do handoffs between HR and managers break down?</li>
+            </ul>
+
+            <h3>Artifacts to request</h3>
+            <ul>
+              <li>Employee handbook/policies</li>
+              <li>Offer letter templates</li>
+              <li>Onboarding checklist</li>
+              <li>Training materials and SOPs</li>
+            </ul>
+
+            <p class="hint"><span class="mono">Capture:</span> time spent on repetitive documentation + staff enablement gaps.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel qblock" data-func="procurement">
+        <details>
+          <summary>Procurement / Inventory <span class="badge med">Stockouts & admin time</span></summary>
+          <div class="muted">
+            <h3>Questions</h3>
+            <ul>
+              <li>How do you track inventory today, and how often is it wrong?</li>
+              <li>What triggers reordering, and where are delays?</li>
+              <li>What vendor communications are repetitive (pricing, availability, ETAs)?</li>
+              <li>Where do stockouts or over-ordering happen most?</li>
+              <li>How are purchase approvals done and tracked?</li>
+              <li>How much time is spent updating spreadsheets/manual counts?</li>
+            </ul>
+
+            <h3>Artifacts to request</h3>
+            <ul>
+              <li>Inventory spreadsheets or system exports</li>
+              <li>Reorder rules (if any)</li>
+              <li>PO templates and approval chain</li>
+              <li>Vendor list and typical email threads</li>
+            </ul>
+
+            <p class="hint"><span class="mono">Capture:</span> manual updates, reconciliation effort, and delays affecting operations.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel qblock" data-func="it">
+        <details>
+          <summary>IT / Systems <span class="badge hard">Dependencies</span> <span class="badge risk">Risk & governance</span></summary>
+          <div class="muted">
+            <h3>Questions</h3>
+            <ul>
+              <li>What systems are in place (email, accounting, CRM, booking, HR)?</li>
+              <li>Where is the “source of truth” for customer and financial data?</li>
+              <li>What integrations already exist, and what’s manual?</li>
+              <li>What are the constraints (data privacy, access control, audit needs)?</li>
+              <li>What recurring incidents or system issues slow teams down?</li>
+              <li>How are permissions managed for staff and contractors?</li>
+              <li>What would be considered “too risky” to automate?</li>
+            </ul>
+
+            <h3>Artifacts to request</h3>
+            <ul>
+              <li>System list + owners</li>
+              <li>Exports/reports currently used</li>
+              <li>Access control rules</li>
+              <li>Any existing automation tools (Zapier, Power Automate, etc.)</li>
+            </ul>
+
+            <p class="hint"><span class="mono">Capture:</span> feasibility, security constraints, and integration opportunities.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- TAB 3 -->
+    <section class="content" id="tab-3" role="tabpanel" aria-labelledby="tab-btn-3" hidden>
+      <div class="panel">
+        <h2>Project Types Library (Efficiency Use Cases)</h2>
+        <p class="muted">
+          Reusable initiative patterns you can mix-and-match into the 90-day roadmap. Each type includes: purpose, typical inputs, and measurable impact.
+        </p>
+
+        <div class="toolbar">
+          <label class="sr-only" for="projFilter">Stage filter</label>
+          <select id="projFilter" class="smallbtn" aria-label="Filter by stage">
+            <option value="all">All stages</option>
+            <option value="automation">Automation</option>
+            <option value="augmentation">Augmentation</option>
+            <option value="intelligence">Intelligence</option>
+            <option value="orchestration">Orchestration</option>
+          </select>
+
+          <button class="smallbtn" id="expandAllP" type="button">Expand all</button>
+          <button class="smallbtn" id="collapseAllP" type="button">Collapse all</button>
+        </div>
+
+        <p class="hint">Tip: In most 90-day Blueprints, pick 2–3 Automation, 2–3 Augmentation, 1 Intelligence, and 0–1 Orchestration depending on systems maturity.</p>
+      </div>
+
+      <!-- Automation -->
+      <div class="panel pblock" data-stage="automation">
+        <details>
+          <summary>Automated Intake → Structured Record <span class="badge quick">Quick win</span></summary>
+          <div class="muted">
+            <p><b>Purpose:</b> Turn emails/WhatsApp/forms into a clean structured record (CRM row, case file, booking request) without manual retyping.</p>
+            <h3>Typical inputs</h3>
+            <ul>
+              <li>Sample inbound messages, forms, PDFs</li>
+              <li>Required fields list + validation rules</li>
+              <li>Destination system (spreadsheet/CRM/accounting)</li>
+            </ul>
+            <h3>Measures</h3>
+            <ul>
+              <li>Minutes saved per intake</li>
+              <li>Error rate reduction (missing fields)</li>
+              <li>Time-to-first-action improvement</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel pblock" data-stage="automation">
+        <details>
+          <summary>Document Generation &amp; Templates <span class="badge quick">Quick win</span></summary>
+          <div class="muted">
+            <p><b>Purpose:</b> Generate consistent quotes, letters, agreements, invoices, and reports from templates + intake data.</p>
+            <h3>Typical inputs</h3>
+            <ul>
+              <li>Approved templates + clauses</li>
+              <li>Brand/format rules</li>
+              <li>Data fields mapping</li>
+            </ul>
+            <h3>Measures</h3>
+            <ul>
+              <li>Time to produce documents</li>
+              <li>Reduction in formatting/wording errors</li>
+              <li>Approval turnaround time</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel pblock" data-stage="automation">
+        <details>
+          <summary>Automated Reminders, Follow-ups &amp; SLA Nudges <span class="badge quick">Quick win</span></summary>
+          <div class="muted">
+            <p><b>Purpose:</b> Reduce “things falling through the cracks” using automated reminders and follow-ups.</p>
+            <h3>Typical inputs</h3>
+            <ul>
+              <li>Trigger rules (e.g., invoice due, missing docs, approval waiting)</li>
+              <li>Message templates and escalation paths</li>
+              <li>Contact sources (email/WhatsApp/CRM)</li>
+            </ul>
+            <h3>Measures</h3>
+            <ul>
+              <li>Reduction in overdue items</li>
+              <li>Fewer escalations and callbacks</li>
+              <li>Faster cycle time</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <!-- Augmentation -->
+      <div class="panel pblock" data-stage="augmentation">
+        <details>
+          <summary>Inbox &amp; Message Triage Copilot <span class="badge med">Medium</span></summary>
+          <div class="muted">
+            <p><b>Purpose:</b> Summarize, categorize, and draft responses so staff can process communication faster and more consistently.</p>
+            <h3>Typical inputs</h3>
+            <ul>
+              <li>FAQ/knowledge base content</li>
+              <li>Response tone guidelines</li>
+              <li>Escalation rules (“when not to answer”) </li>
+            </ul>
+            <h3>Measures</h3>
+            <ul>
+              <li>First-response time reduction</li>
+              <li>Average handle time reduction</li>
+              <li>Consistency / fewer missed details</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel pblock" data-stage="augmentation">
+        <details>
+          <summary>Proposal / Quote Writing Copilot <span class="badge med">Medium</span></summary>
+          <div class="muted">
+            <p><b>Purpose:</b> Help sales or operations produce faster, better proposals using approved templates + past examples.</p>
+            <h3>Typical inputs</h3>
+            <ul>
+              <li>Past proposals and best examples</li>
+              <li>Pricing rules and packages</li>
+              <li>Objection-handling scripts</li>
+            </ul>
+            <h3>Measures</h3>
+            <ul>
+              <li>Time from inquiry → quote</li>
+              <li>Reduction in revision cycles</li>
+              <li>Increased throughput per rep</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel pblock" data-stage="augmentation">
+        <details>
+          <summary>SOP Builder &amp; Training Assistant <span class="badge med">Medium</span></summary>
+          <div class="muted">
+            <p><b>Purpose:</b> Convert tribal knowledge into clear SOPs, checklists, and onboarding materials quickly.</p>
+            <h3>Typical inputs</h3>
+            <ul>
+              <li>Process walkthrough recordings/notes</li>
+              <li>Current checklists and forms</li>
+              <li>Quality standards</li>
+            </ul>
+            <h3>Measures</h3>
+            <ul>
+              <li>Time to create/update SOPs</li>
+              <li>Reduction in training time</li>
+              <li>Fewer new-hire errors</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <!-- Intelligence -->
+      <div class="panel pblock" data-stage="intelligence">
+        <details>
+          <summary>Weekly Ops Snapshot (Auto-Generated) <span class="badge med">Medium</span></summary>
+          <div class="muted">
+            <p><b>Purpose:</b> Generate a consistent weekly operational report automatically (volume, backlog, aging, bottlenecks).</p>
+            <h3>Typical inputs</h3>
+            <ul>
+              <li>Data exports (CRM/accounting/spreadsheets)</li>
+              <li>Definitions for KPIs (what counts as backlog, overdue, etc.)</li>
+              <li>Audience-specific views (Owner vs manager)</li>
+            </ul>
+            <h3>Measures</h3>
+            <ul>
+              <li>Hours saved on reporting</li>
+              <li>Faster detection of bottlenecks</li>
+              <li>Reduction in “surprise” escalations</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel pblock" data-stage="intelligence">
+        <details>
+          <summary>Exceptions &amp; Bottleneck Alerting <span class="badge med">Medium</span></summary>
+          <div class="muted">
+            <p><b>Purpose:</b> Flag stuck items and exceptions early (missing docs, approval delays, overdue tasks).</p>
+            <h3>Typical inputs</h3>
+            <ul>
+              <li>Exception definitions and thresholds</li>
+              <li>Escalation paths and notification channels</li>
+              <li>Data sources that indicate status</li>
+            </ul>
+            <h3>Measures</h3>
+            <ul>
+              <li>Reduced cycle time variance</li>
+              <li>Lower backlog aging</li>
+              <li>Fewer urgent escalations</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <!-- Orchestration -->
+      <div class="panel pblock" data-stage="orchestration">
+        <details>
+          <summary>End-to-End Workflow Handoff Automation <span class="badge hard">Heavy lift</span></summary>
+          <div class="muted">
+            <p><b>Purpose:</b> Connect multi-step, cross-department workflows so work progresses without manual chasing.</p>
+            <h3>Typical inputs</h3>
+            <ul>
+              <li>Step-by-step workflow map</li>
+              <li>System permissions and integration options</li>
+              <li>Handoff rules + quality gates</li>
+            </ul>
+            <h3>Measures</h3>
+            <ul>
+              <li>Days removed from full cycle time</li>
+              <li>Reduced handoff failures</li>
+              <li>Higher on-time completion rates</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="panel pblock" data-stage="orchestration">
+        <details>
+          <summary>Customer Journey Orchestration (Intake → Service → Billing) <span class="badge hard">Heavy lift</span> <span class="badge risk">Risk-managed</span></summary>
+          <div class="muted">
+            <p><b>Purpose:</b> Create a coordinated journey where data and tasks move automatically from initial request to fulfillment and invoicing.</p>
+            <h3>Typical inputs</h3>
+            <ul>
+              <li>Systems map (booking/CRM/accounting/support)</li>
+              <li>Data model (customer, job, invoice, status)</li>
+              <li>Governance rules (what must remain human-approved)</li>
+            </ul>
+            <h3>Measures</h3>
+            <ul>
+              <li>Reduced time-to-invoice and time-to-cash</li>
+              <li>Fewer missed steps / fewer customer callbacks</li>
+              <li>Reduced manual coordination hours</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer>
+      <span class="mono">AI Opportunity Blueprint</span> • Efficiency-first product working doc • Update sections as you refine your offer and repeatable assets.
+    </footer>
+  </div>
+
+  <script>
+    // Tab switching
+    const tabButtons = Array.from(document.querySelectorAll('.tab-btn'));
+    const tabPanels = [
+      document.getElementById('tab-1'),
+      document.getElementById('tab-2'),
+      document.getElementById('tab-3')
+    ];
+
+    function setActiveTab(index){
+      tabButtons.forEach((btn, i) => {
+        const selected = i === index;
+        btn.setAttribute('aria-selected', String(selected));
+        btn.tabIndex = selected ? 0 : -1;
+        tabPanels[i].hidden = !selected;
+      });
+
+      // Clear local filters/search highlights when switching tabs
+      document.getElementById('globalSearch').value = '';
+      clearHighlights(tabPanels[index]);
+      // reset filters
+      const funcFilter = document.getElementById('funcFilter');
+      if(funcFilter) funcFilter.value = 'all';
+      applyFuncFilter();
+
+      const projFilter = document.getElementById('projFilter');
+      if(projFilter) projFilter.value = 'all';
+      applyProjFilter();
+    }
+
+    tabButtons.forEach((btn, i) => {
+      btn.addEventListener('click', () => setActiveTab(i));
+      btn.addEventListener('keydown', (e) => {
+        if(e.key === 'ArrowRight'){ e.preventDefault(); setActiveTab((i+1) % tabButtons.length); tabButtons[(i+1)%tabButtons.length].focus(); }
+        if(e.key === 'ArrowLeft'){ e.preventDefault(); setActiveTab((i-1+tabButtons.length) % tabButtons.length); tabButtons[(i-1+tabButtons.length)%tabButtons.length].focus(); }
+      });
+    });
+
+    // Search within current visible tab
+    const searchInput = document.getElementById('globalSearch');
+    const clearBtn = document.getElementById('clearSearch');
+
+    function getActivePanel(){
+      return tabPanels.find(p => !p.hidden);
+    }
+
+    function clearHighlights(root){
+      if(!root) return;
+      const marks = root.querySelectorAll('mark[data-hl="1"]');
+      marks.forEach(m => {
+        const text = document.createTextNode(m.textContent);
+        m.replaceWith(text);
+      });
+      // normalize to merge adjacent text nodes
+      root.normalize();
+    }
+
+    function highlightTerm(root, term){
+      if(!root || !term) return;
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: (node) => {
+          if(!node.nodeValue) return NodeFilter.FILTER_REJECT;
+          const parent = node.parentElement;
+          if(!parent) return NodeFilter.FILTER_REJECT;
+          if(parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE' || parent.tagName === 'MARK') return NodeFilter.FILTER_REJECT;
+          if(parent.closest('header')) return NodeFilter.FILTER_REJECT; // don't highlight header
+          return node.nodeValue.toLowerCase().includes(term.toLowerCase())
+            ? NodeFilter.FILTER_ACCEPT
+            : NodeFilter.FILTER_REJECT;
+        }
+      });
+
+      const nodes = [];
+      while(walker.nextNode()) nodes.push(walker.currentNode);
+
+      nodes.forEach(textNode => {
+        const val = textNode.nodeValue;
+        const lower = val.toLowerCase();
+        const t = term.toLowerCase();
+        const idx = lower.indexOf(t);
+        if(idx === -1) return;
+
+        const before = document.createTextNode(val.slice(0, idx));
+        const match = document.createElement('mark');
+        match.dataset.hl = "1";
+        match.style.background = "rgba(255, 204, 102, .25)";
+        match.style.color = "inherit";
+        match.style.padding = "0 .12em";
+        match.style.borderRadius = "6px";
+        match.textContent = val.slice(idx, idx + term.length);
+        const after = document.createTextNode(val.slice(idx + term.length));
+
+        const frag = document.createDocumentFragment();
+        frag.appendChild(before);
+        frag.appendChild(match);
+        frag.appendChild(after);
+
+        textNode.replaceWith(frag);
+      });
+    }
+
+    searchInput.addEventListener('input', () => {
+      const root = getActivePanel();
+      clearHighlights(root);
+      const term = searchInput.value.trim();
+      if(term.length >= 2){
+        highlightTerm(root, term);
+      }
+    });
+
+    clearBtn.addEventListener('click', () => {
+      const root = getActivePanel();
+      searchInput.value = '';
+      clearHighlights(root);
+      searchInput.focus();
+    });
+
+    // Print
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    // Discovery questions filter
+    function applyFuncFilter(){
+      const sel = document.getElementById('funcFilter');
+      if(!sel) return;
+      const v = sel.value;
+      document.querySelectorAll('#tab-2 .qblock').forEach(el => {
+        el.style.display = (v === 'all' || el.dataset.func === v) ? '' : 'none';
+      });
+    }
+    const funcFilter = document.getElementById('funcFilter');
+    if(funcFilter){
+      funcFilter.addEventListener('change', applyFuncFilter);
+    }
+
+    document.getElementById('expandAllQ')?.addEventListener('click', () => {
+      document.querySelectorAll('#tab-2 details').forEach(d => d.open = true);
+    });
+    document.getElementById('collapseAllQ')?.addEventListener('click', () => {
+      document.querySelectorAll('#tab-2 details').forEach(d => d.open = false);
+    });
+
+    // Project types filter
+    function applyProjFilter(){
+      const sel = document.getElementById('projFilter');
+      if(!sel) return;
+      const v = sel.value;
+      document.querySelectorAll('#tab-3 .pblock').forEach(el => {
+        el.style.display = (v === 'all' || el.dataset.stage === v) ? '' : 'none';
+      });
+    }
+    const projFilter = document.getElementById('projFilter');
+    if(projFilter){
+      projFilter.addEventListener('change', applyProjFilter);
+    }
+
+    document.getElementById('expandAllP')?.addEventListener('click', () => {
+      document.querySelectorAll('#tab-3 details').forEach(d => d.open = true);
+    });
+    document.getElementById('collapseAllP')?.addEventListener('click', () => {
+      document.querySelectorAll('#tab-3 details').forEach(d => d.open = false);
+    });
+
+    // Init
+    setActiveTab(0);
+  </script>
+</body>
+</html>

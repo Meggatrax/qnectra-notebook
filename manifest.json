@@ -1,15 +1,21 @@
 [
   {
-    "path": "dashboards/Client-portal-comparison.html",
-    "filename": "Client-portal-comparison.html",
+    "path": "dashboards/AI_Blueprint.html",
+    "filename": "AI_Blueprint.html",
     "type": "html",
-    "modified": "2026-01-14T10:59:29"
+    "modified": "2026-01-16T13:53:42"
   },
   {
     "path": "dashboards/CoachingContentStrategy.html",
     "filename": "CoachingContentStrategy.html",
     "type": "html",
-    "modified": "2026-01-12T11:37:31"
+    "modified": "2026-01-14T13:21:29"
+  },
+  {
+    "path": "dashboards/Client-portal-comparison.html",
+    "filename": "Client-portal-comparison.html",
+    "type": "html",
+    "modified": "2026-01-14T12:05:23"
   },
   {
     "path": "dashboards/Old-colleagues-catchup.html",
