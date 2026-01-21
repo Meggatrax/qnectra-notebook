@@ -1,5 +1,11 @@
 [
   {
+    "path": "dashboards/Client_portal_call_flow.html",
+    "filename": "Client_portal_call_flow.html",
+    "type": "html",
+    "modified": "2026-01-21T14:57:49"
+  },
+  {
     "path": "dashboards/AI_Blueprint.html",
     "filename": "AI_Blueprint.html",
     "type": "html",

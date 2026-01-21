@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Discovery Call Playbook — Client Portals (Asana + Smartsheet Context)</title>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
+    :root{
+      --bg:#0b0f19;
+      --panel:rgba(255,255,255,0.06);
+      --panel2:rgba(255,255,255,0.08);
+      --border:rgba(255,255,255,0.12);
+      --text:rgba(255,255,255,0.92);
+      --muted:rgba(255,255,255,0.66);
+      --muted2:rgba(255,255,255,0.52);
+      --accent:#8be9fd;
+      --accent2:#a78bfa;
+      --good:#34d399;
+      --warn:#fbbf24;
+      --bad:#fb7185;
+      --shadow:0 20px 60px rgba(0,0,0,0.35);
+      --radius:18px;
+      --radius2:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(1000px 600px at 20% 10%, rgba(167,139,250,0.25), transparent 55%),
+                  radial-gradient(900px 500px at 80% 30%, rgba(139,233,253,0.18), transparent 50%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.45;
+    }
+    .wrap{max-width:1200px;margin:24px auto 60px;padding:0 18px;}
+    header{
+      display:flex; flex-wrap:wrap; gap:14px;
+      align-items:flex-end; justify-content:space-between;
+      margin-bottom:14px;
+    }
+    h1{margin:0;font-size:20px;letter-spacing:-0.3px;}
+    .sub{margin:0;color:var(--muted);font-size:13px;max-width:860px}
+    .badgeRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .badge{
+      background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+      border:1px solid var(--border);
+      padding:8px 10px;border-radius:999px;
+      font-size:12px;color:var(--muted);
+      box-shadow:var(--shadow);
+      white-space:nowrap;
+    }
+    .badge strong{color:var(--text);font-weight:600}
+
+    .grid{display:grid;grid-template-columns: 1fr 0.95fr;gap:14px;}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.05));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+    .card h2{margin:0 0 10px;font-size:14.5px;letter-spacing:-0.2px;}
+    .kicker{margin:0 0 12px;font-size:12.5px;color:var(--muted);}
+    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0 0}
+    select, button, input[type="search"], textarea{
+      font-family:inherit;
+      font-size:12px;
+      color:rgba(255,255,255,0.88);
+      background:rgba(0,0,0,0.25);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:12px;
+      padding:10px 12px;
+      outline:none;
+    }
+    textarea{width:100%;min-height:110px;resize:vertical}
+    button{
+      cursor:pointer;
+      background:linear-gradient(180deg, rgba(139,233,253,0.18), rgba(139,233,253,0.07));
+      border-color:rgba(139,233,253,0.25);
+    }
+    button.secondary{
+      background:rgba(255,255,255,0.06);
+      border-color:rgba(255,255,255,0.14);
+    }
+    button:hover{filter:brightness(1.05)}
+    .panel{
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:var(--radius2);
+      background:rgba(0,0,0,0.18);
+      padding:12px;
+    }
+
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(255,255,255,0.06);
+      padding:6px 10px;border-radius:999px;
+      font-size:11px;color:rgba(255,255,255,0.78);
+      white-space:nowrap;
+    }
+    .dot{width:8px;height:8px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px rgba(139,233,253,0.15)}
+    .dot.good{background:var(--good);box-shadow:0 0 0 4px rgba(52,211,153,0.16)}
+    .dot.warn{background:var(--warn);box-shadow:0 0 0 4px rgba(251,191,36,0.16)}
+    .dot.bad{background:var(--bad);box-shadow:0 0 0 4px rgba(251,113,133,0.16)}
+    .dot.p2{background:var(--accent2);box-shadow:0 0 0 4px rgba(167,139,250,0.15)}
+
+    .twoCol{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media(max-width:720px){.twoCol{grid-template-columns:1fr}}
+    ul{margin:8px 0 0 18px}
+    li{margin:6px 0}
+    .muted{color:var(--muted)}
+    .muted2{color:var(--muted2)}
+    .script{
+      white-space:pre-wrap;
+      font-size:12.5px;
+      color:rgba(255,255,255,0.84);
+      line-height:1.5;
+      border:1px dashed rgba(255,255,255,0.22);
+      background:rgba(0,0,0,0.22);
+      padding:12px;
+      border-radius:var(--radius2);
+    }
+    .callout{
+      border-left:3px solid rgba(139,233,253,0.55);
+      padding-left:10px;
+      color:rgba(255,255,255,0.80);
+      font-size:12.5px;
+    }
+    .tagline{
+      font-size:12px;color:rgba(255,255,255,0.70);
+      border:1px solid rgba(255,255,255,0.12);
+      background:rgba(255,255,255,0.04);
+      border-radius:12px;
+      padding:10px;
+    }
+    .toast{
+      position:fixed; right:18px; bottom:18px;
+      background:rgba(0,0,0,0.6);
+      border:1px solid rgba(255,255,255,0.14);
+      color:rgba(255,255,255,0.92);
+      padding:10px 12px; border-radius:12px;
+      box-shadow:var(--shadow);
+      font-size:12px;
+      opacity:0; transform:translateY(10px);
+      pointer-events:none;
+      transition:180ms ease;
+    }
+    .toast.show{opacity:1; transform:translateY(0)}
+    .hr{height:1px;background:rgba(255,255,255,0.10);margin:12px 0}
+    .small{font-size:11.5px}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Discovery Call Playbook — “Do I need a portal, and if yes, which kind?”</h1>
+        <p class="sub">
+          Designed for a Go-Giver call: you’re helping her decide, not selling.
+          Context to honor: she uses <b>Asana</b> internally, has tried <b>Smartsheet</b> dashboards, and is curious what you recommend.
+        </p>
+      </div>
+      <div class="badgeRow">
+        <div class="badge"><strong>Mode:</strong> Help-first</div>
+        <div class="badge"><strong>Decision:</strong> Dashboard vs Guided Home Base</div>
+        <div class="badge"><strong>Output:</strong> 2–3 best-fit paths</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT: Call Flow -->
+      <section class="card">
+        <h2>Call Flow (25 minutes)</h2>
+        <p class="kicker">Use this as your backbone. You’ll branch based on what she says using the selector on the right.</p>
+
+        <div class="panel">
+          <div class="row">
+            <span class="pill"><span class="dot"></span><b>1) Set intent</b></span>
+            <span class="pill"><span class="dot p2"></span><b>2) Map current flow</b></span>
+            <span class="pill"><span class="dot warn"></span><b>3) Portal worth-it test</b></span>
+            <span class="pill"><span class="dot good"></span><b>4) Choose portal type</b></span>
+            <span class="pill"><span class="dot bad"></span><b>5) Close with recap</b></span>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="twoCol">
+            <div>
+              <div class="tagline">
+                <b>Opening (verbatim)</b><br>
+                “Thanks for making time. Quick frame: I’m not here to sell you anything.
+                You mentioned portals on my post — so the goal today is to help you decide
+                <b>(1)</b> whether a portal is worth it for your model, and <b>(2)</b> if yes, which kind fits best.
+                We can use Asana + Smartsheet as our baseline.”
+              </div>
+
+              <div class="hr"></div>
+
+              <div class="tagline">
+                <b>3 questions to get oriented</b>
+                <ul>
+                  <li>“What do clients need in week one — a dashboard, or a guided home base?”</li>
+                  <li>“Where do resources + replays live today?”</li>
+                  <li>“Where do questions come in — email, Slack, Voxer, community?”</li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <div class="tagline">
+                <b>The “Portal Worth-It” Test</b><br>
+                A portal is worth it when clarity is the constraint — usually when:
+                <ul>
+                  <li>You re-send links/resources weekly</li>
+                  <li>Clients ask “where do I…?” in week one</li>
+                  <li>Replays/resources are split across tools</li>
+                  <li>Questions come in through multiple channels</li>
+                  <li>You want a more premium, consistent experience</li>
+                </ul>
+                <span class="small muted">If none of these are true, you likely just need a cleaner “Start Here” page.</span>
+              </div>
+
+              <div class="hr"></div>
+
+              <div class="tagline">
+                <b>Minimum Viable Portal Structure (tool-agnostic)</b>
+                <ul>
+                  <li><b>Start Here</b> (Day 0–7 steps + expectations + access)</li>
+                  <li><b>This Week</b> (current focus + links + tasks)</li>
+                  <li><b>Resources</b> (single library)</li>
+                  <li><b>Replays</b> (organized by week/module)</li>
+                  <li><b>Support</b> (where to ask what + response expectations)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button id="copyOpening">Copy Opening</button>
+            <button class="secondary" id="copyMVPS">Copy Portal Structure</button>
+          </div>
+        </div>
+
+        <div style="height:12px;"></div>
+
+        <h2>Notes (saved automatically)</h2>
+        <p class="kicker">Jot down her current stack + pain points. This persists in your browser.</p>
+        <textarea id="notes" placeholder="Example:
+- Offer type:
+- Week 1 friction:
+- Tools: Asana + Smartsheet + Slack
+- Biggest pain: replays scattered + clients ask where to start
+- Goal: premium experience + reduce manual follow-ups
+"></textarea>
+        <div class="controls">
+          <button class="secondary" id="clearNotes">Clear Notes</button>
+          <button id="copyNotes">Copy Notes</button>
+        </div>
+      </section>
+
+      <!-- RIGHT: Branching Responses -->
+      <aside class="card">
+        <h2>Interactive Response Helper</h2>
+        <p class="kicker">
+          Pick what she says. You’ll get: (a) your response, (b) a follow-up question, (c) recommended path.
+        </p>
+
+        <div class="panel">
+          <div class="row">
+            <label class="pill"><span class="dot"></span>Pick her statement</label>
+            <select id="scenario">
+              <option value="default">Select a scenario…</option>
+              <option value="asanastrong">“Asana is our main hub; it works, but there are limitations.”</option>
+              <option value="smartsheetworks">“Smartsheet works decently as a client dashboard/portal.”</option>
+              <option value="clientsconfused">“Clients keep asking where to find things.”</option>
+              <option value="replaysmess">“Replays/recordings are hard to organize.”</option>
+              <option value="questionschannels">“Questions come in from everywhere (email/Slack/DMs).”</option>
+              <option value="clientsdontlog">“Clients don’t log into systems; adoption is the issue.”</option>
+              <option value="wantwhite">“I want it white-labeled / branded.”</option>
+              <option value="wantprogress">“I want progress tracking / assignments / accountability.”</option>
+              <option value="lightweight">“I want the lightest thing possible—no rebuild.”</option>
+              <option value="proservices">“I need more of a professional services ‘client hub’ feel.”</option>
+              <option value="courseled">“It’s mostly course content + replays.”</option>
+              <option value="security">“We deal with sensitive info; privacy matters.”</option>
+              <option value="whatyouuse">“I’m interested in what you’re using.”</option>
+              <option value="decisionhelp">“Help me decide whether we even need a portal.”</option>
+            </select>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="callout small">
+            <b>Tip:</b> Keep the tone neutral. Use: “tradeoff,” “fit,” “depends on delivery model,” and “let’s decide the category first.”
+          </div>
+
+          <div style="height:12px;"></div>
+
+          <div class="script" id="responseBox">Select a scenario to generate your response script.</div>
+
+          <div class="controls">
+            <button id="copyResponse">Copy Response</button>
+            <button class="secondary" id="showPaths">Show Path Summary</button>
+          </div>
+
+          <div id="pathsBox" style="display:none; margin-top:10px;" class="tagline">
+            <b>3 Neutral Paths (use on any call)</b>
+            <ul>
+              <li><b>Path 1 — Optimize Smartsheet</b>: best when she wants a <b>dashboard</b> (status + links + timeline).</li>
+              <li><b>Path 2 — Add a thin client-facing portal layer</b>: keep Asana internal, portal becomes the <b>front desk</b>.</li>
+              <li><b>Path 3 — Coaching-first portal</b>: best when she wants <b>guided experience + accountability</b> (this week, progress, assignments, replays).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="height:12px;"></div>
+
+        <h2>“Dashboard vs Guided Home Base” (your key diagnostic)</h2>
+        <div class="panel">
+          <div class="twoCol">
+            <div class="tagline">
+              <b>Dashboard</b> (Smartsheet tends to fit)
+              <ul>
+                <li>Status, deliverables, deadlines</li>
+                <li>Links to resources</li>
+                <li>Client sees “where things stand”</li>
+              </ul>
+            </div>
+            <div class="tagline">
+              <b>Guided Home Base</b> (coaching-first tools tend to fit)
+              <ul>
+                <li>Start Here + This Week</li>
+                <li>Replays by week/module</li>
+                <li>Assignments/progress/accountability</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:12px;"></div>
+
+        <h2>End the call gracefully (no pitch)</h2>
+        <div class="panel">
+          <div class="tagline">
+            <b>Closing (verbatim)</b><br>
+            “This was helpful. If you want, I can summarize what we discussed into a simple one-pager:
+            the portal structure, which path fits you (Smartsheet optimize vs portal layer vs coaching-first), and 2–3 tools to consider.
+            No pressure — it’ll just make your decision easier.”
+          </div>
+          <div class="controls">
+            <button class="secondary" id="copyClosing">Copy Closing</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="toast" id="toast">Copied.</div>
+  </div>
+
+  <script>
+    const toast = document.getElementById("toast");
+    function showToast(msg){
+      toast.textContent = msg || "Copied.";
+      toast.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>toast.classList.remove("show"), 1200);
+    }
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast("Copied to clipboard.");
+      }catch(e){
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        showToast("Copied (fallback).");
+      }
+    }
+
+    // Notes persistence
+    const NOTES_KEY = "qnectra_portal_call_notes_v1";
+    const notes = document.getElementById("notes");
+    try{
+      notes.value = localStorage.getItem(NOTES_KEY) || "";
+    }catch(e){}
+    notes.addEventListener("input", () => {
+      try{ localStorage.setItem(NOTES_KEY, notes.value); }catch(e){}
+    });
+    document.getElementById("clearNotes").addEventListener("click", () => {
+      notes.value = "";
+      try{ localStorage.setItem(NOTES_KEY, ""); }catch(e){}
+      showToast("Notes cleared.");
+    });
+    document.getElementById("copyNotes").addEventListener("click", () => copyText(notes.value.trim() || ""));
+
+    // Copy buttons
+    document.getElementById("copyOpening").addEventListener("click", () => {
+      const t = "Thanks for making time. Quick frame: I’m not here to sell you anything. You mentioned portals on my post — so the goal today is to help you decide (1) whether a portal is worth it for your model, and (2) if yes, which kind fits best. We can use Asana + Smartsheet as our baseline.";
+      copyText(t);
+    });
+    document.getElementById("copyMVPS").addEventListener("click", () => {
+      const t = "Minimum Viable Portal Structure (tool-agnostic)\n\n1) Start Here (Day 0–7 steps + expectations + access)\n2) This Week (current focus + links + tasks)\n3) Resources (single library)\n4) Replays (organized by week/module)\n5) Support (where to ask what + response expectations)";
+      copyText(t);
+    });
+    document.getElementById("copyClosing").addEventListener("click", () => {
+      const t = "This was helpful. If you want, I can summarize what we discussed into a simple one-pager: the portal structure, which path fits you (Smartsheet optimize vs portal layer vs coaching-first), and 2–3 tools to consider. No pressure — it’ll just make your decision easier.";
+      copyText(t);
+    });
+
+    // Path summary toggle
+    const pathsBox = document.getElementById("pathsBox");
+    document.getElementById("showPaths").addEventListener("click", () => {
+      const isOpen = pathsBox.style.display !== "none";
+      pathsBox.style.display = isOpen ? "none" : "block";
+    });
+
+    // Scenario scripts
+    const scripts = {
+      default: {
+        response: "Select a scenario to generate your response script.",
+        followup: "",
+        path: ""
+      },
+
+      asanastrong: {
+        response:
+`Response:
+“Totally makes sense. Asana is excellent as an internal command center — especially for your team. The question is: do we want clients inside that same system, or do we want a simpler client-facing ‘front desk’ that points to everything they need?”
+
+Follow-up question:
+“What do you want clients to experience: a dashboard that shows status, or a guided home base that tells them what to do this week?”
+
+Likely direction:
+Keep Asana internal. Decide whether Smartsheet is sufficient (dashboard) or whether a portal layer is better (guided home base).`,
+        followup: "What do you want clients to experience: dashboard status, or a guided home base (Start Here / This Week / Replays / Support)?",
+        path: "Usually Path 1 (Smartsheet optimize) or Path 2 (thin portal layer), keeping Asana internal."
+      },
+
+      smartsheetworks: {
+        response:
+`Response:
+“Smartsheet can absolutely work — especially if what you need is a client dashboard: status, deliverables, deadlines, and links. Where it can start to strain is when you want more of a guided experience: ‘Start here, do this this week, here are replays, here’s support.’”
+
+Follow-up question:
+“What’s the main pain you’re trying to solve — visibility into status, or reducing ‘where do I find…’ questions?”
+
+Likely direction:
+If dashboard + visibility → optimize Smartsheet.
+If guided home base → add a portal layer or move to coaching-first.`,
+        followup: "Is your #1 goal dashboard visibility, or a guided home base that reduces “where do I find…?” questions?",
+        path: "Path 1 if dashboard. Path 2/3 if guided home base is needed."
+      },
+
+      clientsconfused: {
+        response:
+`Response:
+“That’s the clearest signal that a portal is worth it. When clients ask ‘where do I…’ in week one, it’s usually not about tech — it’s about having a single home base.”
+
+Follow-up question:
+“If you could fix one thing, would it be: a clearer ‘Start Here’ path, or consolidating resources/replays into one place?”
+
+Likely direction:
+Start with the Minimum Viable Portal structure (Start Here / This Week / Resources / Replays / Support), regardless of tool.`,
+        followup: "If you could fix one thing first, would it be a clearer Start Here path, or consolidating resources + replays into one place?",
+        path: "Any path can work, but structure first. Often Path 2 or Path 3 depending on accountability needs."
+      },
+
+      replaysmess: {
+        response:
+`Response:
+“Replays are a common pain point. The fix is less about the tool and more about the indexing: recordings need a predictable home, organized by week/module, with the most recent at the top.”
+
+Follow-up question:
+“Do clients need replays only, or do you also want ‘This Week’ guidance + assignments next to the replay?”
+
+Likely direction:
+If replays-only → Smartsheet/portal layer can work.
+If replays + guided weekly flow → coaching-first tools tend to shine.`,
+        followup: "Do clients need replays only, or do you want ‘This Week’ guidance + assignments next to replays?",
+        path: "Path 1/2 for replay indexing; Path 3 if you want guided weekly delivery."
+      },
+
+      questionschannels: {
+        response:
+`Response:
+“That multi-channel question flow is usually what creates the feeling of ‘I’m always on.’ A portal doesn’t have to replace your channels — it just sets a clear rule: what goes where, and how quickly you respond.”
+
+Follow-up question:
+“Do you want to centralize questions into one place, or keep multiple channels but route them with clear rules?”
+
+Likely direction:
+If centralize → coaching-first/community tools often help.
+If keep channels → portal layer with a Support section + clear policies works well.`,
+        followup: "Do you want to centralize questions into one place, or keep multiple channels but route them with clear rules?",
+        path: "Path 2 for routing + policies; Path 3 if centralization is a priority."
+      },
+
+      clientsdontlog: {
+        response:
+`Response:
+“That’s a great point — adoption is the real constraint. In that case, the portal has to be ‘low friction’: one link, one home base, and it answers ‘what’s next’ in under 10 seconds.”
+
+Follow-up question:
+“What’s the simplest thing clients will reliably do — click one link, or log into a system?”
+
+Likely direction:
+Optimize for lowest-friction access: portal layer or very lightweight portal experience. Keep it simple, reduce logins if possible.`,
+        followup: "What’s the simplest thing your clients will reliably do: click one link, or log into a system?",
+        path: "Often Path 2 (thin portal layer) with minimal login friction; sometimes Path 1 if Smartsheet is already adopted."
+      },
+
+      wantwhite: {
+        response:
+`Response:
+“White-label is mainly about the premium signal: your brand experience feels cohesive. The tradeoff is sometimes complexity or cost.”
+
+Follow-up question:
+“Is white-label a ‘must-have’ because it affects perceived premium, or a ‘nice-to-have’?”
+
+Likely direction:
+If must-have → portal layer / white-label portals.
+If nice-to-have → prioritize clarity and adoption first, then brand polish later.`,
+        followup: "Is white-label a must-have for premium perception, or a nice-to-have?",
+        path: "Path 2 is often best when white-label is important."
+      },
+
+      wantprogress: {
+        response:
+`Response:
+“Progress tracking and assignments are where coaching-first tools really differentiate. If accountability is part of your promise, having it built-in can reduce manual follow-ups and improve continuity.”
+
+Follow-up question:
+“Do you want progress tracking to be ‘nice and lightweight,’ or do you want it structured and measured?”
+
+Likely direction:
+If structured accountability matters → coaching-first portal tools are usually the best fit.`,
+        followup: "Do you want progress tracking to be lightweight, or structured and measured as part of delivery?",
+        path: "Path 3 (coaching-first portal) tends to be strongest."
+      },
+
+      lightweight: {
+        response:
+`Response:
+“Love that. The lightest approach is to keep Asana as your internal system and build a client-facing ‘front desk’ that’s basically: Start Here + This Week + Replays + Support.”
+
+Follow-up question:
+“Which is the bigger win for you: fewer ‘where do I find…’ messages, or fewer manual follow-ups?”
+
+Likely direction:
+Start with minimum viable portal structure. Keep the first version extremely small and prove adoption.`,
+        followup: "Which is the bigger win: fewer “where do I find…?” messages, or fewer manual follow-ups?",
+        path: "Path 2 (thin portal layer) is usually the lightest while keeping Asana internal."
+      },
+
+      proservices: {
+        response:
+`Response:
+“Got it — that’s less ‘course delivery’ and more ‘client hub.’ In that case, the portal needs to feel like a professional services workflow: onboarding, documents, status, deliverables, and communication norms.”
+
+Follow-up question:
+“Do you need contracts/invoicing inside the portal, or just a clean hub that links out?”
+
+Likely direction:
+If you want a polished hub and client-facing professionalism → portal layer / pro-services style tools tend to fit.`,
+        followup: "Do you need contracts/invoicing inside the hub, or just a clean portal that links out?",
+        path: "Often Path 2 (thin portal layer) or a pro-services-oriented platform approach."
+      },
+
+      courseled: {
+        response:
+`Response:
+“If it’s mostly curriculum + replays, then a course-led platform category usually fits better because it’s designed for content delivery and navigation.”
+
+Follow-up question:
+“Is the main value content navigation, or do you also need coaching accountability (assignments, progress, check-ins)?”
+
+Likely direction:
+Course-led if content-first. Coaching-first if accountability is core.`,
+        followup: "Is the main value content navigation, or do you also need coaching accountability?",
+        path: "Course-led category (tool depends on your stack); Path 3 if accountability is core."
+      },
+
+      security: {
+        response:
+`Response:
+“That matters. If sensitive data is involved, we should be deliberate about access controls, storage locations, and whether the portal is a thin hub linking to secure systems versus storing everything inside the portal.”
+
+Follow-up question:
+“What types of sensitive info are we talking about (health/finance/personal identifiers), and where is it stored today?”
+
+Likely direction:
+Prefer solutions with strong access controls; keep sensitive content in the right system of record; portal can be a navigational layer.`,
+        followup: "What sensitive info is involved, and where is it currently stored?",
+        path: "Usually Path 2 with careful architecture; sometimes Path 3 if the platform meets requirements."
+      },
+
+      whatyouuse: {
+        response:
+`Response:
+“Great question. I don’t start with the tool — I start with the structure and your delivery model. Once we know whether you need a dashboard or a guided home base, I can point you to 2–3 best-fit options from the market.”
+
+Follow-up question:
+“Are you trying to give clients visibility into status (dashboard), or reduce confusion by guiding week-to-week (home base)?”
+
+Likely direction:
+Use your comparison view as a ‘market map’ and narrow to 2–3 candidates based on her model.`,
+        followup: "Do you want a dashboard (status + links), or a guided home base (Start Here / This Week / Replays / Support)?",
+        path: "Path 1/2/3 depends on her answer; structure first, tool second."
+      },
+
+      decisionhelp: {
+        response:
+`Response:
+“Perfect — that’s exactly what we can do. We’ll make the decision simple: we’ll map your week-one client journey, identify where you intervene manually, and then decide whether Smartsheet is enough or whether you want a portal layer/coaching-first tool.”
+
+Follow-up question:
+“What are the top 3 ‘where do I…’ questions you get in the first two weeks?”
+
+Likely direction:
+Run the Portal Worth-It test, then pick one of the three neutral paths.`,
+        followup: "What are the top 3 “where do I…?” questions you get in the first two weeks?",
+        path: "Any path; decision based on friction and desired experience."
+      }
+    };
+
+    const scenario = document.getElementById("scenario");
+    const responseBox = document.getElementById("responseBox");
+
+    function renderScenario(key){
+      const s = scripts[key] || scripts.default;
+      responseBox.textContent = s.response;
+    }
+    scenario.addEventListener("change", () => renderScenario(scenario.value));
+    renderScenario("default");
+
+    document.getElementById("copyResponse").addEventListener("click", () => {
+      const t = responseBox.textContent.trim();
+      if (!t || t.startsWith("Select a scenario")) return showToast("Pick a scenario first.");
+      copyText(t);
+    });
+
+    function showToast(msg){
+      toast.textContent = msg || "Copied.";
+      toast.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>toast.classList.remove("show"), 1200);
+    }
+  </script>
+</body>
+</html>
