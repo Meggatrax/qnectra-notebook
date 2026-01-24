@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>M3Linked Intros — Editable Builder</title>
+
+  <!-- Font (optional) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #0b0f17;
+      --panel: #101826;
+      --panel2: #0f1624;
+      --text: #e8eefc;
+      --muted: #a9b6d3;
+      --border: rgba(255,255,255,.10);
+      --accent: #6ee7ff;
+      --accent2:#a78bfa;
+      --good:#86efac;
+      --warn:#fbbf24;
+      --bad:#fb7185;
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 10% 0%, rgba(167,139,250,.18), transparent 50%),
+                  radial-gradient(1000px 700px at 100% 20%, rgba(110,231,255,.14), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.45;
+    }
+
+    header{
+      position: sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter: blur(10px);
+      background: rgba(11,15,23,.65);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 18px;
+    }
+
+    .top{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+
+    h1{
+      margin:0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .sub{
+      margin:4px 0 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .btnrow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    button, .fileLabel{
+      appearance:none;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor:pointer;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    button:hover, .fileLabel:hover{
+      background: rgba(255,255,255,.07);
+      border-color: rgba(255,255,255,.18);
+    }
+    button:active{
+      transform: translateY(1px);
+    }
+
+    .primary{
+      border-color: rgba(110,231,255,.35);
+      background: linear-gradient(90deg, rgba(110,231,255,.18), rgba(167,139,250,.12));
+    }
+
+    main{
+      padding: 18px 0 40px 0;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    @media(min-width: 960px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .cardHead{
+      padding: 14px 14px 10px 14px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: rgba(16,24,38,.55);
+    }
+    .label{
+      display:flex;
+      flex-direction:column;
+      gap: 4px;
+    }
+    .title{
+      font-weight: 700;
+      font-size: 13px;
+      margin:0;
+    }
+    .hint{
+      margin:0;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap: 6px;
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: var(--muted);
+      white-space:nowrap;
+    }
+
+    .cardBody{
+      padding: 12px 14px 14px 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+
+    textarea{
+      width:100%;
+      min-height: 150px;
+      resize: vertical;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(15,22,36,.8);
+      color: var(--text);
+      padding: 12px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 1.45;
+      outline:none;
+    }
+    textarea:focus{
+      border-color: rgba(110,231,255,.40);
+      box-shadow: 0 0 0 4px rgba(110,231,255,.10);
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .leftActions, .rightActions{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .tiny{
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+
+    .ok{
+      border-color: rgba(134,239,172,.35);
+      background: rgba(134,239,172,.08);
+    }
+    .warn{
+      border-color: rgba(251,191,36,.35);
+      background: rgba(251,191,36,.08);
+    }
+    .danger{
+      border-color: rgba(251,113,133,.35);
+      background: rgba(251,113,133,.08);
+    }
+
+    .toast{
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--text);
+      font-size: 12px;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 999;
+      backdrop-filter: blur(10px);
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-6px);
+    }
+
+    .footerNote{
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      padding: 2px 6px;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 8px;
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+    }
+
+    input[type="file"]{ display:none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap top">
+    <div>
+      <h1>M3Linked Intros — Editable Builder</h1>
+      <p class="sub">Edit any take below. Changes auto-save in your browser (localStorage). Use Export/Import to move between devices.</p>
+    </div>
+
+    <div class="btnrow">
+      <button class="primary" id="copyAllBtn" title="Copy all takes into your clipboard">Copy All</button>
+      <button id="exportBtn" title="Download your current takes as a JSON file">Export JSON</button>
+      <label class="fileLabel" for="importFile" title="Load a previously exported JSON file">Import JSON</label>
+      <input id="importFile" type="file" accept="application/json" />
+      <button class="danger" id="resetBtn" title="Restore default text for all takes">Reset to Defaults</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid" id="cards"></div>
+
+  <p class="footerNote">
+    Tip: For quick formatting, use short lines + strong nouns. If you’re practicing live, print the <span class="kbd">15s</span> and <span class="kbd">Breakout</span> takes.
+  </p>
+</main>
+
+<div class="toast" id="toast">Copied.</div>
+
+<script>
+  const STORAGE_KEY = "qnectra_m3linked_intros_v1";
+
+  const defaults = [
+    {
+      id: "oneliner",
+      title: "StoryBrand One-Liner",
+      hint: "One sentence. Memorable. Referable.",
+      length: "≈ 1 line",
+      text:
+`I help operators who are tired of manual handoffs and spreadsheet reporting map where work is getting stuck—and leave with a 90-day AI + automation plan that frees up time, speeds up customer response, and improves cashflow.`
+    },
+    {
+      id: "intro15",
+      title: "15-Second Intro",
+      hint: "For quick rounds or if the curator is tight on time.",
+      length: "≈ 15 sec",
+      text:
+`I run the AI Opportunity Blueprint—a short diagnostic that maps where work is getting stuck, quantifies the cost of friction, and delivers a 90-day priority plan for automation and AI that pays back quickly.`
+    },
+    {
+      id: "intro30",
+      title: "30-Second Intro",
+      hint: "Problem → Guide → 3-step plan.",
+      length: "≈ 30 sec",
+      text:
+`Most teams don’t have an “AI problem”—they have workflow friction: retyping data across tools, slow approvals, and reports that take nights and weekends. I help operators fix that.
+
+My AI Opportunity Blueprint is a simple 3-step engagement: quick discovery, offsite analysis, and a readout that gives you a 90-day roadmap with the highest-ROI opportunities first.`
+    },
+    {
+      id: "intro60",
+      title: "60-Second Intro",
+      hint: "Best for the M3Linked format. Not pitchy; highly referable.",
+      length: "≈ 60 sec",
+      text:
+`I’m Chris with Qnèctra. A lot of businesses are running on manual processes they’ve simply learned to tolerate—duplicate data entry, slow handoffs, slow customer responses, invoicing lag, and spreadsheet reporting. It’s frustrating, and it’s unfair because you’re already paying for tools—yet the team is still stuck doing “human middleware.”
+
+I’m not a software vendor—I’m the guide who helps you find the real bottlenecks and the safest way to modernize. I run an engagement called the AI Opportunity Blueprint. It’s a clear 3-step plan:
+1) rapid discovery interviews,
+2) offsite mapping + ROI analysis,
+3) a readout where you walk away with a 90-day priority roadmap—typically 5–8 initiatives—plus tooling and training recommendations.
+
+If you’re an operator who wants faster execution without burning out the team, the first step is a short intro call. I can usually tell in 10 minutes whether the Blueprint will deliver a strong ROI for your situation.`
+    },
+    {
+      id: "breakout",
+      title: "Breakout Line",
+      hint: "Answer to: “Who should you meet?” / “Who do you help?”",
+      length: "≈ 10–15 sec",
+      text:
+`I’d love to meet founders/COOs/ops leaders who feel like work is moving too slowly through the business—handoffs, approvals, invoicing, reporting. If that’s you, I can share a one-page overview of the AI Opportunity Blueprint and we can see if it’s worth running.`
+    },
+    {
+      id: "sendme",
+      title: "If someone says: “Can you send me the blueprint?”",
+      hint: "Clarifies it’s custom, then offers the correct artifact.",
+      length: "≈ 10–15 sec",
+      text:
+`Totally—and just to clarify, the Blueprint is custom and comes out of the diagnostic. What I can send right now is a one-page overview of the process and deliverables, and we can do a quick triage call to see if it’s a fit.`
+    }
+  ];
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (!Array.isArray(data)) return null;
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveState(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function showToast(msg = "Done.") {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove("show"), 1200);
+  }
+
+  function copyToClipboard(text) {
+    return navigator.clipboard.writeText(text);
+  }
+
+  function buildCard(item, idx, stateRef) {
+    const card = document.createElement("section");
+    card.className = "card";
+
+    const head = document.createElement("div");
+    head.className = "cardHead";
+
+    const label = document.createElement("div");
+    label.className = "label";
+
+    const t = document.createElement("p");
+    t.className = "title";
+    t.textContent = item.title;
+
+    const h = document.createElement("p");
+    h.className = "hint";
+    h.textContent = item.hint;
+
+    label.appendChild(t);
+    label.appendChild(h);
+
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.innerHTML = `⏱ <span>${item.length}</span>`;
+
+    head.appendChild(label);
+    head.appendChild(chip);
+
+    const body = document.createElement("div");
+    body.className = "cardBody";
+
+    const ta = document.createElement("textarea");
+    ta.value = item.text;
+    ta.setAttribute("aria-label", item.title);
+
+    ta.addEventListener("input", () => {
+      stateRef[idx].text = ta.value;
+      saveState(stateRef);
+    });
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const left = document.createElement("div");
+    left.className = "leftActions";
+
+    const right = document.createElement("div");
+    right.className = "rightActions";
+
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "tiny ok";
+    copyBtn.textContent = "Copy";
+    copyBtn.addEventListener("click", async () => {
+      await copyToClipboard(ta.value);
+      showToast("Copied.");
+    });
+
+    const copyCleanBtn = document.createElement("button");
+    copyCleanBtn.className = "tiny";
+    copyCleanBtn.textContent = "Copy (clean)";
+    copyCleanBtn.title = "Copies trimmed text with normalized newlines.";
+    copyCleanBtn.addEventListener("click", async () => {
+      const cleaned = ta.value
+        .split("\\n")
+        .map(l => l.replace(/\\s+$/g,""))
+        .join("\\n")
+        .replace(/\\n{3,}/g, "\\n\\n")
+        .trim();
+      await copyToClipboard(cleaned);
+      showToast("Copied clean.");
+    });
+
+    const defaultsBtn = document.createElement("button");
+    defaultsBtn.className = "tiny warn";
+    defaultsBtn.textContent = "Restore";
+    defaultsBtn.title = "Restore this take to default text.";
+    defaultsBtn.addEventListener("click", () => {
+      const def = defaults.find(d => d.id === item.id);
+      if (!def) return;
+      ta.value = def.text;
+      stateRef[idx].text = def.text;
+      saveState(stateRef);
+      showToast("Restored.");
+    });
+
+    const count = document.createElement("span");
+    count.className = "chip";
+    count.style.marginLeft = "2px";
+    count.title = "Character count (live).";
+    const updateCount = () => count.innerHTML = `✍️ <span>${ta.value.length} chars</span>`;
+    updateCount();
+    ta.addEventListener("input", updateCount);
+
+    left.appendChild(copyBtn);
+    left.appendChild(copyCleanBtn);
+    right.appendChild(defaultsBtn);
+    right.appendChild(count);
+
+    actions.appendChild(left);
+    actions.appendChild(right);
+
+    body.appendChild(ta);
+    body.appendChild(actions);
+
+    card.appendChild(head);
+    card.appendChild(body);
+
+    return card;
+  }
+
+  function render() {
+    const container = document.getElementById("cards");
+    container.innerHTML = "";
+
+    const state = loadState() || structuredClone(defaults);
+    // Ensure schema compatibility if defaults evolve
+    const merged = defaults.map(def => {
+      const existing = state.find(s => s.id === def.id);
+      return existing ? { ...def, text: existing.text ?? def.text } : def;
+    });
+    saveState(merged);
+
+    merged.forEach((item, idx) => {
+      container.appendChild(buildCard(item, idx, merged));
+    });
+
+    // Top buttons
+    document.getElementById("copyAllBtn").onclick = async () => {
+      const all = merged.map(m => `## ${m.title}\\n${m.text.trim()}\\n`).join("\\n");
+      await copyToClipboard(all.trim());
+      showToast("Copied all.");
+    };
+
+    document.getElementById("resetBtn").onclick = () => {
+      saveState(structuredClone(defaults));
+      render();
+      showToast("Reset.");
+    };
+
+    document.getElementById("exportBtn").onclick = () => {
+      const blob = new Blob([JSON.stringify(merged, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "m3linked-intros.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+      showToast("Exported.");
+    };
+
+    document.getElementById("importFile").onchange = async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (!Array.isArray(data)) throw new Error("Invalid format");
+        // Merge imported text into defaults structure
+        const imported = defaults.map(def => {
+          const found = data.find(d => d.id === def.id);
+          return found ? { ...def, text: (found.text ?? def.text) } : def;
+        });
+        saveState(imported);
+        render();
+        showToast("Imported.");
+      } catch (err) {
+        console.error(err);
+        showToast("Import failed.");
+        alert("Import failed: please select a valid m3linked-intros.json file.");
+      } finally {
+        e.target.value = "";
+      }
+    };
+  }
+
+  // Keyboard shortcut: Ctrl/Cmd + Shift + C copies all
+  window.addEventListener("keydown", async (e) => {
+    const isMac = navigator.platform.toUpperCase().includes("MAC");
+    const mod = isMac ? e.metaKey : e.ctrlKey;
+    if (mod && e.shiftKey && e.key.toLowerCase() === "c") {
+      e.preventDefault();
+      const state = loadState() || structuredClone(defaults);
+      const all = state.map(m => `## ${m.title}\\n${(m.text || "").trim()}\\n`).join("\\n");
+      await copyToClipboard(all.trim());
+      showToast("Copied all.");
+    }
+  });
+
+  render();
+</script>
+
+</body>
+</html>
