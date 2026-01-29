@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <title>Qnèctra Notebook</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg: #020617;
@@ -149,6 +151,11 @@
             background: var(--accent);
             border-radius: 0 3px 3px 0;
         }
+        
+        /* New "Read" style */
+        .file-item.read {
+            opacity: 0.7;
+        }
 
         .file-item-header {
             display: flex;
@@ -257,6 +264,9 @@
             border-bottom: 1px solid rgba(31, 41, 55, 0.5);
             background: linear-gradient(135deg, #020617dd, #020617f5);
             flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .content-title {
@@ -264,6 +274,20 @@
             font-size: 1.1rem;
             font-weight: 500;
             color: var(--text-main);
+        }
+        
+        .auth-button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-tile);
+            background: var(--bg-tile);
+            color: var(--text-main);
+            cursor: pointer;
+        }
+        
+        .auth-button:hover {
+             background: var(--accent);
         }
 
         .content-viewer {
@@ -277,6 +301,7 @@
             height: 100%;
             border: none;
             background: white;
+            display: block; /* Default to block, hidden by JS logic */
         }
 
         .empty-state {
@@ -315,77 +340,47 @@
             overflow-y: auto;
             height: 100%;
         }
-
-        .archive-card {
+        
+        /* Modal for Login */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--bg-elevated);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-tile);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .modal input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 1rem 0;
             background: var(--bg-tile);
             border: 1px solid var(--border-tile);
-            border-radius: 12px;
-            padding: 1rem;
+            color: white;
+            border-radius: 8px;
+        }
+        .modal button {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--accent);
+            border: none;
+            color: white;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.14s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            font-weight: bold;
         }
-
-        .archive-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-2px);
-        }
-
-        .archive-card-title {
-            font-size: 0.95rem;
-            font-weight: 500;
-            margin: 0;
-            line-height: 1.3;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-
-        .archive-card-filename {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .archive-card-date {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        .archive-card-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            margin-top: 0.3rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid rgba(31, 41, 55, 0.5);
-        }
-
-        .file-list-container::-webkit-scrollbar,
-        .archive-grid::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .file-list-container::-webkit-scrollbar-track,
-        .archive-grid::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.3);
-        }
-
-        .file-list-container::-webkit-scrollbar-thumb,
-        .archive-grid::-webkit-scrollbar-thumb {
-            background: rgba(148, 163, 184, 0.3);
-            border-radius: 4px;
-        }
-
-        .file-list-container::-webkit-scrollbar-thumb:hover,
-        .archive-grid::-webkit-scrollbar-thumb:hover {
-            background: rgba(148, 163, 184, 0.5);
+        .modal button:hover {
+            opacity: 0.9;
         }
 
         @media (max-width: 768px) {
@@ -432,7 +427,7 @@
             <p class="sidebar-subtitle">
                 Select any document to view in the main panel
             </p>
-            <div id="file-count" class="file-count">Loading files…</div>
+            <div id="file-count" class="file-count">Connecting...</div>
         </div>
 
         <div class="file-list-container">
@@ -440,19 +435,22 @@
             <div id="empty-state-sidebar" class="empty-state" style="display: none; padding: 2rem 1rem;">
                 <p style="font-size: 0.9rem; color: var(--text-muted);">
                     No documents found.<br />
-                    Add HTML files to <code style="font-size: 0.85rem; background: rgba(15, 23, 42, 0.8); padding: 0.15rem 0.4rem; border-radius: 4px;">dashboards/</code>
+                    Run <code style="font-size: 0.85rem; background: rgba(15, 23, 42, 0.8); padding: 0.15rem 0.4rem; border-radius: 4px;">npm run sync</code>
                 </p>
             </div>
         </div>
 
         <button id="archive-button" class="archive-button">
-            📦 View Archive (<span id="archive-count">0</span>)
+            📦 View Archive
         </button>
     </div>
 
     <div class="main-content">
         <div class="content-header">
             <h2 id="content-title" class="content-title">Select a document</h2>
+            <div id="auth-container">
+                <button id="auth-button" class="auth-button">Sign In</button>
+            </div>
         </div>
         <div class="content-viewer">
             <iframe id="content-iframe" class="content-iframe" style="display: none;"></iframe>
@@ -464,295 +462,22 @@
             <div id="archive-view" class="archive-grid" style="display: none;"></div>
         </div>
     </div>
+    
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <h2>Sync your Notebook</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                Enter your email to receive a magic link for cross-device sync.
+            </p>
+            <input type="email" id="email-input" placeholder="you@example.com" />
+            <button id="send-magic-link">Send Magic Link</button>
+            <div id="login-status" style="margin-top: 1rem; font-size: 0.85rem;"></div>
+        </div>
+    </div>
 
-    <script>
-        const fileListContainer = document.getElementById("file-list");
-        const emptyStateSidebar = document.getElementById("empty-state-sidebar");
-        const emptyStateMain = document.getElementById("empty-state-main");
-        const fileCountEl = document.getElementById("file-count");
-        const contentTitle = document.getElementById("content-title");
-        const contentIframe = document.getElementById("content-iframe");
-        const archiveButton = document.getElementById("archive-button");
-        const archiveView = document.getElementById("archive-view");
-        const archiveCountEl = document.getElementById("archive-count");
-
-        let currentFiles = [];
-        let activeFileIndex = -1;
-        let archivedFiles = new Set();
-        let showingArchive = false;
-
-        function loadArchivedState() {
-            const stored = localStorage.getItem('qnectra-archived');
-            if (stored) {
-                try {
-                    archivedFiles = new Set(JSON.parse(stored));
-                } catch (e) {
-                    archivedFiles = new Set();
-                }
-            }
-        }
-
-        function saveArchivedState() {
-            localStorage.setItem('qnectra-archived', JSON.stringify([...archivedFiles]));
-        }
-
-        function toggleArchive(filePath, isArchived) {
-            if (isArchived) {
-                archivedFiles.add(filePath);
-            } else {
-                archivedFiles.delete(filePath);
-            }
-            saveArchivedState();
-            updateArchiveCount();
-            if (showingArchive) {
-                renderArchiveView();
-            } else {
-                renderFileList(currentFiles);
-            }
-        }
-
-        function updateArchiveCount() {
-            archiveCountEl.textContent = archivedFiles.size;
-        }
-
-        function formatShortDate(iso) {
-            if (!iso) return "";
-            const d = new Date(iso);
-            const month = String(d.getMonth() + 1).padStart(2, "0");
-            const day = String(d.getDate()).padStart(2, "0");
-            const year = d.getFullYear();
-            return `${month}/${day}/${year}`;
-        }
-
-        function truncate(text, maxLen) {
-            if (!text) return "";
-            return text.length > maxLen ? text.slice(0, maxLen - 1).trimEnd() + "…" : text;
-        }
-
-        async function fetchMetadata(entry) {
-            const isPdf =
-                (entry.type || "").toLowerCase() === "pdf" ||
-                entry.filename.toLowerCase().endsWith(".pdf");
-
-            if (isPdf) {
-                return {
-                    ...entry,
-                    title: entry.filename,
-                    description: "",
-                    isPdf: true
-                };
-            }
-
-            try {
-                const response = await fetch(entry.path);
-                if (!response.ok) throw new Error("HTTP " + response.status);
-                const html = await response.text();
-                const doc = new DOMParser().parseFromString(html, "text/html");
-
-                const titleEl = doc.querySelector("title");
-                const title = (titleEl && titleEl.textContent.trim()) || entry.filename;
-
-                const headerEl = doc.querySelector("h1, h2, header h1, header h2");
-                const headerText = headerEl ? headerEl.textContent.trim() : "";
-
-                const metaDesc = doc.querySelector('meta[name="description"]');
-                const desc = metaDesc
-                    ? metaDesc.getAttribute("content").trim()
-                    : headerText;
-
-                return {
-                    ...entry,
-                    title,
-                    description: desc || "",
-                    isPdf: false
-                };
-            } catch (err) {
-                console.warn("Metadata read failed for", entry.path, err);
-                return {
-                    ...entry,
-                    title: entry.filename,
-                    description: "",
-                    isPdf: false
-                };
-            }
-        }
-
-        function loadDocument(file) {
-            contentTitle.textContent = file.title || file.filename;
-            contentIframe.src = file.path;
-            contentIframe.style.display = 'block';
-            emptyStateMain.style.display = 'none';
-            archiveView.style.display = 'none';
-            showingArchive = false;
-
-            document.querySelectorAll('.file-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            const activeItem = document.querySelector(`[data-path="${file.path}"]`);
-            if (activeItem) {
-                activeItem.classList.add('active');
-            }
-        }
-
-        function renderFileList(items) {
-            fileListContainer.innerHTML = "";
-            
-            const activeItems = items.filter(item => !archivedFiles.has(item.path));
-
-            if (!activeItems.length) {
-                fileListContainer.style.display = "none";
-                emptyStateSidebar.style.display = "block";
-                fileCountEl.innerHTML = '<strong>0</strong> files';
-                return;
-            }
-
-            fileListContainer.style.display = "flex";
-            emptyStateSidebar.style.display = "none";
-
-            for (let i = 0; i < activeItems.length; i++) {
-                const item = activeItems[i];
-                const li = document.createElement("li");
-                li.className = "file-item";
-                li.setAttribute('data-path', item.path);
-                
-                const typeTag = item.isPdf ? '<span class="file-type-tag">PDF</span>' : '';
-                
-                li.innerHTML = `
-                    <div class="file-item-header">
-                        <p class="file-item-title">${truncate(item.title || item.filename, 80)}</p>
-                        ${typeTag}
-                    </div>
-                    <div class="file-item-meta">
-                        <span class="file-filename" title="${item.filename}">${item.filename}</span>
-                        <span class="file-date">${formatShortDate(item.modified)}</span>
-                    </div>
-                    <div class="archive-checkbox-container">
-                        <input type="checkbox" class="archive-checkbox" id="archive-${i}" />
-                        <label for="archive-${i}" class="archive-label">Archive</label>
-                    </div>
-                `;
-
-                const checkbox = li.querySelector('.archive-checkbox');
-                checkbox.addEventListener('change', (e) => {
-                    e.stopPropagation();
-                    toggleArchive(item.path, checkbox.checked);
-                });
-
-                li.addEventListener('click', (e) => {
-                    if (!e.target.classList.contains('archive-checkbox') && 
-                        !e.target.classList.contains('archive-label')) {
-                        loadDocument(item);
-                    }
-                });
-
-                fileListContainer.appendChild(li);
-            }
-
-            const count = activeItems.length;
-            fileCountEl.innerHTML = count === 1 
-                ? '<strong>1</strong> file indexed' 
-                : `<strong>${count}</strong> files indexed`;
-
-            if (count > 0 && !showingArchive) {
-                loadDocument(activeItems[0]);
-            }
-        }
-
-        function renderArchiveView() {
-            const archivedItems = currentFiles.filter(item => archivedFiles.has(item.path));
-            
-            archiveView.innerHTML = "";
-            contentIframe.style.display = 'none';
-            emptyStateMain.style.display = 'none';
-            archiveView.style.display = 'grid';
-            contentTitle.textContent = `Archive (${archivedItems.length} items)`;
-
-            if (archivedItems.length === 0) {
-                archiveView.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
-                        <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">📦</div>
-                        <p style="font-size: 1.1rem; margin: 0;">No archived items</p>
-                    </div>
-                `;
-                return;
-            }
-
-            archivedItems.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'archive-card';
-                
-                const typeTag = item.isPdf ? '<span class="file-type-tag">PDF</span>' : '';
-                
-                card.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 0.5rem;">
-                        <h3 class="archive-card-title">${item.title || item.filename}</h3>
-                        ${typeTag}
-                    </div>
-                    <p class="archive-card-filename">${item.filename}</p>
-                    <p class="archive-card-date">${formatShortDate(item.modified)}</p>
-                    <div class="archive-card-actions">
-                        <input type="checkbox" class="archive-checkbox" checked id="unarchive-${item.path}" />
-                        <label for="unarchive-${item.path}" class="archive-label">Archived</label>
-                    </div>
-                `;
-
-                const checkbox = card.querySelector('.archive-checkbox');
-                checkbox.addEventListener('change', (e) => {
-                    e.stopPropagation();
-                    toggleArchive(item.path, checkbox.checked);
-                });
-
-                card.addEventListener('click', (e) => {
-                    if (!e.target.classList.contains('archive-checkbox') && 
-                        !e.target.classList.contains('archive-label')) {
-                        loadDocument(item);
-                    }
-                });
-
-                archiveView.appendChild(card);
-            });
-        }
-
-        archiveButton.addEventListener('click', () => {
-            showingArchive = !showingArchive;
-            if (showingArchive) {
-                renderArchiveView();
-            } else {
-                renderFileList(currentFiles);
-            }
-        });
-
-        async function initNotebook() {
-            loadArchivedState();
-            updateArchiveCount();
-
-            try {
-                const res = await fetch("manifest.json", { cache: "no-store" });
-                if (!res.ok) throw new Error("HTTP " + res.status);
-                const manifest = await res.json();
-
-                if (!Array.isArray(manifest) || !manifest.length) {
-                    renderFileList([]);
-                    return;
-                }
-
-                const enriched = [];
-                for (const entry of manifest) {
-                    const meta = await fetchMetadata(entry);
-                    enriched.push(meta);
-                }
-
-                enriched.sort((a, b) => new Date(b.modified) - new Date(a.modified));
-                currentFiles = enriched;
-                renderFileList(enriched);
-            } catch (err) {
-                console.error("Failed to load manifest.json", err);
-                renderFileList([]);
-            }
-        }
-
-        initNotebook();
-    </script>
+    <!-- App Logic -->
+    <script src="js/app.js"></script>
 </body>
 
 </html>
