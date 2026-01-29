@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dripify Reply Paths — AI Opportunity Blueprint</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#111a33;
+      --panel2:#0f1730;
+      --text:#e9eefc;
+      --muted:#aab6da;
+      --accent:#7c5cff;
+      --line:rgba(255,255,255,.10);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(124,92,255,.25), transparent 50%),
+                  radial-gradient(1000px 500px at 95% 0%, rgba(88,180,255,.18), transparent 45%),
+                  var(--bg);
+      color: var(--text);
+    }
+    header{
+      padding: 24px 18px 10px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    h1{
+      margin:0 0 8px 0;
+      font-size: 20px;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 18px 40px;
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap: 14px;
+    }
+
+    .sidebar, .main{
+      background: rgba(17,26,51,.75);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .sidebar{
+      display:flex;
+      flex-direction:column;
+      min-height: 560px;
+    }
+
+    .search{
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(15,23,48,.55);
+    }
+    .search input{
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(10,16,34,.6);
+      color: var(--text);
+      outline:none;
+      font-size: 13px;
+    }
+    .search input::placeholder{color: rgba(233,238,252,.45)}
+    .list{
+      padding: 10px;
+      overflow:auto;
+      flex: 1;
+    }
+    .item{
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 10px 10px;
+      margin: 6px 0;
+      cursor:pointer;
+      background: rgba(15,23,48,.35);
+    }
+    .item:hover{border-color: rgba(124,92,255,.45)}
+    .item.active{
+      border-color: rgba(124,92,255,.9);
+      background: rgba(124,92,255,.12);
+    }
+    .item .t{
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+    .item .d{
+      color: var(--muted);
+      font-size: 12px;
+      line-height:1.25;
+    }
+
+    .main{
+      padding: 14px;
+    }
+    .topbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      padding: 4px 2px 12px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 12px;
+    }
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      border: 1px solid var(--line);
+      background: rgba(10,16,34,.55);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .pill b{color: var(--text); font-weight:600}
+    .btns{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    button{
+      border: 1px solid var(--line);
+      background: rgba(10,16,34,.55);
+      color: var(--text);
+      padding: 9px 10px;
+      border-radius: 10px;
+      cursor:pointer;
+      font-size: 12px;
+    }
+    button:hover{border-color: rgba(124,92,255,.65)}
+    button.primary{
+      background: rgba(124,92,255,.20);
+      border-color: rgba(124,92,255,.65);
+    }
+
+    .section{
+      margin-top: 12px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .card{
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow:hidden;
+      background: rgba(15,23,48,.35);
+    }
+    .card .hd{
+      padding: 12px 12px 10px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background: rgba(15,23,48,.50);
+    }
+    .card .hd .title{
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .tag{
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(10,16,34,.5);
+      white-space:nowrap;
+    }
+    .card .bd{
+      padding: 12px;
+      display:grid;
+      gap:10px;
+    }
+    label{
+      font-size: 12px;
+      color: var(--muted);
+      display:block;
+      margin-bottom: 6px;
+    }
+    textarea{
+      width:100%;
+      min-height: 90px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(10,16,34,.55);
+      color: var(--text);
+      outline:none;
+      font-size: 13px;
+      line-height: 1.35;
+      resize: vertical;
+    }
+    textarea:focus{border-color: rgba(124,92,255,.75)}
+    .hint{
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .footerNote{
+      margin-top: 12px;
+      color: rgba(233,238,252,.55);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 900px){
+      .wrap{grid-template-columns: 1fr}
+      .sidebar{min-height: auto}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Dripify Reply Paths — AI Opportunity Blueprint</h1>
+  <p class="sub">
+    Click a category on the left. Edit any message. Changes save automatically in your browser (localStorage). Use “Copy current” to paste into LinkedIn.
+  </p>
+</header>
+
+<div class="wrap">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="search">
+      <input id="search" placeholder="Search paths (e.g., Sales, Finance, bridge)..." />
+    </div>
+    <div class="list" id="list"></div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="topbar">
+      <div class="pill">
+        Path: <b id="activeName">—</b>
+      </div>
+      <div class="btns">
+        <button id="copyCurrent" class="primary">Copy current</button>
+        <button id="copyAll">Copy all</button>
+        <button id="reset">Reset defaults</button>
+      </div>
+    </div>
+
+    <div id="content" class="section"></div>
+
+    <div class="footerNote">
+      Tip: Keep the first reply short and end with a simple clarifier. After they answer, use your “Bridge line” (permission-based) to introduce the AI Blueprint approach and only share a link if they show interest.
+    </div>
+  </main>
+</div>
+
+<script>
+  // ---------- Defaults ----------
+  const DEFAULTS = [
+    {
+      key: "sales",
+      name: "Sales",
+      description: "If they say Sales",
+      fields: {
+        reply: "Makes sense — Sales bottlenecks usually show up as slow lead follow-up, messy handoffs, or unclear next steps.\nIs it more about lead intake/qualification, pipeline follow-through, or handoff into delivery?",
+        bridge: "That helps. This is exactly the kind of spot where a quick end-to-end map can surface the few highest-leverage fixes (process + automation/AI) without adding headcount. If you’d like, I can share the approach."
+      }
+    },
+    {
+      key: "ops",
+      name: "Ops/Delivery",
+      description: "If they say Ops/Delivery",
+      fields: {
+        reply: "That’s a common one — ops/delivery is where complexity hides.\nIs the bottleneck more in intake/context, handoffs between people/teams, or staying on schedule once work is in motion?",
+        bridge: "That helps. This is exactly the kind of spot where a quick end-to-end map can surface the few highest-leverage fixes (process + automation/AI) without adding headcount. If you’d like, I can share the approach."
+      }
+    },
+    {
+      key: "finance",
+      name: "Finance/Legal",
+      description: "If they say Finance/Legal",
+      fields: {
+        reply: "Yep — Finance/Legal bottlenecks can quietly slow everything down.\nIs it mostly invoicing/collections, approvals, contracts/compliance, or reconciling data across systems?",
+        bridge: "That helps. This is exactly the kind of spot where a quick end-to-end map can surface the few highest-leverage fixes (process + automation/AI) without adding headcount. If you’d like, I can share the approach."
+      }
+    },
+    {
+      key: "cs",
+      name: "Customer Success/Support",
+      description: "If they say Customer Success/Support",
+      fields: {
+        reply: "Totally — CS/Support bottlenecks usually come from context and volume: too much chasing, not enough clean visibility.\nIs it more about intake/triage, response consistency, or keeping issues from bouncing around?",
+        bridge: "That helps. This is exactly the kind of spot where a quick end-to-end map can surface the few highest-leverage fixes (process + automation/AI) without adding headcount. If you’d like, I can share the approach."
+      }
+    },
+    {
+      key: "hr",
+      name: "HR/People Ops",
+      description: "If they say HR/People Ops",
+      fields: {
+        reply: "That tracks — People Ops tends to bottleneck around repeatable admin work.\nIs it more hiring/onboarding, training, policy/compliance, or performance processes?",
+        bridge: "That helps. This is exactly the kind of spot where a quick end-to-end map can surface the few highest-leverage fixes (process + automation/AI) without adding headcount. If you’d like, I can share the approach."
+      }
+    },
+    {
+      key: "other",
+      name: "Other / All of them",
+      description: "If they answer something else or 'all of them'",
+      fields: {
+        reply: "Fair — if everything is a little sticky, it usually means the system-of-work isn’t well defined end-to-end.\nIf you had to pick the one area that’s most costly right now, what would it be?",
+        bridge: "That helps. This is exactly the kind of spot where a quick end-to-end map can surface the few highest-leverage fixes (process + automation/AI) without adding headcount. If you’d like, I can share the approach."
+      }
+    },
+    {
+      key: "bridge_only",
+      name: "Bridge line (standalone)",
+      description: "Use after their clarifier reply",
+      fields: {
+        reply: "That helps. This is exactly the kind of spot where a quick end-to-end map can surface the few highest-leverage fixes (process + automation/AI) without adding headcount. If you’d like, I can share the approach.",
+        bridge: "If they ask for details, share your AI Blueprint link or offer a short call."
+      }
+    }
+  ];
+
+  const STORAGE_KEY = "qnectra_dripify_reply_paths_v1";
+
+  // ---------- State ----------
+  let data = loadData();
+  let activeKey = data[0]?.key || "sales";
+
+  function loadData(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return structuredClone(DEFAULTS);
+      const parsed = JSON.parse(raw);
+      // basic shape validation
+      if(!Array.isArray(parsed) || !parsed.length) return structuredClone(DEFAULTS);
+      return parsed;
+    }catch(e){
+      return structuredClone(DEFAULTS);
+    }
+  }
+
+  function saveData(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  // ---------- UI ----------
+  const listEl = document.getElementById("list");
+  const contentEl = document.getElementById("content");
+  const activeNameEl = document.getElementById("activeName");
+  const searchEl = document.getElementById("search");
+
+  functio

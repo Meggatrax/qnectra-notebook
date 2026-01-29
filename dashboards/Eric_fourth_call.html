@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Eric Call #4 Flow — Marketing Update → Offer</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111a2e;
+      --muted:#8ea0c2;
+      --text:#e9eefc;
+      --accent:#76a8ff;
+      --accent2:#7ef0c1;
+      --warn:#ffcf5a;
+      --danger:#ff6b6b;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      background: radial-gradient(1200px 700px at 20% 0%, rgba(118,168,255,.25), transparent 55%),
+                  radial-gradient(1000px 600px at 90% 20%, rgba(126,240,193,.18), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      padding:28px;
+    }
+    .wrap{max-width:1100px;margin:0 auto}
+    header{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:18px;
+      margin-bottom:18px;
+    }
+    h1{margin:0;font-size:24px;letter-spacing:.2px}
+    .sub{color:var(--muted);font-size:13px;line-height:1.4;margin-top:6px}
+    .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .pill{
+      font-size:12px; padding:6px 10px; border:1px solid var(--border); border-radius:999px;
+      background:rgba(255,255,255,.04); color:var(--muted)
+    }
+    .grid{display:grid;grid-template-columns: 1.2fr .8fr;gap:16px}
+    @media (max-width: 980px){.grid{grid-template-columns:1fr}}
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card h2{
+      margin:0; padding:14px 16px;
+      font-size:14px; letter-spacing:.2px;
+      border-bottom:1px solid var(--border);
+      background:rgba(0,0,0,.18);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .card h2 small{color:var(--muted);font-weight:500}
+    .content{padding:14px 16px}
+
+    .flow{
+      display:flex; flex-direction:column; gap:10px;
+      padding:14px 16px;
+    }
+    details.step{
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.18);
+      overflow:hidden;
+    }
+    details.step[open]{background:rgba(0,0,0,.26)}
+    summary{
+      cursor:pointer;
+      list-style:none;
+      padding:12px 12px;
+      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
+    }
+    summary::-webkit-details-marker{display:none}
+    .left{display:flex;gap:10px;align-items:flex-start}
+    .num{
+      min-width:30px;height:30px;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(118,168,255,.16);
+      border:1px solid rgba(118,168,255,.35);
+      color:var(--text);
+      font-family:var(--mono);
+      font-size:12px;
+      margin-top:1px;
+    }
+    .title{font-size:13px;font-weight:700;line-height:1.2}
+    .meta{color:var(--muted);font-size:12px;margin-top:4px}
+    .time{color:var(--muted);font-size:12px;white-space:nowrap;margin-top:2px}
+    .body{padding:0 12px 12px 52px}
+
+    .script{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      border-radius:12px;
+      padding:10px 10px;
+      font-size:13px;
+      line-height:1.45;
+    }
+    .script .label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px}
+    .q{
+      margin:8px 0 0;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.12);
+    }
+    .q b{color:var(--accent2)}
+
+    .side{
+      display:flex; flex-direction:column; gap:16px;
+    }
+    .checks{display:grid;gap:10px}
+    label.chk{
+      display:flex;gap:10px;align-items:flex-start;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.14);
+      cursor:pointer;
+    }
+    input[type=checkbox]{
+      margin-top:2px;
+      width:16px;height:16px;
+      accent-color: var(--accent2);
+    }
+    .chk span{font-size:13px;line-height:1.35}
+    .hint{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.4}
+
+    .offer{
+      border:1px dashed rgba(126,240,193,.45);
+      background:rgba(126,240,193,.06);
+      padding:12px;
+      border-radius:14px;
+    }
+    .offer h3{margin:0 0 8px;font-size:13px}
+    .offer p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
+
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    button{
+      background:rgba(118,168,255,.18);
+      border:1px solid rgba(118,168,255,.40);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:12px;
+    }
+    button:hover{background:rgba(118,168,255,.26)}
+    .ghost{background:rgba(255,255,255,.05);border-color:var(--border);color:var(--muted)}
+
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background:rgba(17,26,46,.95);
+      border:1px solid var(--border);
+      padding:10px 12px;
+      border-radius:999px;
+      box-shadow:var(--shadow);
+      color:var(--text);
+      font-size:12px;
+      display:none;
+      z-index:20;
+    }
+    .kbd{font-family:var(--mono); padding:2px 6px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.05); color:var(--muted)}
+
+    .footer{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Eric Call #4 Flow — Marketing Update → Offer</h1>
+        <div class="sub">
+          Designed to resume the paused decision: check campaign progress, confirm need, then ask for a comfortable starting number and present a ramp/structure.
+        </div>
+        <div class="pillrow">
+          <div class="pill">Call #4</div>
+          <div class="pill">Price anchor known ($10k/mo)</div>
+          <div class="pill">Goal: decision + next step</div>
+          <div class="pill">Key move: ask for starting number <span class="kbd">after</span> context + need</div>
+        </div>
+      </div>
+      <div class="btnrow">
+        <button id="openAll">Open all</button>
+        <button class="ghost" id="closeAll">Close all</button>
+        <button class="ghost" id="copyAsk">Copy “Ask for number” line</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Call Flow <small>~15–25 min</small></h2>
+        <div class="flow" id="flow">
+
+          <details class="step" open>
+            <summary>
+              <div class="left">
+                <div class="num">1</div>
+                <div>
+                  <div class="title">Re-open the loop (context)</div>
+                  <div class="meta">Pick up where you left off — marketing results first.</div>
+                </div>
+              </div>
+              <div class="time">3–5 min</div>
+            </summary>
+            <div class="body">
+              <div class="script">
+                <div class="label">Script</div>
+                “Eric, last time we spoke you wanted to launch the marketing campaign, see how it performed, and then revisit this. Before we talk next steps, I’d love to hear how that’s been going.”
+              </div>
+              <div class="q"><b>Ask:</b> “What’s working so far?”</div>
+              <div class="q"><b>Ask:</b> “What’s been harder than expected?”</div>
+              <div class="q"><b>Ask:</b> “What did the campaign confirm for you?”</div>
+            </div>
+          </details>
+
+          <details class="step" open>
+            <summary>
+              <div class="left">
+                <div class="num">2</div>
+                <div>
+                  <div class="title">Confirm the need (has anything changed?)</div>
+                  <div class="meta">Verify the ops/tech leadership gap still exists.</div>
+                </div>
+              </div>
+              <div class="time">2–3 min</div>
+            </summary>
+            <div class="body">
+              <div class="script">
+                <div class="label">Script</div>
+                “Given what you’re seeing so far, do you still feel like you need support on the operational and technical side — or has anything changed there?”
+              </div>
+              <div class="q"><b>Ask:</b> “What feels most urgent right now?”</div>
+            </div>
+          </details>
+
+          <details class="step" open>
+            <summary>
+              <div class="left">
+                <div class="num">3</div>
+                <div>
+                  <div class="title">Bridge to an offer (structure, not pressure)</div>
+                  <div class="meta">Acknowledge timing/cash flow; keep recommendation intact.</div>
+                </div>
+              </div>
+              <div class="time">1–2 min</div>
+            </summary>
+            <div class="body">
+              <div class="script">
+                <div class="label">Script</div>
+                “My recommendation hasn’t changed — the full Q-Engaged partnership is still the cleanest way to support what you’re building. And I also understand timing and cash flow matter while marketing results are still coming in.”
+              </div>
+            </div>
+          </details>
+
+          <details class="step" open>
+            <summary>
+              <div class="left">
+                <div class="num">4</div>
+                <div>
+                  <div class="title">Ask for his starting number</div>
+                  <div class="meta">You’re not asking “budget” — you’re asking “start.”</div>
+                </div>
+              </div>
+              <div class="time">1 min</div>
+            </summary>
+            <div class="body">
+              <div class="script" id="askLine">
+                <div class="label">Script (say this, then stop)</div>
+                “To make this workable, what monthly number would you feel comfortable starting at right now?”
+              </div>
+              <div class="hint">If he’s vague: “Would something closer to $5k or closer to $8k feel more realistic?”</div>
+            </div>
+          </details>
+
+          <details class="step">
+            <summary>
+              <div class="left">
+                <div class="num">5</div>
+                <div>
+                  <div class="title">Match his number to a structure</div>
+                  <div class="meta">Ramp-up is the default; discount is time-bound.</div>
+                </div>
+              </div>
+              <div class="time">4–6 min</div>
+            </summary>
+            <div class="body">
+              <div class="offer">
+                <h3>If he says $4k–$6k → Ramp-up</h3>
+                <p>“That helps. We can start there for the first month or two, then step up as the business supports it. Same partnership — we’re simply creating an on-ramp.”</p>
+              </div>
+              <div class="offer" style="margin-top:10px;border-color:rgba(255,207,90,.55);background:rgba(255,207,90,.06)">
+                <h3>If he says $6k–$7k → Time-bound bridge</h3>
+                <p>“We can do that for a short, defined period, then return to standard pricing once things stabilize.”</p>
+              </div>
+              <div class="offer" style="margin-top:10px;border-color:rgba(255,107,107,.55);background:rgba(255,107,107,.06)">
+                <h3>If he’s below $4k → Downshift</h3>
+                <p>“At that level I can’t deliver the leadership you need. We can do a smaller-scope consult/roadmap now, then revisit Q-Engaged when the business is ready.”</p>
+              </div>
+            </div>
+          </details>
+
+          <details class="step">
+            <summary>
+              <div class="left">
+                <div class="num">6</div>
+                <div>
+                  <div class="title">Close with a decision</div>
+                  <div class="meta">Confirm comfort and book the next step.</div>
+                </div>
+              </div>
+              <div class="time">2–3 min</div>
+            </summary>
+            <div class="body">
+              <div class="script">
+                <div class="label">Script</div>
+                “If we went with that approach, would you be comfortable moving forward?”
+              </div>
+              <div class="q"><b>If yes:</b> “Great — I’ll send the agreement and we’ll align on start date.”</div>
+              <div class="q"><b>If maybe:</b> “What would need to be true for this to be a clear yes?”</div>
+            </div>
+          </details>
+
+        </div>
+      </div>
+
+      <div class="side">
+        <div class="card">
+          <h2>Must-cover checks <small>Don’t skip</small></h2>
+          <div class="content">
+            <div class="checks" id="checks">
+              <label class="chk"><input type="checkbox" /> <span><b>Start with marketing update</b> (resume the paused decision)</span></label>
+              <label class="chk"><input type="checkbox" /> <span><b>Confirm the need</b> (ops/tech leadership still required)</span></label>
+              <label class="chk"><input type="checkbox" /> <span><b>Bridge statement</b>: “Recommendation unchanged; structure can flex”</span></label>
+              <label class="chk"><input type="checkbox" /> <span><b>Ask for a starting number</b> (monthly comfort right now)</span></label>
+              <label class="chk"><input type="checkbox" /> <span><b>Match to structure</b> (ramp-up / time-bound bridge / downshift)</span></label>
+              <label class="chk"><input type="checkbox" /> <span><b>Ask for the decision</b>: “Comfortable moving forward?”</span></label>
+              <label class="chk"><input type="checkbox" /> <span><b>Lock next step</b> (agreement + start date / follow-up)</span></label>
+            </div>
+            <div class="hint" style="margin-top:10px">
+              Tip: if Eric drifts into new territory, gently reframe: <br/>
+              “That’s helpful context — let’s come back to whether we should move forward and how we structure it.”
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Anchor line <small>Keep you grounded</small></h2>
+          <div class="content">
+            <div class="script">
+              <div class="label">One-liner</div>
+              “I’m not changing the recommendation — I’m changing how we get there.”
+            </div>
+            <div class="footer">
+              Use this if you feel yourself sliding into negotiation mode. Structure is flexible; value is not.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="toast" id="toast">Copied.</div>
+  </div>
+
+  <script>
+    const steps = () => Array.from(document.querySelectorAll('details.step'));
+
+    document.getElementById('openAll').addEventListener('click', () => {
+      steps().forEach(d => d.open = true);
+      toast('Opened all steps');
+    });
+
+    document.getElementById('closeAll').addEventListener('click', () => {
+      steps().forEach(d => d.open = false);
+      toast('Closed all steps');
+    });
+
+    document.getElementById('copyAsk').addEventListener('click', async () => {
+      const line = document.getElementById('askLine').innerText
+        .replace('Script (say this, then stop)\n','')
+        .trim();
+      try{
+        await navigator.clipboard.writeText(line);
+        toast('Copied “ask for number” line');
+      }catch{
+        toast('Copy failed — select and copy manually');
+      }
+    });
+
+    function toast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      clearTimeout(window.__toast);
+      window.__toast = setTimeout(() => t.style.display = 'none', 1400);
+    }
+  </script>
+</body>
+</html>
