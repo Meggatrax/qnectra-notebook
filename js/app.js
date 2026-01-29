@@ -6,7 +6,11 @@ const SUPABASE_ANON_KEY = "sb_publishable_topKCVKmrlcOXV28eij8eA_h4b67cF4";
 let supabase;
 
 try {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    if (window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } else {
+        console.error("Supabase SDK not loaded from CDN");
+    }
 } catch (e) {
     console.error("Supabase init failed", e);
 }
@@ -40,9 +44,22 @@ const ui = {
 // --- AUTHENTICATION ---
 
 async function checkUser() {
-    const { data: { session } } = await supabase.auth.getSession();
-    appState.user = session?.user || null;
-    updateAuthUI();
+    if (!supabase) return;
+
+    // Safety check for session
+    try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) {
+            console.warn("Session check error", error);
+            return;
+        }
+        appState.user = data.session?.user || null;
+    } catch (e) {
+        console.warn("Auth check failed", e);
+    }
+
+    updateAuthUI(); // Always update UI state
+
     if (appState.user) {
         await fetchUserStates();
         render(); // Re-render to show correct archived/read status
@@ -55,6 +72,7 @@ function updateAuthUI() {
         ui.authBtn.onclick = handleSignOut;
     } else {
         ui.authBtn.textContent = "Sign In (Sync)";
+        // Re-bind the modal trigger just in case
         ui.authBtn.onclick = () => ui.loginModal.style.display = "flex";
     }
 }
@@ -86,9 +104,13 @@ async function handleSignOut() {
 // --- DATA FETCHING ---
 
 async function fetchDashboards() {
+    if (!supabase) {
+        ui.fileCount.innerHTML = "Config Error";
+        return;
+    }
+
     ui.fileCount.innerHTML = "Loading...";
 
-    // Fetch Dashboards
     const { data: dashboards, error } = await supabase
         .from('dashboards')
         .select('id, title, updated_at, tags')
@@ -105,7 +127,7 @@ async function fetchDashboards() {
 }
 
 async function fetchUserStates() {
-    if (!appState.user) return;
+    if (!appState.user || !supabase) return;
 
     const { data: states, error } = await supabase
         .from('user_states')
@@ -121,7 +143,8 @@ async function fetchUserStates() {
 }
 
 async function loadDashboardContent(id) {
-    // We only fetched metadata initially. Now fetch content.
+    if (!supabase) return;
+
     const { data, error } = await supabase
         .from('dashboards')
         .select('content, title')
@@ -245,7 +268,7 @@ function renderList(items, container) {
             markAsArchived(item.id, e.target.checked);
         });
 
-        // Block click on label from triggering item load (optional, but good UX)
+        // Block click on label from triggering item load
         li.querySelector('.archive-label').addEventListener('click', (e) => e.stopPropagation());
 
         li.addEventListener('click', (e) => {
@@ -260,6 +283,15 @@ function renderList(items, container) {
 
 
 // --- INIT ---
+
+// Bind Default Listeners - Ensures button works even if Supabase/Auth fails
+ui.authBtn.addEventListener('click', () => {
+    // If we have a user, handleSignOut is attached by updateAuthUI. 
+    // If not, this default handler opens the modal.
+    // However, updateAuthUI overwrites onclick.
+    // We set this as a fallback.
+    ui.loginModal.style.display = "flex";
+});
 
 ui.archiveBtn.addEventListener('click', () => {
     appState.showingArchive = !appState.showingArchive;
@@ -287,7 +319,7 @@ window.addEventListener('click', (e) => {
 
 
 // Boot
-if (window.supabase) {
+if (supabase) {
     fetchDashboards();
     checkUser();
 
@@ -299,5 +331,8 @@ if (window.supabase) {
         })
         .subscribe();
 } else {
-    console.error("Supabase SDK not loaded");
+    // Graceful degradation
+    ui.fileCount.innerHTML = "Offline Mode (Config Error)";
+    ui.authBtn.style.opacity = "0.5";
+    ui.authBtn.textContent = "Auth Unavailable";
 }
