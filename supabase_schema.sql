@@ -43,6 +43,7 @@ create table public.user_states (
   is_read boolean default false,
   is_archived boolean default false,
   updated_at timestamptz default now(),
+  state jsonb,
   primary key (user_id, dashboard_id)
 );
 

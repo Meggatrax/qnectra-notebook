@@ -1044,10 +1044,22 @@
     }
 
     function loadApp() {
-      try { const raw = localStorage.getItem(APP_KEY); return raw ? JSON.parse(raw) : null; }
-      catch (e) { return null; }
+      // Disabled localStorage loading to rely on parent injection or default init
+      return null;
     }
-    function saveApp(state) { localStorage.setItem(APP_KEY, JSON.stringify(state)); }
+    function saveApp(state) {
+      // Send state to parent for saving
+      window.parent.postMessage({
+        type: 'SAVE_STATE',
+        payload: {
+          dashboardId: "accelerate_my_business.html", // Must match filename/ID
+          state: state
+        }
+      }, '*');
+
+      // Also save to localStorage as a fallback/cache (optional, but requested to active avoid it being source of truth)
+      // localStorage.setItem(APP_KEY, JSON.stringify(state)); 
+    }
 
     function makeQuarter() {
       return {
@@ -1105,10 +1117,24 @@
         quarters: { [`${year}-${q}`]: makeQuarter() }
       };
       saveApp(state);
+
       return state;
     }
 
     let STATE = initState();
+
+    // Listen for cloud state injection
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'INIT_STATE' && event.data.payload) {
+        console.log(" Received cloud state override");
+        STATE = event.data.payload;
+        // Ensure quarters are normalized in case of schema updates
+        Object.keys(STATE.quarters || {}).forEach(k => {
+          STATE.quarters[k] = normalizeQuarter(STATE.quarters[k]);
+        });
+        renderAll();
+      }
+    });
 
     function qKey() { const { year, q } = STATE.meta.current; return `${year}-${q}`; }
     function ensureQuarter(k) { if (!STATE.quarters[k]) STATE.quarters[k] = makeQuarter(); else STATE.quarters[k] = normalizeQuarter(STATE.quarters[k]); }

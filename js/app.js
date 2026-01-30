@@ -208,7 +208,7 @@ async function fetchUserStates() {
     if (!appState.user || !supabase) return;
     const { data: states } = await supabase
         .from('user_states')
-        .select('dashboard_id, is_read, is_archived')
+        .select('dashboard_id, is_read, is_archived, state')
         .eq('user_id', appState.user.id);
 
     if (states) {
@@ -309,6 +309,15 @@ async function loadDashboardContent(id) {
         doc.write(data.content);
         doc.close();
 
+        // Inject state after load (simple delay for now, better to use postMessage handshake)
+        setTimeout(() => {
+            const userState = appState.userState[id]?.state;
+            if (userState) {
+                console.log("Injecting state into dashboard:", id);
+                ui.contentIframe.contentWindow.postMessage({ type: 'INIT_STATE', payload: userState }, '*');
+            }
+        }, 500);
+
         ui.contentIframe.style.display = "block";
         ui.emptyStateMain.style.display = "none";
         ui.archiveView.style.display = "none";
@@ -346,3 +355,26 @@ async function markAsRead(id) {
     // Silent update
     fetchUserStates();
 }
+
+// Listen for state updates from iframe
+window.addEventListener('message', async (event) => {
+    if (event.data.type === 'SAVE_STATE' && appState.user) {
+        const { dashboardId, state } = event.data.payload;
+        console.log("Saving state for:", dashboardId);
+
+        await supabase.from('user_states').upsert({
+            user_id: appState.user.id,
+            dashboard_id: dashboardId,
+            state: state,
+            updated_at: new Date().toISOString()
+        });
+
+        // Update local cache
+        if (appState.userState[dashboardId]) {
+            appState.userState[dashboardId].state = state;
+        } else {
+            // force re-fetch if new
+            fetchUserStates();
+        }
+    }
+});
