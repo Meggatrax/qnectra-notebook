@@ -1,168 +1,437 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Accelerate My Business — Quarterly Dashboard</title>
   <style>
-    :root{
-      --bg:#0b0f19;
-      --text:#e5e7eb;
-      --muted:#9ca3af;
-      --line:rgba(255,255,255,.08);
-      --accent:#ef4444;
-      --good:#22c55e;
-      --warn:#f59e0b;
-      --shadow: 0 12px 28px rgba(0,0,0,.35);
-      --radius:18px;
+    :root {
+      --bg: #0b0f19;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --line: rgba(255, 255, 255, .08);
+      --accent: #ef4444;
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --shadow: 0 12px 28px rgba(0, 0, 0, .35);
+      --radius: 18px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:var(--sans);
-      color:var(--text);
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
       background:
-        radial-gradient(1200px 900px at 15% -10%, rgba(239,68,68,.20), transparent 60%),
-        radial-gradient(900px 700px at 110% 20%, rgba(34,197,94,.10), transparent 55%),
+        radial-gradient(1200px 900px at 15% -10%, rgba(239, 68, 68, .20), transparent 60%),
+        radial-gradient(900px 700px at 110% 20%, rgba(34, 197, 94, .10), transparent 55%),
         linear-gradient(180deg, var(--bg), #060913 70%);
-      min-height:100vh;
+      min-height: 100vh;
     }
-    .wrap{display:grid;grid-template-columns: 320px 1fr;min-height:100vh;}
-    @media (max-width: 980px){.wrap{grid-template-columns:1fr}.sidebar{position:sticky;top:0;z-index:50}}
-    .sidebar{
-      background: linear-gradient(180deg, rgba(17,24,39,.92), rgba(15,23,42,.88));
-      border-right:1px solid var(--line);
-      padding:18px 16px;
+
+    .wrap {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 100vh;
+    }
+
+    @media (max-width: 980px) {
+      .wrap {
+        grid-template-columns: 1fr
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 50
+      }
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, rgba(17, 24, 39, .92), rgba(15, 23, 42, .88));
+      border-right: 1px solid var(--line);
+      padding: 18px 16px;
       backdrop-filter: blur(10px);
     }
-    .brand{display:flex;gap:12px;align-items:center;padding:10px 10px 14px;border-bottom:1px solid var(--line);margin-bottom:14px;}
-    .logo{
-      width:42px;height:42px;border-radius:14px;
-      background: radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.18), transparent 60%),
-                  linear-gradient(135deg, rgba(239,68,68,.9), rgba(34,197,94,.55));
-      box-shadow: 0 10px 20px rgba(0,0,0,.25);
-    }
-    .brand h1{font-size:15px;margin:0;line-height:1.2;letter-spacing:.2px}
-    .brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
 
-    .controls{display:grid; gap:10px;padding:12px 10px 14px;border-bottom:1px solid var(--line);margin-bottom:14px;}
-    .row{display:grid;grid-template-columns: 1fr 1fr;gap:10px;}
-    label{font-size:11px;color:var(--muted);display:block;margin:0 0 6px}
-    select, input[type="date"], input[type="number"], input[type="text"]{
-      width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.25);color:var(--text);outline:none;
-    }
-    select:focus, input:focus{border-color: rgba(239,68,68,.55); box-shadow: 0 0 0 4px rgba(239,68,68,.12)}
-    .btn{
-      cursor:pointer;border:none;border-radius:12px;padding:10px 12px;font-weight:600;color:var(--text);
-      background: rgba(255,255,255,.08);transition:.15s ease;
-    }
-    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.11)}
-    .btn.primary{background: linear-gradient(135deg, rgba(239,68,68,.95), rgba(239,68,68,.55))}
-    .btn.good{background: linear-gradient(135deg, rgba(34,197,94,.92), rgba(34,197,94,.45))}
-    .btn.danger{background: linear-gradient(135deg, rgba(239,68,68,.95), rgba(148,163,184,.14))}
-    .btn.small{padding:8px 10px;border-radius:10px;font-size:12px}
-    .btn.ghost{background: rgba(0,0,0,.12); border:1px solid rgba(255,255,255,.10)}
-    .btn.ghost:hover{background: rgba(255,255,255,.06)}
-    .btn.toggleActive{
-      background: rgba(239,68,68,.12);
-      border:1px solid rgba(239,68,68,.25);
-      box-shadow: inset 0 0 0 1px rgba(239,68,68,.18);
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 10px 14px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 14px;
     }
 
-    .nav{display:grid; gap:6px;padding: 0 6px;}
-    .nav button{
-      text-align:left;display:flex;align-items:center;justify-content:space-between;
-      padding:11px 12px;background: transparent;border:1px solid transparent;color:var(--text);
-      border-radius:14px;cursor:pointer;transition:.15s ease;font-weight:650;letter-spacing:.15px;
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: radial-gradient(18px 18px at 30% 30%, rgba(255, 255, 255, .18), transparent 60%),
+        linear-gradient(135deg, rgba(239, 68, 68, .9), rgba(34, 197, 94, .55));
+      box-shadow: 0 10px 20px rgba(0, 0, 0, .25);
     }
-    .nav button span{color:var(--muted);font-weight:600;font-size:12px}
-    .nav button.active{background: rgba(255,255,255,.06);border-color: rgba(255,255,255,.10);box-shadow: inset 0 0 0 1px rgba(239,68,68,.20);}
-    .nav button:hover{background: rgba(255,255,255,.04)}
-    .foot{margin-top:14px;padding:12px 10px 0;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.35;}
 
-    .main{padding:18px 18px 28px}
-    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px;}
-    .topbar h2{margin:0;font-size:22px;letter-spacing:.2px}
-    .topbar p{margin:6px 0 0;color:var(--muted);max-width:70ch}
+    .brand h1 {
+      font-size: 15px;
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: .2px
+    }
 
-    .grid{display:grid;grid-template-columns: 1.1fr .9fr;gap:14px;}
-    @media (max-width: 1100px){ .grid{grid-template-columns:1fr} }
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px
+    }
 
-    .card{
-      background: linear-gradient(180deg, rgba(17,24,39,.75), rgba(11,18,35,.75));
-      border:1px solid rgba(255,255,255,.08);
+    .controls {
+      display: grid;
+      gap: 10px;
+      padding: 12px 10px 14px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 14px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 11px;
+      color: var(--muted);
+      display: block;
+      margin: 0 0 6px
+    }
+
+    select,
+    input[type="date"],
+    input[type="number"],
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(0, 0, 0, .25);
+      color: var(--text);
+      outline: none;
+    }
+
+    select:focus,
+    input:focus {
+      border-color: rgba(239, 68, 68, .55);
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, .12)
+    }
+
+    .btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 600;
+      color: var(--text);
+      background: rgba(255, 255, 255, .08);
+      transition: .15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, .11)
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(239, 68, 68, .95), rgba(239, 68, 68, .55))
+    }
+
+    .btn.good {
+      background: linear-gradient(135deg, rgba(34, 197, 94, .92), rgba(34, 197, 94, .45))
+    }
+
+    .btn.danger {
+      background: linear-gradient(135deg, rgba(239, 68, 68, .95), rgba(148, 163, 184, .14))
+    }
+
+    .btn.small {
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 12px
+    }
+
+    .btn.ghost {
+      background: rgba(0, 0, 0, .12);
+      border: 1px solid rgba(255, 255, 255, .10)
+    }
+
+    .btn.ghost:hover {
+      background: rgba(255, 255, 255, .06)
+    }
+
+    .btn.toggleActive {
+      background: rgba(239, 68, 68, .12);
+      border: 1px solid rgba(239, 68, 68, .25);
+      box-shadow: inset 0 0 0 1px rgba(239, 68, 68, .18);
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+      padding: 0 6px;
+    }
+
+    .nav button {
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 12px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: .15s ease;
+      font-weight: 650;
+      letter-spacing: .15px;
+    }
+
+    .nav button span {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 12px
+    }
+
+    .nav button.active {
+      background: rgba(255, 255, 255, .06);
+      border-color: rgba(255, 255, 255, .10);
+      box-shadow: inset 0 0 0 1px rgba(239, 68, 68, .20);
+    }
+
+    .nav button:hover {
+      background: rgba(255, 255, 255, .04)
+    }
+
+    .foot {
+      margin-top: 14px;
+      padding: 12px 10px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .main {
+      padding: 18px 18px 28px
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: .2px
+    }
+
+    .topbar p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      max-width: 70ch
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 1100px) {
+      .grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(17, 24, 39, .75), rgba(11, 18, 35, .75));
+      border: 1px solid rgba(255, 255, 255, .08);
       border-radius: var(--radius);
-      box-shadow: 0 12px 28px rgba(0,0,0,.35);
-      overflow:hidden;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .35);
+      overflow: hidden;
     }
-    .card .hd{
-      padding:14px 14px 10px;border-bottom:1px solid var(--line);
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-    }
-    .card .hd h3{margin:0;font-size:14px;letter-spacing:.2px}
-    .card .hd .sub{color:var(--muted);font-size:12px}
-    .card .bd{padding:14px}
 
-    .pill{
-      display:inline-flex;gap:8px;align-items:center;padding:7px 10px;border-radius:999px;
-      font-size:12px;border:1px solid rgba(255,255,255,.10);background: rgba(0,0,0,.18);color:var(--muted);
+    .card .hd {
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
-    .dot{width:8px;height:8px;border-radius:50%;background: rgba(239,68,68,.95);box-shadow: 0 0 0 4px rgba(239,68,68,.14);}
-    .dot.g{background: rgba(34,197,94,.95); box-shadow: 0 0 0 4px rgba(34,197,94,.14)}
-    .dot.y{background: rgba(245,158,11,.95); box-shadow: 0 0 0 4px rgba(245,158,11,.14)}
-    .muted{color:var(--muted); font-size:12px; line-height:1.35}
-    .divider{height:1px;background:var(--line);margin:12px 0}
+
+    .card .hd h3 {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: .2px
+    }
+
+    .card .hd .sub {
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .card .bd {
+      padding: 14px
+    }
+
+    .pill {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(0, 0, 0, .18);
+      color: var(--muted);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, .95);
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, .14);
+    }
+
+    .dot.g {
+      background: rgba(34, 197, 94, .95);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, .14)
+    }
+
+    .dot.y {
+      background: rgba(245, 158, 11, .95);
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, .14)
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 12px 0
+    }
 
     /* Rhythm tabs + groups */
-    .tabs{display:flex;gap:8px;flex-wrap:wrap;}
-    .tabBtn{
-      cursor:pointer;border:1px solid rgba(255,255,255,.10);background: rgba(0,0,0,.18);color: var(--text);
-      padding:9px 12px;border-radius: 999px;font-weight:700;font-size:12px;transition:.15s ease;
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
-    .tabBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08)}
-    .tabBtn.active{
-      border-color: rgba(239,68,68,.30);
-      box-shadow: inset 0 0 0 1px rgba(239,68,68,.25);
-      background: rgba(239,68,68,.12);
-    }
-    .tabPane{display:none}
-    .tabPane.active{display:block}
 
-    .paneTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:10px;
+    .tabBtn {
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(0, 0, 0, .18);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 12px;
+      transition: .15s ease;
     }
-    .viewToggle{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .viewToggle .btn{padding:8px 10px;border-radius:999px}
-    .hintTiny{font-size:12px;color:var(--muted)}
 
-    .sectionTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px 10px;
+    .tabBtn:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, .08)
+    }
+
+    .tabBtn.active {
+      border-color: rgba(239, 68, 68, .30);
+      box-shadow: inset 0 0 0 1px rgba(239, 68, 68, .25);
+      background: rgba(239, 68, 68, .12);
+    }
+
+    .tabPane {
+      display: none
+    }
+
+    .tabPane.active {
+      display: block
+    }
+
+    .paneTop {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .viewToggle {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .viewToggle .btn {
+      padding: 8px 10px;
+      border-radius: 999px
+    }
+
+    .hintTiny {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .sectionTitle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 10px;
       border-radius: 14px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .04);
       margin: 12px 0 10px;
     }
-    .sectionTitle b{font-size:12px;letter-spacing:.2px}
-    .sectionTitle span{font-size:12px;color:var(--muted);font-family:var(--mono)}
-    .collapseRow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .linkBtn{
+
+    .sectionTitle b {
+      font-size: 12px;
+      letter-spacing: .2px
+    }
+
+    .sectionTitle span {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: var(--mono)
+    }
+
+    .collapseRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .linkBtn {
       background: transparent;
       border: none;
       color: #cbd5e1;
@@ -172,109 +441,262 @@
       padding: 6px 8px;
       border-radius: 10px;
     }
-    .linkBtn:hover{background: rgba(255,255,255,.06)}
 
-    .groupHd{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:10px 10px;border-radius: 14px;border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);margin: 10px 0 10px;
+    .linkBtn:hover {
+      background: rgba(255, 255, 255, .06)
     }
-    .groupHd b{font-size:12px;letter-spacing:.2px}
-    .groupHd span{font-size:12px;color:var(--muted);font-family:var(--mono)}
+
+    .groupHd {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .04);
+      margin: 10px 0 10px;
+    }
+
+    .groupHd b {
+      font-size: 12px;
+      letter-spacing: .2px
+    }
+
+    .groupHd span {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: var(--mono)
+    }
 
     /* Task list */
-    .taskList{display:grid; gap:10px}
-    .task{
-      display:grid;grid-template-columns: 1fr auto;gap:10px;
-      padding:12px;border-radius: 14px;background: rgba(0,0,0,.20);
-      border:1px solid rgba(255,255,255,.08);align-items:center;
+    .taskList {
+      display: grid;
+      gap: 10px
+    }
+
+    .task {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, .20);
+      border: 1px solid rgba(255, 255, 255, .08);
+      align-items: center;
       position: relative;
     }
-    .task .name{font-weight:700;font-size:13px;letter-spacing:.15px}
-    .task .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-    .tag{
-      font-size:11px;padding:5px 8px;border-radius:999px;background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);color:var(--muted);
+
+    .task .name {
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: .15px
     }
-    .tag.accent{border-color: rgba(239,68,68,.25); color:#fecaca}
-    .tag.good{border-color: rgba(34,197,94,.25); color:#bbf7d0}
-    .tag.warn{border-color: rgba(245,158,11,.25); color:#fde68a}
+
+    .task .meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .08);
+      color: var(--muted);
+    }
+
+    .tag.accent {
+      border-color: rgba(239, 68, 68, .25);
+      color: #fecaca
+    }
+
+    .tag.good {
+      border-color: rgba(34, 197, 94, .25);
+      color: #bbf7d0
+    }
+
+    .tag.warn {
+      border-color: rgba(245, 158, 11, .25);
+      color: #fde68a
+    }
 
     /* Active vs Inactive styling (Option B) */
-    .task.isActive{
-      border-color: rgba(239,68,68,.20);
-      box-shadow: inset 4px 0 0 rgba(239,68,68,.45);
-      background: rgba(239,68,68,.06);
+    .task.isActive {
+      border-color: rgba(239, 68, 68, .20);
+      box-shadow: inset 4px 0 0 rgba(239, 68, 68, .45);
+      background: rgba(239, 68, 68, .06);
     }
-    .task.isInactive{
+
+    .task.isInactive {
       opacity: .62;
-      background: rgba(0,0,0,.14);
-      border-color: rgba(255,255,255,.06);
+      background: rgba(0, 0, 0, .14);
+      border-color: rgba(255, 255, 255, .06);
       box-shadow: none;
     }
 
-    .task .actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap;}
-    .count{
-      font-family: var(--mono);font-size:12px;color:var(--text);padding:6px 10px;border-radius: 10px;
-      border:1px solid rgba(255,255,255,.10);background: rgba(0,0,0,.22);min-width:92px;text-align:center;white-space:nowrap;
+    .task .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
     }
-    .count.qtd{
-      border-color: rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      min-width:92px;
+
+    .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(0, 0, 0, .22);
+      min-width: 92px;
+      text-align: center;
+      white-space: nowrap;
     }
-    .prog{
-      width:140px;height:8px;border-radius:999px;background: rgba(255,255,255,.06);
-      overflow:hidden;border:1px solid rgba(255,255,255,.08);
+
+    .count.qtd {
+      border-color: rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .06);
+      min-width: 92px;
     }
-    .bar{height:100%;width:0%;background: linear-gradient(90deg, rgba(239,68,68,.9), rgba(34,197,94,.8));}
-    .check{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);}
-    .check input{width:16px;height:16px}
+
+    .prog {
+      width: 140px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(239, 68, 68, .9), rgba(34, 197, 94, .8));
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .check input {
+      width: 16px;
+      height: 16px
+    }
 
     /* Pin button */
-    .pinBtn{
-      width:34px;height:34px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
+    .pinBtn {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-      cursor:pointer;
-      transition:.15s ease;
-    }
-    .pinBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.06)}
-    .pinBtn.pinned{
-      border-color: rgba(239,68,68,.30);
-      background: rgba(239,68,68,.14);
-      box-shadow: inset 0 0 0 1px rgba(239,68,68,.18);
-    }
-    .pinIcon{width:16px;height:16px;display:block}
-    .srOnly{
-      position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(0, 0, 0, .16);
+      cursor: pointer;
+      transition: .15s ease;
     }
 
-    .editable{
-      min-height:40px;padding:10px 12px;border-radius:12px;border:1px dashed rgba(255,255,255,.18);
-      background: rgba(0,0,0,.18);outline:none;color:var(--text);
+    .pinBtn:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, .06)
     }
-    .editable:focus{border-color: rgba(239,68,68,.55); box-shadow: 0 0 0 4px rgba(239,68,68,.12)}
 
-    table{
-      width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);background: rgba(0,0,0,.18);overflow:hidden;
+    .pinBtn.pinned {
+      border-color: rgba(239, 68, 68, .30);
+      background: rgba(239, 68, 68, .14);
+      box-shadow: inset 0 0 0 1px rgba(239, 68, 68, .18);
     }
-    th, td{padding:10px 10px;border-bottom:1px solid rgba(255,255,255,.07);font-size:12px;vertical-align:top;}
-    th{text-align:left;color:var(--muted);font-weight:700;background: rgba(255,255,255,.04);}
-    tr:last-child td{border-bottom:none}
-    .right{text-align:right}
 
-    .toast{
-      position:fixed;right:16px;bottom:16px;z-index:2000;
-      background: rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);
-      color:var(--text);padding:10px 12px;border-radius: 14px;
-      box-shadow: 0 14px 30px rgba(0,0,0,.35);
-      display:none;backdrop-filter: blur(10px);font-size:12px;
+    .pinIcon {
+      width: 16px;
+      height: 16px;
+      display: block
+    }
+
+    .srOnly {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .editable {
+      min-height: 40px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px dashed rgba(255, 255, 255, .18);
+      background: rgba(0, 0, 0, .18);
+      outline: none;
+      color: var(--text);
+    }
+
+    .editable:focus {
+      border-color: rgba(239, 68, 68, .55);
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, .12)
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(0, 0, 0, .18);
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
+      font-size: 12px;
+      vertical-align: top;
+    }
+
+    th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 700;
+      background: rgba(255, 255, 255, .04);
+    }
+
+    tr:last-child td {
+      border-bottom: none
+    }
+
+    .right {
+      text-align: right
+    }
+
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 2000;
+      background: rgba(0, 0, 0, .55);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .35);
+      display: none;
+      backdrop-filter: blur(10px);
+      font-size: 12px;
     }
   </style>
 </head>
@@ -373,7 +795,8 @@
               <div class="divider"></div>
               <div class="task" style="grid-template-columns:1fr;gap:8px">
                 <div class="name">Objective (editable)</div>
-                <div id="objField" class="editable" contenteditable="true">Choose 1–2 daily. Choose 1–5 weekly. Choose 1 monthly. Repeat for 90 days.</div>
+                <div id="objField" class="editable" contenteditable="true">Choose 1–2 daily. Choose 1–5 weekly. Choose 1
+                  monthly. Repeat for 90 days.</div>
               </div>
               <div style="height:10px"></div>
               <button class="btn good" id="jumpDailyBtn">Jump to Daily</button>
@@ -427,7 +850,8 @@
 
             <div class="bd">
               <div class="muted" style="margin-bottom:10px">
-                Use the <b>pin</b> to add/remove a task from your Active Set. Inactive tasks stay visible in the Library.
+                Use the <b>pin</b> to add/remove a task from your Active Set. Inactive tasks stay visible in the
+                Library.
               </div>
 
               <!-- DAILY -->
@@ -435,7 +859,8 @@
                 <div class="paneTop">
                   <div class="pill"><span class="dot g"></span><span id="dayKeyPill">—</span></div>
                   <div class="viewToggle" aria-label="Daily view toggle">
-                    <button class="btn small ghost toggleActive" data-mode-btn="daily" data-mode="focus">Focus View</button>
+                    <button class="btn small ghost toggleActive" data-mode-btn="daily" data-mode="focus">Focus
+                      View</button>
                     <button class="btn small ghost" data-mode-btn="daily" data-mode="library">Library View</button>
                     <span class="hintTiny" id="dailyActiveHint"></span>
                   </div>
@@ -450,7 +875,8 @@
                 <div class="paneTop">
                   <div class="pill"><span class="dot y"></span><span id="weekKeyPill">—</span></div>
                   <div class="viewToggle" aria-label="Weekly view toggle">
-                    <button class="btn small ghost toggleActive" data-mode-btn="weekly" data-mode="focus">Focus View</button>
+                    <button class="btn small ghost toggleActive" data-mode-btn="weekly" data-mode="focus">Focus
+                      View</button>
                     <button class="btn small ghost" data-mode-btn="weekly" data-mode="library">Library View</button>
                     <span class="hintTiny" id="weeklyActiveHint"></span>
                   </div>
@@ -465,7 +891,8 @@
                 <div class="paneTop">
                   <div class="pill"><span class="dot"></span><span id="monthKeyPill">—</span></div>
                   <div class="viewToggle" aria-label="Monthly view toggle">
-                    <button class="btn small ghost toggleActive" data-mode-btn="monthly" data-mode="focus">Focus View</button>
+                    <button class="btn small ghost toggleActive" data-mode-btn="monthly" data-mode="focus">Focus
+                      View</button>
                     <button class="btn small ghost" data-mode-btn="monthly" data-mode="library">Library View</button>
                     <span class="hintTiny" id="monthlyActiveHint"></span>
                   </div>
@@ -476,37 +903,10 @@
               </div>
 
               <div class="divider"></div>
-
-              <div class="sectionTitle">
-                <b>Templates (Optional)</b>
-                <span>Includes “active” state</span>
-              </div>
-
-              <textarea id="taskJson" style="width:100%;min-height:320px;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.25);color:var(--text);font-family:var(--mono);font-size:12px;outline:none"></textarea>
-              <div style="height:10px"></div>
-              <button class="btn good" id="saveTaskJsonBtn">Save templates</button>
             </div>
           </div>
 
-          <div class="card">
-            <div class="hd">
-              <div>
-                <h3>Import / Export</h3>
-                <div class="sub">Backups + portability</div>
-              </div>
-              <div class="pill"><span class="dot y"></span><span>JSON</span></div>
-            </div>
-            <div class="bd">
-              <button class="btn small" id="exportBtn2">Export JSON</button>
-              <button class="btn small" id="importBtn2" style="margin-left:6px">Import JSON</button>
-              <button class="btn small danger" id="wipeAllBtn" style="margin-left:6px">Wipe ALL</button>
-              <input id="importFile" type="file" accept="application/json" style="display:none" />
-              <div class="divider"></div>
-              <div class="muted">
-                Tip: If you change tasks/targets, do it here — then export so you can reuse next quarter.
-              </div>
-            </div>
-          </div>
+
         </div>
       </section>
 
@@ -529,169 +929,169 @@
     const DEFAULT_TASKS = {
       daily: [
         // Attract
-        { id:"d_attr_linkedin_add_5", name:"Add 5 LinkedIn connection from target list", category:"Attract", target:5, active:true },
-        { id:"d_attr_comment_5", name:"Comment on 5 posts in a group where buyers gather", category:"Attract", target:5, active:true },
-        { id:"d_attr_share_1", name:"Share 1 piece of relevant insight with your network", category:"Attract", target:1, active:true },
-        { id:"d_attr_connect_req_5", name:"Send 5 connection requests with personalized notes", category:"Attract", target:5, active:true },
-        { id:"d_attr_engage_3", name:"Engage with 3 target prospects’ LinkedIn posts", category:"Attract", target:3, active:true },
+        { id: "d_attr_linkedin_add_5", name: "Add 5 LinkedIn connection from target list", category: "Attract", target: 5, active: true },
+        { id: "d_attr_comment_5", name: "Comment on 5 posts in a group where buyers gather", category: "Attract", target: 5, active: true },
+        { id: "d_attr_share_1", name: "Share 1 piece of relevant insight with your network", category: "Attract", target: 1, active: true },
+        { id: "d_attr_connect_req_5", name: "Send 5 connection requests with personalized notes", category: "Attract", target: 5, active: true },
+        { id: "d_attr_engage_3", name: "Engage with 3 target prospects’ LinkedIn posts", category: "Attract", target: 3, active: true },
 
         // Convert
-        { id:"d_conv_followup_stalled_3", name:"Follow up on 3 stalled conversations with specific next steps", category:"Convert", target:3, active:true },
-        { id:"d_conv_send_resource_1", name:"Send 1 relevant resource to an active prospect with your specific take", category:"Convert", target:1, active:true },
-        { id:"d_conv_record_video_1", name:"Record brief video addressing a prospect's exact challenge", category:"Convert", target:1, active:true },
-        { id:"d_conv_move_warm_1", name:"Move 1 warm conversation to discovery call", category:"Convert", target:1, active:true },
-        { id:"d_conv_review_pipeline_1", name:"Review pipeline - identify which deal needs attention today", category:"Convert", target:1, active:true },
-        { id:"d_conv_followup_quiet_1", name:"Send follow-up to anyone who’s gone quiet this week", category:"Convert", target:1, active:true },
+        { id: "d_conv_followup_stalled_3", name: "Follow up on 3 stalled conversations with specific next steps", category: "Convert", target: 3, active: true },
+        { id: "d_conv_send_resource_1", name: "Send 1 relevant resource to an active prospect with your specific take", category: "Convert", target: 1, active: true },
+        { id: "d_conv_record_video_1", name: "Record brief video addressing a prospect's exact challenge", category: "Convert", target: 1, active: true },
+        { id: "d_conv_move_warm_1", name: "Move 1 warm conversation to discovery call", category: "Convert", target: 1, active: true },
+        { id: "d_conv_review_pipeline_1", name: "Review pipeline - identify which deal needs attention today", category: "Convert", target: 1, active: true },
+        { id: "d_conv_followup_quiet_1", name: "Send follow-up to anyone who’s gone quiet this week", category: "Convert", target: 1, active: true },
 
         // Serve
-        { id:"d_serv_checkin_1", name:"Check in with 1 client on their progress", category:"Serve", target:1, active:true },
-        { id:"d_serv_win_notice_1", name:"Send 1 client a win you noticed in their business", category:"Serve", target:1, active:true },
-        { id:"d_serv_share_resource_1", name:"Share 1 resource that solves client's current challenge", category:"Serve", target:1, active:true },
-        { id:"d_serv_flag_risk_1", name:"Flag 1 risk you see coming for a client", category:"Serve", target:1, active:true },
-        { id:"d_serv_doc_win_1", name:"Document 1 client win for future case study", category:"Serve", target:1, active:true },
-        { id:"d_serv_celebrate_1", name:"Celebrate 1 client milestone publicly (with permission)", category:"Serve", target:1, active:true }
+        { id: "d_serv_checkin_1", name: "Check in with 1 client on their progress", category: "Serve", target: 1, active: true },
+        { id: "d_serv_win_notice_1", name: "Send 1 client a win you noticed in their business", category: "Serve", target: 1, active: true },
+        { id: "d_serv_share_resource_1", name: "Share 1 resource that solves client's current challenge", category: "Serve", target: 1, active: true },
+        { id: "d_serv_flag_risk_1", name: "Flag 1 risk you see coming for a client", category: "Serve", target: 1, active: true },
+        { id: "d_serv_doc_win_1", name: "Document 1 client win for future case study", category: "Serve", target: 1, active: true },
+        { id: "d_serv_celebrate_1", name: "Celebrate 1 client milestone publicly (with permission)", category: "Serve", target: 1, active: true }
       ],
       weekly: [
         // Attract
-        { id:"w_attr_join_1", name:"Join 1 community where your ideal clients gather", category:"Attract", target:1, active:true },
-        { id:"w_attr_post_1", name:"Post 1 thought leadership post or article", category:"Attract", target:1, active:true },
-        { id:"w_attr_record_video_1", name:"Record 1 video on a problem you solve", category:"Attract", target:1, active:true },
-        { id:"w_attr_draft_case_1", name:"Draft 1 case study (3 paragraphs)", category:"Attract", target:1, active:true },
-        { id:"w_attr_show_up_1", name:"Show up in someone else’s community with value", category:"Attract", target:1, active:true },
-        { id:"w_attr_outreach_10", name:"Send personalized outreach to 10 new prospects", category:"Attract", target:10, active:true },
+        { id: "w_attr_join_1", name: "Join 1 community where your ideal clients gather", category: "Attract", target: 1, active: true },
+        { id: "w_attr_post_1", name: "Post 1 thought leadership post or article", category: "Attract", target: 1, active: true },
+        { id: "w_attr_record_video_1", name: "Record 1 video on a problem you solve", category: "Attract", target: 1, active: true },
+        { id: "w_attr_draft_case_1", name: "Draft 1 case study (3 paragraphs)", category: "Attract", target: 1, active: true },
+        { id: "w_attr_show_up_1", name: "Show up in someone else’s community with value", category: "Attract", target: 1, active: true },
+        { id: "w_attr_outreach_10", name: "Send personalized outreach to 10 new prospects", category: "Attract", target: 10, active: true },
 
         // Convert
-        { id:"w_conv_discovery_2", name:"Run 2-3 discovery calls with qualified prospects", category:"Convert", target:2, active:true },
-        { id:"w_conv_proposal_1", name:"Send 1 proposal to qualified opportunity", category:"Convert", target:1, active:true },
-        { id:"w_conv_followup_open_3", name:"Follow up on 3-5 open proposals with specific value adds", category:"Convert", target:3, active:true },
-        { id:"w_conv_move_stalled_1", name:"Move 1 stalled deal forward with creative approach", category:"Convert", target:1, active:true },
-        { id:"w_conv_host_ps_1", name:"Host 1 problem-solving session for prospects", category:"Convert", target:1, active:true },
-        { id:"w_conv_custom_diag_1", name:"Create 1 custom diagnostic for active opportunity", category:"Convert", target:1, active:true },
-        { id:"w_conv_walkthrough_1", name:"Record video walkthrough of your solution for prospect", category:"Convert", target:1, active:true },
+        { id: "w_conv_discovery_2", name: "Run 2-3 discovery calls with qualified prospects", category: "Convert", target: 2, active: true },
+        { id: "w_conv_proposal_1", name: "Send 1 proposal to qualified opportunity", category: "Convert", target: 1, active: true },
+        { id: "w_conv_followup_open_3", name: "Follow up on 3-5 open proposals with specific value adds", category: "Convert", target: 3, active: true },
+        { id: "w_conv_move_stalled_1", name: "Move 1 stalled deal forward with creative approach", category: "Convert", target: 1, active: true },
+        { id: "w_conv_host_ps_1", name: "Host 1 problem-solving session for prospects", category: "Convert", target: 1, active: true },
+        { id: "w_conv_custom_diag_1", name: "Create 1 custom diagnostic for active opportunity", category: "Convert", target: 1, active: true },
+        { id: "w_conv_walkthrough_1", name: "Record video walkthrough of your solution for prospect", category: "Convert", target: 1, active: true },
 
         // Serve
-        { id:"w_serv_share_win_1", name:"Share 1 client win story (anonymized if needed)", category:"Serve", target:1, active:true },
-        { id:"w_serv_request_intro_1", name:"Request 1 introduction from satisfied client", category:"Serve", target:1, active:true },
-        { id:"w_serv_qbr_1", name:"Deliver quarterly business review to 1 client", category:"Serve", target:1, active:true },
-        { id:"w_serv_quick_win_1", name:"Propose 1 quick win your client could implement this month", category:"Serve", target:1, active:true },
-        { id:"w_serv_testimonial_1", name:"Capture 1 testimonial or case study approval", category:"Serve", target:1, active:true },
-        { id:"w_serv_sop_1", name:"Document 1 repeatable client process as SOP", category:"Serve", target:1, active:true }
+        { id: "w_serv_share_win_1", name: "Share 1 client win story (anonymized if needed)", category: "Serve", target: 1, active: true },
+        { id: "w_serv_request_intro_1", name: "Request 1 introduction from satisfied client", category: "Serve", target: 1, active: true },
+        { id: "w_serv_qbr_1", name: "Deliver quarterly business review to 1 client", category: "Serve", target: 1, active: true },
+        { id: "w_serv_quick_win_1", name: "Propose 1 quick win your client could implement this month", category: "Serve", target: 1, active: true },
+        { id: "w_serv_testimonial_1", name: "Capture 1 testimonial or case study approval", category: "Serve", target: 1, active: true },
+        { id: "w_serv_sop_1", name: "Document 1 repeatable client process as SOP", category: "Serve", target: 1, active: true }
       ],
       monthly: [
         // Attract
-        { id:"m_attr_speak_1", name:"Speak at 1 event or guest on 1 podcast", category:"Attract", target:1, active:true },
-        { id:"m_attr_publish_case_1", name:"Publish 1 full case study with client results", category:"Attract", target:1, active:true },
-        { id:"m_attr_write_article_1", name:"Write 1 LinkedIn article or blog post (800+ words)", category:"Attract", target:1, active:true },
-        { id:"m_attr_host_workshop_1", name:"Host 1 workshop or training for target market", category:"Attract", target:1, active:true },
-        { id:"m_attr_test_channel_1", name:"Test 1 new marketing channel or partnership", category:"Attract", target:1, active:true },
-        { id:"m_attr_newsletter_1", name:"Publish monthly newsletter", category:"Attract", target:1, active:true },
-        { id:"m_attr_m3_3", name:"Attend 3 M3Nation Events", category:"Attract", target:3, active:true },
+        { id: "m_attr_speak_1", name: "Speak at 1 event or guest on 1 podcast", category: "Attract", target: 1, active: true },
+        { id: "m_attr_publish_case_1", name: "Publish 1 full case study with client results", category: "Attract", target: 1, active: true },
+        { id: "m_attr_write_article_1", name: "Write 1 LinkedIn article or blog post (800+ words)", category: "Attract", target: 1, active: true },
+        { id: "m_attr_host_workshop_1", name: "Host 1 workshop or training for target market", category: "Attract", target: 1, active: true },
+        { id: "m_attr_test_channel_1", name: "Test 1 new marketing channel or partnership", category: "Attract", target: 1, active: true },
+        { id: "m_attr_newsletter_1", name: "Publish monthly newsletter", category: "Attract", target: 1, active: true },
+        { id: "m_attr_m3_3", name: "Attend 3 M3Nation Events", category: "Attract", target: 3, active: true },
 
         // Convert
-        { id:"m_conv_reactivate_10", name:"Reactivate 10 cold conversations from past 3-6 months", category:"Convert", target:10, active:true },
-        { id:"m_conv_update_template_1", name:"Review and update your proposal template based on feedback", category:"Convert", target:1, active:true },
-        { id:"m_conv_group_session_1", name:"Run 1 group session with multiple prospects", category:"Convert", target:1, active:true },
-        { id:"m_conv_video_open_props_1", name:"Send personalized video to every open proposal", category:"Convert", target:1, active:true },
-        { id:"m_conv_strat_calls_3", name:"Conduct strategic planning calls with 3 top prospects", category:"Convert", target:3, active:true },
+        { id: "m_conv_reactivate_10", name: "Reactivate 10 cold conversations from past 3-6 months", category: "Convert", target: 10, active: true },
+        { id: "m_conv_update_template_1", name: "Review and update your proposal template based on feedback", category: "Convert", target: 1, active: true },
+        { id: "m_conv_group_session_1", name: "Run 1 group session with multiple prospects", category: "Convert", target: 1, active: true },
+        { id: "m_conv_video_open_props_1", name: "Send personalized video to every open proposal", category: "Convert", target: 1, active: true },
+        { id: "m_conv_strat_calls_3", name: "Conduct strategic planning calls with 3 top prospects", category: "Convert", target: 3, active: true },
 
         // Serve
-        { id:"m_serv_scope_1", name:"Propose scope expansion to 1+ current clients", category:"Serve", target:1, active:true },
-        { id:"m_serv_strat_session_1", name:"Run strategic planning session for your top clients", category:"Serve", target:1, active:true },
-        { id:"m_serv_impact_memo_1", name:"Share strategic impact memo to each client", category:"Serve", target:1, active:true },
-        { id:"m_serv_intro_1", name:"Facilitate introduction between 2 clients for mutual benefit", category:"Serve", target:1, active:true },
-        { id:"m_serv_review_video_1", name:"Record quarterly review video for top clients", category:"Serve", target:1, active:true },
-        { id:"m_serv_advisory_1", name:"Launch client advisory group or peer community", category:"Serve", target:1, active:true }
+        { id: "m_serv_scope_1", name: "Propose scope expansion to 1+ current clients", category: "Serve", target: 1, active: true },
+        { id: "m_serv_strat_session_1", name: "Run strategic planning session for your top clients", category: "Serve", target: 1, active: true },
+        { id: "m_serv_impact_memo_1", name: "Share strategic impact memo to each client", category: "Serve", target: 1, active: true },
+        { id: "m_serv_intro_1", name: "Facilitate introduction between 2 clients for mutual benefit", category: "Serve", target: 1, active: true },
+        { id: "m_serv_review_video_1", name: "Record quarterly review video for top clients", category: "Serve", target: 1, active: true },
+        { id: "m_serv_advisory_1", name: "Launch client advisory group or peer community", category: "Serve", target: 1, active: true }
       ]
     };
 
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
-    function toast(msg){
+    function toast(msg) {
       const t = $("#toast");
       t.textContent = msg;
       t.style.display = "block";
       clearTimeout(toast._timer);
-      toast._timer = setTimeout(()=> t.style.display="none", 2200);
+      toast._timer = setTimeout(() => t.style.display = "none", 2200);
     }
 
-    function nowISODate(){ return new Date().toISOString().slice(0,10); }
-    function monthKey(d=new Date()){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`; }
-    function weekKey(d=new Date()){
+    function nowISODate() { return new Date().toISOString().slice(0, 10); }
+    function monthKey(d = new Date()) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; }
+    function weekKey(d = new Date()) {
       const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
       const dayNum = date.getUTCDay() || 7;
       date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-      const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
-      const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1)/7);
-      return `${date.getUTCFullYear()}-W${String(weekNo).padStart(2,"0")}`;
+      const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+      const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+      return `${date.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
     }
 
-    function defaultQuarterFor(date=new Date()){
-      const m = date.getMonth()+1;
-      if(m<=3) return "Q1";
-      if(m<=6) return "Q2";
-      if(m<=9) return "Q3";
+    function defaultQuarterFor(date = new Date()) {
+      const m = date.getMonth() + 1;
+      if (m <= 3) return "Q1";
+      if (m <= 6) return "Q2";
+      if (m <= 9) return "Q3";
       return "Q4";
     }
-    function quarterDates(year, q){
+    function quarterDates(year, q) {
       const map = {
-        Q1: {s:`${year}-01-01`, e:`${year}-03-31`},
-        Q2: {s:`${year}-04-01`, e:`${year}-06-30`},
-        Q3: {s:`${year}-07-01`, e:`${year}-09-30`},
-        Q4: {s:`${year}-10-01`, e:`${year}-12-31`}
+        Q1: { s: `${year}-01-01`, e: `${year}-03-31` },
+        Q2: { s: `${year}-04-01`, e: `${year}-06-30` },
+        Q3: { s: `${year}-07-01`, e: `${year}-09-30` },
+        Q4: { s: `${year}-10-01`, e: `${year}-12-31` }
       };
       return map[q];
     }
 
-    function loadApp(){
-      try{ const raw = localStorage.getItem(APP_KEY); return raw ? JSON.parse(raw) : null; }
-      catch(e){ return null; }
+    function loadApp() {
+      try { const raw = localStorage.getItem(APP_KEY); return raw ? JSON.parse(raw) : null; }
+      catch (e) { return null; }
     }
-    function saveApp(state){ localStorage.setItem(APP_KEY, JSON.stringify(state)); }
+    function saveApp(state) { localStorage.setItem(APP_KEY, JSON.stringify(state)); }
 
-    function makeQuarter(){
+    function makeQuarter() {
       return {
         objective: "Choose 1–2 daily. Choose 1–5 weekly. Choose 1 monthly. Repeat for 90 days.",
         templates: JSON.parse(JSON.stringify(DEFAULT_TASKS)),
-        logs: { daily:{}, weekly:{}, monthly:{} },
-        completions: { daily:{}, weekly:{}, monthly:{} },
-        ui: { mode: { daily:"focus", weekly:"focus", monthly:"focus" }, libraryExpanded: { daily:true, weekly:true, monthly:true } }
+        logs: { daily: {}, weekly: {}, monthly: {} },
+        completions: { daily: {}, weekly: {}, monthly: {} },
+        ui: { mode: { daily: "focus", weekly: "focus", monthly: "focus" }, libraryExpanded: { daily: true, weekly: true, monthly: true } }
       };
     }
 
     // Migration: ensure active exists, and UI mode defaults exist
-    function normalizeQuarter(q){
+    function normalizeQuarter(q) {
       q.templates = q.templates || JSON.parse(JSON.stringify(DEFAULT_TASKS));
-      ["daily","weekly","monthly"].forEach(freq=>{
+      ["daily", "weekly", "monthly"].forEach(freq => {
         q.templates[freq] = q.templates[freq] || [];
-        q.templates[freq].forEach(t=>{
-          if(typeof t.active !== "boolean") t.active = true;
-          if(typeof t.target !== "number") t.target = 1;
-          if(!t.category) t.category = "Attract";
+        q.templates[freq].forEach(t => {
+          if (typeof t.active !== "boolean") t.active = true;
+          if (typeof t.target !== "number") t.target = 1;
+          if (!t.category) t.category = "Attract";
         });
       });
-      q.logs = q.logs || { daily:{}, weekly:{}, monthly:{} };
-      q.completions = q.completions || { daily:{}, weekly:{}, monthly:{} };
-      q.ui = q.ui || { mode:{}, libraryExpanded:{} };
+      q.logs = q.logs || { daily: {}, weekly: {}, monthly: {} };
+      q.completions = q.completions || { daily: {}, weekly: {}, monthly: {} };
+      q.ui = q.ui || { mode: {}, libraryExpanded: {} };
       q.ui.mode = q.ui.mode || {};
       q.ui.libraryExpanded = q.ui.libraryExpanded || {};
-      ["daily","weekly","monthly"].forEach(freq=>{
-        if(!q.ui.mode[freq]) q.ui.mode[freq] = "focus";
-        if(typeof q.ui.libraryExpanded[freq] !== "boolean") q.ui.libraryExpanded[freq] = true;
+      ["daily", "weekly", "monthly"].forEach(freq => {
+        if (!q.ui.mode[freq]) q.ui.mode[freq] = "focus";
+        if (typeof q.ui.libraryExpanded[freq] !== "boolean") q.ui.libraryExpanded[freq] = true;
       });
-      if(typeof q.objective !== "string") q.objective = "";
+      if (typeof q.objective !== "string") q.objective = "";
       return q;
     }
 
-    function initState(){
+    function initState() {
       const existing = loadApp();
-      if(existing){
+      if (existing) {
         // migrate all quarters
-        try{
-          Object.keys(existing.quarters || {}).forEach(k=>{
+        try {
+          Object.keys(existing.quarters || {}).forEach(k => {
             existing.quarters[k] = normalizeQuarter(existing.quarters[k]);
           });
-        }catch(e){}
+        } catch (e) { }
         saveApp(existing);
         return existing;
       }
@@ -701,8 +1101,8 @@
       const q = defaultQuarterFor(today);
       const dates = quarterDates(year, q);
       const state = {
-        meta:{ current:{ year, q, start: dates.s, end: dates.e } },
-        quarters:{ [`${year}-${q}`]: makeQuarter() }
+        meta: { current: { year, q, start: dates.s, end: dates.e } },
+        quarters: { [`${year}-${q}`]: makeQuarter() }
       };
       saveApp(state);
       return state;
@@ -710,70 +1110,70 @@
 
     let STATE = initState();
 
-    function qKey(){ const {year,q}=STATE.meta.current; return `${year}-${q}`; }
-    function ensureQuarter(k){ if(!STATE.quarters[k]) STATE.quarters[k]=makeQuarter(); else STATE.quarters[k]=normalizeQuarter(STATE.quarters[k]); }
-    function Q(){ const k=qKey(); ensureQuarter(k); return STATE.quarters[k]; }
+    function qKey() { const { year, q } = STATE.meta.current; return `${year}-${q}`; }
+    function ensureQuarter(k) { if (!STATE.quarters[k]) STATE.quarters[k] = makeQuarter(); else STATE.quarters[k] = normalizeQuarter(STATE.quarters[k]); }
+    function Q() { const k = qKey(); ensureQuarter(k); return STATE.quarters[k]; }
 
-    function periodKey(freq){
-      if(freq==="daily") return nowISODate();
-      if(freq==="weekly") return weekKey(new Date());
-      if(freq==="monthly") return monthKey(new Date());
+    function periodKey(freq) {
+      if (freq === "daily") return nowISODate();
+      if (freq === "weekly") return weekKey(new Date());
+      if (freq === "monthly") return monthKey(new Date());
       return nowISODate();
     }
 
-    function getNowUnits(freq, task){
+    function getNowUnits(freq, task) {
       const q = Q();
       const key = periodKey(freq);
       return (q.logs[freq][key] && q.logs[freq][key][task.id]) ? q.logs[freq][key][task.id] : 0;
     }
 
-    function getQTDUnits(freq, task){
+    function getQTDUnits(freq, task) {
       const q = Q();
       let total = 0;
-      Object.keys(q.logs[freq]).forEach(k=>{
+      Object.keys(q.logs[freq]).forEach(k => {
         total += (q.logs[freq][k]?.[task.id] || 0);
       });
       return total;
     }
 
-    function isMet(freq, task){
+    function isMet(freq, task) {
       const q = Q();
       const key = periodKey(freq);
       return !!(q.completions[freq][key] && q.completions[freq][key][task.id]);
     }
 
-    function setUnits(freq, task, units){
+    function setUnits(freq, task, units) {
       const q = Q();
       const key = periodKey(freq);
       q.logs[freq][key] = q.logs[freq][key] || {};
       q.completions[freq][key] = q.completions[freq][key] || {};
       q.logs[freq][key][task.id] = Math.max(0, units);
 
-      if(q.logs[freq][key][task.id] >= (task.target||1)) q.completions[freq][key][task.id] = true;
+      if (q.logs[freq][key][task.id] >= (task.target || 1)) q.completions[freq][key][task.id] = true;
       else delete q.completions[freq][key][task.id];
 
       saveApp(STATE);
       renderAll();
     }
 
-    function bump(freq, task, delta){
+    function bump(freq, task, delta) {
       setUnits(freq, task, getNowUnits(freq, task) + delta);
     }
 
-    function escapeHtml(str){
+    function escapeHtml(str) {
       return String(str)
-        .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+        .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
     }
 
-    function catTagClass(cat){
-      if(cat==="Convert") return "accent";
-      if(cat==="Serve") return "good";
-      if(cat==="Attract") return "warn";
+    function catTagClass(cat) {
+      if (cat === "Convert") return "accent";
+      if (cat === "Serve") return "good";
+      if (cat === "Attract") return "warn";
       return "";
     }
 
-    function pinSvg(){
+    function pinSvg() {
       return `
         <svg class="pinIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M14 3l7 7-2 2-2-2-5 5v4l-2 2v-6l-5-5-2 2-2-2 7-7 2 2-2 2 5 5 5-5-2-2 2-2z"
@@ -781,29 +1181,29 @@
         </svg>`;
     }
 
-    function toggleTaskActive(freq, taskId){
+    function toggleTaskActive(freq, taskId) {
       const q = Q();
-      const t = q.templates[freq].find(x=>x.id===taskId);
-      if(!t) return;
+      const t = q.templates[freq].find(x => x.id === taskId);
+      if (!t) return;
       t.active = !t.active;
       saveApp(STATE);
       renderAll();
       toast(t.active ? "Added to Active Set." : "Removed from Active Set.");
     }
 
-    function activeCount(freq){
+    function activeCount(freq) {
       const q = Q();
-      return q.templates[freq].filter(t=>t.active).length;
+      return q.templates[freq].filter(t => t.active).length;
     }
 
-    function setMode(freq, mode){
+    function setMode(freq, mode) {
       const q = Q();
       q.ui.mode[freq] = mode;
       saveApp(STATE);
       renderAll();
     }
 
-    function toggleLibraryExpanded(freq){
+    function toggleLibraryExpanded(freq) {
       const q = Q();
       q.ui.libraryExpanded[freq] = !q.ui.libraryExpanded[freq];
       saveApp(STATE);
@@ -811,13 +1211,13 @@
     }
 
     // Renderer: grouped list with pin button, active/inactive styling
-    function renderGrouped(container, freq, tasks, opts={}){
-      const { onlyActive=false } = opts;
-      const order = ["Attract","Convert","Serve"];
-      const groups = {Attract:[],Convert:[],Serve:[]};
+    function renderGrouped(container, freq, tasks, opts = {}) {
+      const { onlyActive = false } = opts;
+      const order = ["Attract", "Convert", "Serve"];
+      const groups = { Attract: [], Convert: [], Serve: [] };
 
-      tasks.forEach(t=>{
-        if(onlyActive && !t.active) return;
+      tasks.forEach(t => {
+        if (onlyActive && !t.active) return;
         const c = t.category || "Attract";
         (groups[c] ||= []).push(t);
       });
@@ -825,8 +1225,8 @@
       container.innerHTML = "";
 
       // empty state if onlyActive and no tasks
-      const totalShown = order.reduce((acc,c)=> acc + (groups[c]?.length||0), 0);
-      if(onlyActive && totalShown === 0){
+      const totalShown = order.reduce((acc, c) => acc + (groups[c]?.length || 0), 0);
+      if (onlyActive && totalShown === 0) {
         const empty = document.createElement("div");
         empty.className = "muted";
         empty.style.padding = "10px 2px 2px";
@@ -835,11 +1235,11 @@
         return;
       }
 
-      order.forEach(cat=>{
+      order.forEach(cat => {
         const list = groups[cat] || [];
-        if(!list.length) return;
+        if (!list.length) return;
 
-        const groupUnits = list.reduce((acc,t)=> acc + getQTDUnits(freq,t), 0);
+        const groupUnits = list.reduce((acc, t) => acc + getQTDUnits(freq, t), 0);
         const hd = document.createElement("div");
         hd.className = "groupHd";
         hd.innerHTML = `<b>${cat}</b><span>QTD units: ${groupUnits}</span>`;
@@ -848,12 +1248,12 @@
         const wrap = document.createElement("div");
         wrap.className = "taskList";
 
-        list.forEach(task=>{
+        list.forEach(task => {
           const now = getNowUnits(freq, task);
           const qtd = getQTDUnits(freq, task);
           const met = isMet(freq, task);
           const target = task.target || 1;
-          const pct = Math.min(100, Math.round((now/target)*100));
+          const pct = Math.min(100, Math.round((now / target) * 100));
 
           const el = document.createElement("div");
           el.className = "task " + (task.active ? "isActive" : "isInactive");
@@ -868,7 +1268,7 @@
               </div>
             </div>
             <div class="actions">
-              <button class="pinBtn ${task.active ? "pinned":""}" data-pin="${task.id}" title="${task.active ? "Remove from Active Set":"Add to Active Set"}" aria-label="${task.active ? "Remove from Active Set":"Add to Active Set"}">
+              <button class="pinBtn ${task.active ? "pinned" : ""}" data-pin="${task.id}" title="${task.active ? "Remove from Active Set" : "Add to Active Set"}" aria-label="${task.active ? "Remove from Active Set" : "Add to Active Set"}">
                 ${pinSvg()}
                 <span class="srOnly">Toggle Active</span>
               </button>
@@ -877,14 +1277,14 @@
               <div class="prog" aria-hidden="true"><div class="bar" style="width:${pct}%"></div></div>
               <button class="btn small" data-act="minus">-</button>
               <button class="btn small good" data-act="plus">+</button>
-              <label class="check"><input type="checkbox" ${met?"checked":""} disabled />met</label>
+              <label class="check"><input type="checkbox" ${met ? "checked" : ""} disabled />met</label>
             </div>
           `;
 
           // +/- always available (even if inactive) so you can still log if you want
-          el.querySelector('[data-act="minus"]').addEventListener("click", ()=> bump(freq, task, -1));
-          el.querySelector('[data-act="plus"]').addEventListener("click", ()=> bump(freq, task, +1));
-          el.querySelector('[data-pin]').addEventListener("click", ()=> toggleTaskActive(freq, task.id));
+          el.querySelector('[data-act="minus"]').addEventListener("click", () => bump(freq, task, -1));
+          el.querySelector('[data-act="plus"]').addEventListener("click", () => bump(freq, task, +1));
+          el.querySelector('[data-pin]').addEventListener("click", () => toggleTaskActive(freq, task.id));
 
           wrap.appendChild(el);
         });
@@ -894,29 +1294,29 @@
     }
 
     // Focus view: Active Set first, then Library (collapsible)
-    function renderFocusAndLibrary(freq, focusWrapEl, libraryWrapEl){
+    function renderFocusAndLibrary(freq, focusWrapEl, libraryWrapEl) {
       const q = Q();
       const tasks = q.templates[freq];
 
       // Active Set section
       focusWrapEl.innerHTML = "";
-      const activeUnits = tasks.filter(t=>t.active).reduce((acc,t)=> acc + getQTDUnits(freq,t), 0);
+      const activeUnits = tasks.filter(t => t.active).reduce((acc, t) => acc + getQTDUnits(freq, t), 0);
       const activeTitle = document.createElement("div");
       activeTitle.className = "sectionTitle";
       activeTitle.innerHTML = `
         <b>Active Set</b>
-        <span>Active: ${tasks.filter(t=>t.active).length} • QTD units: ${activeUnits}</span>
+        <span>Active: ${tasks.filter(t => t.active).length} • QTD units: ${activeUnits}</span>
       `;
       focusWrapEl.appendChild(activeTitle);
 
       const activeList = document.createElement("div");
-      renderGrouped(activeList, freq, tasks, { onlyActive:true });
+      renderGrouped(activeList, freq, tasks, { onlyActive: true });
       focusWrapEl.appendChild(activeList);
 
       // Library section (collapsible)
       libraryWrapEl.innerHTML = "";
       const libExpanded = !!q.ui.libraryExpanded[freq];
-      const totalUnits = tasks.reduce((acc,t)=> acc + getQTDUnits(freq,t), 0);
+      const totalUnits = tasks.reduce((acc, t) => acc + getQTDUnits(freq, t), 0);
 
       const libTitle = document.createElement("div");
       libTitle.className = "sectionTitle";
@@ -934,31 +1334,31 @@
 
       const libBody = document.createElement("div");
       libBody.style.display = libExpanded ? "" : "none";
-      renderGrouped(libBody, freq, tasks, { onlyActive:false });
+      renderGrouped(libBody, freq, tasks, { onlyActive: false });
       libraryWrapEl.appendChild(libBody);
 
-      libraryWrapEl.querySelector('[data-lib-toggle]')?.addEventListener("click", ()=> toggleLibraryExpanded(freq));
+      libraryWrapEl.querySelector('[data-lib-toggle]')?.addEventListener("click", () => toggleLibraryExpanded(freq));
     }
 
-    function categoryRollup(){
+    function categoryRollup() {
       const q = Q();
-      const cats = ["Attract","Convert","Serve"];
+      const cats = ["Attract", "Convert", "Serve"];
       const out = {};
-      cats.forEach(c=> out[c] = {units:0, completions:0});
+      cats.forEach(c => out[c] = { units: 0, completions: 0 });
 
-      function add(freq){
-        const taskMap = Object.fromEntries(q.templates[freq].map(t=>[t.id,t]));
-        Object.keys(q.logs[freq]).forEach(pk=>{
+      function add(freq) {
+        const taskMap = Object.fromEntries(q.templates[freq].map(t => [t.id, t]));
+        Object.keys(q.logs[freq]).forEach(pk => {
           const per = q.logs[freq][pk] || {};
-          Object.keys(per).forEach(id=>{
-            const t = taskMap[id]; if(!t) return;
+          Object.keys(per).forEach(id => {
+            const t = taskMap[id]; if (!t) return;
             out[t.category].units += (per[id] || 0);
           });
         });
-        Object.keys(q.completions[freq]).forEach(pk=>{
+        Object.keys(q.completions[freq]).forEach(pk => {
           const per = q.completions[freq][pk] || {};
-          Object.keys(per).forEach(id=>{
-            const t = taskMap[id]; if(!t) return;
+          Object.keys(per).forEach(id => {
+            const t = taskMap[id]; if (!t) return;
             out[t.category].completions += 1;
           });
         });
@@ -968,11 +1368,11 @@
       return out;
     }
 
-    function renderCategoryTable(){
+    function renderCategoryTable() {
       const roll = categoryRollup();
       const body = $("#catTable");
       body.innerHTML = "";
-      ["Attract","Convert","Serve"].forEach(cat=>{
+      ["Attract", "Convert", "Serve"].forEach(cat => {
         const r = roll[cat];
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -984,26 +1384,26 @@
       });
     }
 
-    function renderTaskTotalsTable(){
+    function renderTaskTotalsTable() {
       const q = Q();
       const tbody = $("#taskTotalsTable");
       tbody.innerHTML = "";
 
       const all = [
-        ...q.templates.daily.map(t=>({t, freq:"Daily"})),
-        ...q.templates.weekly.map(t=>({t, freq:"Weekly"})),
-        ...q.templates.monthly.map(t=>({t, freq:"Monthly"}))
+        ...q.templates.daily.map(t => ({ t, freq: "Daily" })),
+        ...q.templates.weekly.map(t => ({ t, freq: "Weekly" })),
+        ...q.templates.monthly.map(t => ({ t, freq: "Monthly" }))
       ];
 
-      const freqOrder = {Daily:1, Weekly:2, Monthly:3};
-      all.sort((a,b)=>{
-        const fo = (freqOrder[a.freq]-freqOrder[b.freq]);
-        if(fo!==0) return fo;
-        if(a.t.category!==b.t.category) return a.t.category.localeCompare(b.t.category);
+      const freqOrder = { Daily: 1, Weekly: 2, Monthly: 3 };
+      all.sort((a, b) => {
+        const fo = (freqOrder[a.freq] - freqOrder[b.freq]);
+        if (fo !== 0) return fo;
+        if (a.t.category !== b.t.category) return a.t.category.localeCompare(b.t.category);
         return a.t.name.localeCompare(b.t.name);
       });
 
-      all.forEach(({t,freq})=>{
+      all.forEach(({ t, freq }) => {
         const units = getQTDUnits(freq.toLowerCase(), t);
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -1017,11 +1417,11 @@
       });
     }
 
-    function setupYearSelector(){
+    function setupYearSelector() {
       const ySel = $("#yearSel");
       ySel.innerHTML = "";
       const now = new Date().getFullYear();
-      for(let y=now-2; y<=now+2; y++){
+      for (let y = now - 2; y <= now + 2; y++) {
         const opt = document.createElement("option");
         opt.value = String(y);
         opt.textContent = String(y);
@@ -1029,64 +1429,63 @@
       }
     }
 
-    function syncSidebar(){
-      const {year,q,start,end} = STATE.meta.current;
+    function syncSidebar() {
+      const { year, q, start, end } = STATE.meta.current;
       $("#yearSel").value = String(year);
       $("#qSel").value = q;
       $("#startDate").value = start;
       $("#endDate").value = end;
     }
 
-    function renderHeader(){
-      const {year,q,start,end} = STATE.meta.current;
+    function renderHeader() {
+      const { year, q, start, end } = STATE.meta.current;
       $("#titleLine").textContent = `${q} ${year} Dashboard`;
       $("#todayLine").textContent = `Today: ${nowISODate()}`;
       $("#qRangeLabel").textContent = `${start} → ${end}`;
     }
 
-    function setModeButtons(freq){
+    function setModeButtons(freq) {
       const q = Q();
       const mode = q.ui.mode[freq] || "focus";
-      $$(`[data-mode-btn="${freq}"]`).forEach(btn=>{
+      $$(`[data-mode-btn="${freq}"]`).forEach(btn => {
         const isOn = btn.dataset.mode === mode;
         btn.classList.toggle("toggleActive", isOn);
       });
 
       const hintEl = $(`#${freq}ActiveHint`);
-      if(hintEl){
+      if (hintEl) {
         hintEl.textContent = `${activeCount(freq)} active / ${Q().templates[freq].length} total`;
       }
     }
 
-    function renderRhythm(){
+    function renderRhythm() {
       const q = Q();
       $("#dayKeyPill").textContent = nowISODate();
       $("#weekKeyPill").textContent = weekKey(new Date());
       $("#monthKeyPill").textContent = monthKey(new Date());
 
-      // Objective + templates editor
+      // Objective
       $("#objField").textContent = q.objective || $("#objField").textContent;
-      $("#taskJson").value = JSON.stringify(q.templates, null, 2);
 
       // For each freq: focus mode + library mode
       const configs = [
-        { freq:"daily", focusWrap:$("#dailyFocusWrap"), libWrap:$("#dailyLibraryWrap") },
-        { freq:"weekly", focusWrap:$("#weeklyFocusWrap"), libWrap:$("#weeklyLibraryWrap") },
-        { freq:"monthly", focusWrap:$("#monthlyFocusWrap"), libWrap:$("#monthlyLibraryWrap") }
+        { freq: "daily", focusWrap: $("#dailyFocusWrap"), libWrap: $("#dailyLibraryWrap") },
+        { freq: "weekly", focusWrap: $("#weeklyFocusWrap"), libWrap: $("#weeklyLibraryWrap") },
+        { freq: "monthly", focusWrap: $("#monthlyFocusWrap"), libWrap: $("#monthlyLibraryWrap") }
       ];
 
-      configs.forEach(({freq, focusWrap, libWrap})=>{
+      configs.forEach(({ freq, focusWrap, libWrap }) => {
         const mode = q.ui.mode[freq] || "focus";
 
         setModeButtons(freq);
 
-        if(mode === "focus"){
+        if (mode === "focus") {
           focusWrap.style.display = "";
           libWrap.style.display = "";
 
           // Focus view includes both sections
           renderFocusAndLibrary(freq, focusWrap, libWrap);
-        }else{
+        } else {
           // Library-only view
           focusWrap.style.display = "none";
           libWrap.style.display = "";
@@ -1098,13 +1497,13 @@
           libWrap.appendChild(title);
 
           const body = document.createElement("div");
-          renderGrouped(body, freq, q.templates[freq], { onlyActive:false });
+          renderGrouped(body, freq, q.templates[freq], { onlyActive: false });
           libWrap.appendChild(body);
         }
       });
     }
 
-    function renderAll(){
+    function renderAll() {
       renderHeader();
       renderCategoryTable();
       renderTaskTotalsTable();
@@ -1112,20 +1511,20 @@
       syncSidebar();
     }
 
-    function viewSwitch(view){
-      $$(".nav button").forEach(b=> b.classList.toggle("active", b.dataset.view === view));
-      $$(".view").forEach(v=> v.style.display = "none");
-      $("#view-"+view).style.display = "";
+    function viewSwitch(view) {
+      $$(".nav button").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+      $$(".view").forEach(v => v.style.display = "none");
+      $("#view-" + view).style.display = "";
     }
 
-    function setTab(tab){
-      $$(".tabBtn").forEach(b=> b.classList.toggle("active", b.dataset.tab === tab));
-      ["daily","weekly","monthly"].forEach(t=>{
-        $("#tab-"+t).classList.toggle("active", t===tab);
+    function setTab(tab) {
+      $$(".tabBtn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+      ["daily", "weekly", "monthly"].forEach(t => {
+        $("#tab-" + t).classList.toggle("active", t === tab);
       });
     }
 
-    function setCurrentQuarter(year, q){
+    function setCurrentQuarter(year, q) {
       const dates = quarterDates(year, q);
       STATE.meta.current = { year, q, start: dates.s, end: dates.e };
       ensureQuarter(`${year}-${q}`);
@@ -1133,8 +1532,8 @@
       renderAll();
     }
 
-    function saveQuarter(){
-      const year = parseInt($("#yearSel").value,10);
+    function saveQuarter() {
+      const year = parseInt($("#yearSel").value, 10);
       const q = $("#qSel").value;
       const start = $("#startDate").value;
       const end = $("#endDate").value;
@@ -1145,32 +1544,11 @@
       renderAll();
     }
 
-    function saveTemplates(){
-      try{
-        const obj = JSON.parse($("#taskJson").value);
-        const q = Q();
 
-        // Ensure active exists (default true if omitted in edited JSON)
-        ["daily","weekly","monthly"].forEach(freq=>{
-          (obj[freq] || []).forEach(t=>{
-            if(typeof t.active !== "boolean") t.active = true;
-          });
-        });
 
-        q.templates = obj;
-        normalizeQuarter(q);
-
-        saveApp(STATE);
-        toast("Templates saved.");
-        renderAll();
-      }catch(e){
-        alert("Invalid JSON. Fix it and try again.");
-      }
-    }
-
-    function exportJSON(){
+    function exportJSON() {
       const dataStr = JSON.stringify(STATE, null, 2);
-      const blob = new Blob([dataStr], {type:"application/json"});
+      const blob = new Blob([dataStr], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -1182,114 +1560,110 @@
       toast("Exported.");
     }
 
-    function importJSON(file){
+    function importJSON(file) {
       const reader = new FileReader();
-      reader.onload = (e)=>{
-        try{
+      reader.onload = (e) => {
+        try {
           STATE = JSON.parse(e.target.result);
           // migrate
-          Object.keys(STATE.quarters || {}).forEach(k=>{
+          Object.keys(STATE.quarters || {}).forEach(k => {
             STATE.quarters[k] = normalizeQuarter(STATE.quarters[k]);
           });
           saveApp(STATE);
           toast("Imported.");
           renderAll();
-        }catch(err){
+        } catch (err) {
           alert("Import failed — invalid JSON.");
         }
       };
       reader.readAsText(file);
     }
 
-    function resetQuarterArchive(){
+    function resetQuarterArchive() {
       const key = qKey();
       const ok = confirm(`Reset ${key}? This archives a snapshot and clears logs/completions for this quarter.`);
-      if(!ok) return;
+      if (!ok) return;
 
       const archiveKey = `${key}-ARCHIVE-${Date.now()}`;
       STATE.quarters[archiveKey] = JSON.parse(JSON.stringify(STATE.quarters[key]));
 
       const q = Q();
-      q.logs = { daily:{}, weekly:{}, monthly:{} };
-      q.completions = { daily:{}, weekly:{}, monthly:{} };
+      q.logs = { daily: {}, weekly: {}, monthly: {} };
+      q.completions = { daily: {}, weekly: {}, monthly: {} };
 
       saveApp(STATE);
       toast("Quarter reset (archived).");
       renderAll();
     }
 
-    function wipeAll(){
+    function wipeAll() {
       const ok = confirm("Wipe ALL dashboard data in this browser?");
-      if(!ok) return;
+      if (!ok) return;
       localStorage.removeItem(APP_KEY);
       STATE = initState();
       toast("Wiped.");
       renderAll();
     }
 
-    function bind(){
+    function bind() {
       // nav
-      $$(".nav button").forEach(btn=>{
-        btn.addEventListener("click", ()=> viewSwitch(btn.dataset.view));
+      $$(".nav button").forEach(btn => {
+        btn.addEventListener("click", () => viewSwitch(btn.dataset.view));
       });
 
       // tabs
-      $$(".tabBtn").forEach(btn=>{
-        btn.addEventListener("click", ()=> setTab(btn.dataset.tab));
+      $$(".tabBtn").forEach(btn => {
+        btn.addEventListener("click", () => setTab(btn.dataset.tab));
       });
 
       // quarter controls
       $("#saveQuarterBtn").addEventListener("click", saveQuarter);
-      $("#yearSel").addEventListener("change", ()=> setCurrentQuarter(parseInt($("#yearSel").value,10), $("#qSel").value));
-      $("#qSel").addEventListener("change", ()=> setCurrentQuarter(parseInt($("#yearSel").value,10), $("#qSel").value));
+      $("#yearSel").addEventListener("change", () => setCurrentQuarter(parseInt($("#yearSel").value, 10), $("#qSel").value));
+      $("#qSel").addEventListener("change", () => setCurrentQuarter(parseInt($("#yearSel").value, 10), $("#qSel").value));
       $("#resetQuarterBtn").addEventListener("click", resetQuarterArchive);
 
       // objective
-      $("#objField").addEventListener("blur", ()=>{
+      $("#objField").addEventListener("blur", () => {
         const q = Q();
         q.objective = $("#objField").textContent.trim();
         saveApp(STATE);
         toast("Objective saved.");
       });
 
-      // templates
-      $("#saveTaskJsonBtn").addEventListener("click", saveTemplates);
+
 
       // exports/imports
       $("#exportBtn").addEventListener("click", exportJSON);
-      $("#importBtn").addEventListener("click", ()=> $("#importFile").click());
-      $("#exportBtn2").addEventListener("click", exportJSON);
-      $("#importBtn2").addEventListener("click", ()=> $("#importFile").click());
-      $("#importFile").addEventListener("change", (e)=>{
-        if(e.target.files && e.target.files[0]) importJSON(e.target.files[0]);
+      $("#importBtn").addEventListener("click", () => $("#importFile").click());
+      $("#importFile").addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) importJSON(e.target.files[0]);
         e.target.value = "";
       });
 
-      // wipe
-      $("#wipeAllBtn").addEventListener("click", wipeAll);
+
 
       // jump
-      $("#jumpDailyBtn").addEventListener("click", ()=>{
+      $("#jumpDailyBtn").addEventListener("click", () => {
         viewSwitch("rhythm");
         setTab("daily");
-        window.scrollTo({top:0, behavior:"smooth"});
+        window.scrollTo({ top: 0, behavior: "smooth" });
       });
 
       // Mode toggle buttons (delegated)
-      document.addEventListener("click", (e)=>{
+      document.addEventListener("click", (e) => {
         const btn = e.target.closest("[data-mode-btn]");
-        if(!btn) return;
+        if (!btn) return;
         const freq = btn.dataset.modeBtn;
         const mode = btn.dataset.mode;
         setMode(freq, mode);
       });
     }
 
-    function init(){
+    function init() {
       setupYearSelector();
       const curr = STATE.meta.current;
       ensureQuarter(`${curr.year}-${curr.q}`);
-      if(!curr.start || !curr.end){
+      if (!curr.start || !curr.end) {
         const dates = quarterDates(curr.year, curr.q);
         STATE.meta.current.start = dates.s;
         STATE.meta.current.end = dates.e;
@@ -1304,4 +1678,5 @@
     init();
   </script>
 </body>
+
 </html>
