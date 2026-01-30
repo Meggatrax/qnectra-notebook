@@ -1126,8 +1126,15 @@
     // Listen for cloud state injection
     window.addEventListener('message', (event) => {
       if (event.data.type === 'INIT_STATE' && event.data.payload) {
-        console.log(" Received cloud state override");
-        STATE = event.data.payload;
+        const payload = event.data.payload;
+        // Validate payload has basic structure
+        if (!payload.quarters || !payload.meta) {
+          console.warn("Received invalid INIT_STATE, ignoring:", payload);
+          return;
+        }
+
+        console.log(" Received cloud state override", payload);
+        STATE = payload;
         // Ensure quarters are normalized in case of schema updates
         Object.keys(STATE.quarters || {}).forEach(k => {
           STATE.quarters[k] = normalizeQuarter(STATE.quarters[k]);
@@ -1696,7 +1703,12 @@
         saveApp(STATE);
       }
       bind();
-      renderAll();
+      try {
+        renderAll();
+      } catch (e) {
+        console.error("Render failed on init:", e);
+        toast("Error loading dashboard. Check console.");
+      }
       viewSwitch("overview");
       setTab("daily");
     }

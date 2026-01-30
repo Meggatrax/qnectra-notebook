@@ -315,6 +315,8 @@ async function loadDashboardContent(id) {
             if (userState) {
                 console.log("Injecting state into dashboard:", id);
                 ui.contentIframe.contentWindow.postMessage({ type: 'INIT_STATE', payload: userState }, '*');
+            } else {
+                console.log("No saved state to inject for:", id);
             }
         }, 500);
 
