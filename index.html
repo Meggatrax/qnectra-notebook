@@ -151,7 +151,7 @@
             background: var(--accent);
             border-radius: 0 3px 3px 0;
         }
-        
+
         /* New "Read" style */
         .file-item.read {
             opacity: 0.7;
@@ -275,7 +275,7 @@
             font-weight: 500;
             color: var(--text-main);
         }
-        
+
         .auth-button {
             padding: 0.4rem 0.8rem;
             font-size: 0.8rem;
@@ -285,9 +285,9 @@
             color: var(--text-main);
             cursor: pointer;
         }
-        
+
         .auth-button:hover {
-             background: var(--accent);
+            background: var(--accent);
         }
 
         .content-viewer {
@@ -301,7 +301,8 @@
             height: 100%;
             border: none;
             background: white;
-            display: block; /* Default to block, hidden by JS logic */
+            display: block;
+            /* Default to block, hidden by JS logic */
         }
 
         .empty-state {
@@ -340,17 +341,21 @@
             overflow-y: auto;
             height: 100%;
         }
-        
+
         /* Modal for Login */
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
             align-items: center;
             justify-content: center;
             z-index: 1000;
         }
+
         .modal-content {
             background: var(--bg-elevated);
             padding: 2rem;
@@ -360,6 +365,7 @@
             max-width: 400px;
             text-align: center;
         }
+
         .modal input {
             width: 100%;
             padding: 0.8rem;
@@ -369,6 +375,7 @@
             color: white;
             border-radius: 8px;
         }
+
         .modal button {
             width: 100%;
             padding: 0.8rem;
@@ -379,6 +386,7 @@
             cursor: pointer;
             font-weight: bold;
         }
+
         .modal button:hover {
             opacity: 0.9;
         }
@@ -435,7 +443,8 @@
             <div id="empty-state-sidebar" class="empty-state" style="display: none; padding: 2rem 1rem;">
                 <p style="font-size: 0.9rem; color: var(--text-muted);">
                     No documents found.<br />
-                    Run <code style="font-size: 0.85rem; background: rgba(15, 23, 42, 0.8); padding: 0.15rem 0.4rem; border-radius: 4px;">npm run sync</code>
+                    Run <code
+                        style="font-size: 0.85rem; background: rgba(15, 23, 42, 0.8); padding: 0.15rem 0.4rem; border-radius: 4px;">npm run sync</code>
                 </p>
             </div>
         </div>
@@ -449,7 +458,7 @@
         <div class="content-header">
             <h2 id="content-title" class="content-title">Select a document</h2>
             <div id="auth-container">
-                <button id="auth-button" class="auth-button">Sign In</button>
+                <button id="auth-button" class="auth-button">Sign In (Sync)</button>
             </div>
         </div>
         <div class="content-viewer">
@@ -462,7 +471,7 @@
             <div id="archive-view" class="archive-grid" style="display: none;"></div>
         </div>
     </div>
-    
+
     <!-- Login Modal -->
     <div id="login-modal" class="modal">
         <div class="modal-content">
@@ -477,7 +486,356 @@
     </div>
 
     <!-- App Logic -->
-    <script src="js/app.js"></script>
+    <script>
+        console.log("🚀 Inline script loaded");
+
+        // Initialize Supabase Client
+        const SUPABASE_URL = "https://ysfejltspyzpahqeorgt.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_topKCVKmrlcOXV28eij8eA_h4b67cF4";
+
+        let supabaseClient;
+
+        // --- STATE ---
+        let appState = {
+            dashboards: [],
+            userState: {},
+            user: null,
+            showingArchive: false
+        };
+
+        // --- DOM ELEMENTS CONTAINER ---
+        let ui = {};
+
+        // --- MAIN INIT ---
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("⚡ DOM Content Loaded");
+
+            // 1. Bind Elements
+            ui = {
+                fileList: document.getElementById("file-list"),
+                fileCount: document.getElementById("file-count"),
+                archiveBtn: document.getElementById("archive-button"),
+                archiveView: document.getElementById("archive-view"),
+                contentIframe: document.getElementById("content-iframe"),
+                emptyStateMain: document.getElementById("empty-state-main"),
+                emptyStateSidebar: document.getElementById("empty-state-sidebar"),
+                contentTitle: document.getElementById("content-title"),
+                authContainer: document.getElementById("auth-container"),
+                authBtn: document.getElementById("auth-button"),
+                loginModal: document.getElementById("login-modal"),
+                emailInput: document.getElementById("email-input"),
+                sendMagicLinkBtn: document.getElementById("send-magic-link"),
+                loginStatus: document.getElementById("login-status")
+            };
+
+            // 2. Validate Elements
+            for (const [key, element] of Object.entries(ui)) {
+                if (!element) {
+                    console.error(`❌ Missing UI element: ${key}`);
+                } else {
+                    console.log(`✅ Found: ${key}`);
+                }
+            }
+
+            // 3. Bind Listeners
+            if (ui.authBtn) {
+                console.log("Bind: Listeners attached to authBtn");
+                ui.authBtn.addEventListener('click', handleAuthClick);
+            }
+
+            if (ui.archiveBtn) {
+                ui.archiveBtn.addEventListener('click', toggleArchiveView);
+            }
+
+            if (ui.sendMagicLinkBtn) {
+                ui.sendMagicLinkBtn.addEventListener('click', handleLogin);
+            }
+
+            if (ui.loginModal) {
+                window.addEventListener('click', (e) => {
+                    if (e.target == ui.loginModal) ui.loginModal.style.display = "none";
+                });
+            }
+
+            // 4. Init Supabase
+            initSupabase();
+        });
+
+
+        // --- FUNCTIONS ---
+
+        function initSupabase() {
+            try {
+                if (window.supabase) {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    console.log("✅ Supabase initialized");
+
+                    // Start App Flow
+                    fetchDashboards();
+                    checkUser();
+                    subscribeToChanges();
+                } else {
+                    console.error("❌ Supabase SDK not loaded from CDN");
+                    if (ui.fileCount) ui.fileCount.textContent = "Error: SDK Missing";
+                }
+            } catch (e) {
+                console.error("❌ Supabase init failed", e);
+            }
+        }
+
+        async function checkUser() {
+            if (!supabaseClient) return;
+            try {
+                const { data, error } = await supabaseClient.auth.getSession();
+                if (error) throw error;
+                appState.user = data.session?.user || null;
+                console.log(`👤 User Status: ${appState.user ? "Logged In" : "Guest"}`);
+            } catch (e) {
+                console.warn("Auth check warning", e);
+            }
+            updateAuthUI();
+            if (appState.user) {
+                await fetchUserStates();
+                render();
+            }
+        }
+
+        function updateAuthUI() {
+            if (!ui.authBtn) return;
+            if (appState.user) {
+                ui.authBtn.textContent = "Sign Out";
+            } else {
+                ui.authBtn.textContent = "Sign In (Sync)";
+            }
+        }
+
+        function handleAuthClick(e) {
+            console.log("🖱️ Auth button clicked", e);
+            if (appState.user) {
+                handleSignOut();
+            } else {
+                console.log("Opening modal...");
+                if (ui.loginModal) ui.loginModal.style.display = "flex";
+            }
+        }
+
+        function toggleArchiveView() {
+            console.log("Toggling archive view");
+            appState.showingArchive = !appState.showingArchive;
+            render();
+
+            if (appState.showingArchive) {
+                ui.emptyStateMain.style.display = "none";
+                ui.contentIframe.style.display = "none";
+                ui.archiveView.style.display = "block";
+                ui.archiveView.innerHTML = `
+                    <div style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                        <h3>Archive View</h3>
+                        <p>Select an item from the sidebar to view it.</p>
+                    </div>
+                `;
+            } else {
+                ui.archiveView.style.display = "none";
+                ui.emptyStateMain.style.display = "flex";
+            }
+        }
+
+        async function handleLogin() {
+            if (!ui.emailInput) return;
+            const email = ui.emailInput.value;
+            console.log("Attempting login for:", email);
+
+            if (!email) {
+                ui.loginStatus.textContent = "Please enter an email.";
+                return;
+            }
+
+            ui.loginStatus.textContent = "Sending link...";
+            const { error } = await supabaseClient.auth.signInWithOtp({ email });
+
+            if (error) {
+                console.error("Login error", error);
+                ui.loginStatus.textContent = "Error: " + error.message;
+                ui.loginStatus.style.color = "red";
+            } else {
+                console.log("Magic link sent");
+                ui.loginStatus.textContent = "Magic link sent! Check your email.";
+                ui.loginStatus.style.color = "#4ade80";
+            }
+        }
+
+        async function handleSignOut() {
+            console.log("Signing out");
+            await supabaseClient.auth.signOut();
+            appState.user = null;
+            appState.userState = {};
+            updateAuthUI();
+            render();
+        }
+
+        async function fetchDashboards() {
+            if (!supabaseClient) return;
+            ui.fileCount.innerHTML = "Loading...";
+
+            const { data: dashboards, error } = await supabaseClient
+                .from('dashboards')
+                .select('id, title, updated_at')
+                .order('updated_at', { ascending: false });
+
+            if (error) {
+                console.error("Error fetching dashboards", error);
+                ui.fileCount.innerHTML = "Sync Error";
+                return;
+            }
+
+            console.log(`📡 Fetched ${dashboards.length} dashboards`);
+            appState.dashboards = dashboards;
+            render();
+        }
+
+        async function fetchUserStates() {
+            if (!appState.user || !supabaseClient) return;
+            const { data: states } = await supabaseClient
+                .from('user_states')
+                .select('dashboard_id, is_read, is_archived')
+                .eq('user_id', appState.user.id);
+
+            if (states) {
+                appState.userState = states.reduce((acc, curr) => {
+                    acc[curr.dashboard_id] = curr;
+                    return acc;
+                }, {});
+            }
+        }
+
+        function subscribeToChanges() {
+            supabaseClient.channel('public:dashboards')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'dashboards' }, () => {
+                    console.log("Realtime update received");
+                    fetchDashboards();
+                })
+                .subscribe();
+        }
+
+        // --- CORE RENDERING ---
+
+        function render() {
+            const list = appState.dashboards.filter(d => {
+                const state = appState.userState[d.id];
+                const isArchived = state?.is_archived || false;
+                return appState.showingArchive ? isArchived : !isArchived;
+            });
+
+            renderList(list, ui.fileList);
+
+            if (list.length === 0) {
+                ui.fileList.style.display = 'none';
+                ui.emptyStateSidebar.style.display = 'block';
+            } else {
+                ui.fileList.style.display = 'flex';
+                ui.emptyStateSidebar.style.display = 'none';
+                ui.fileCount.innerHTML = `<strong>${list.length}</strong> files`;
+            }
+
+            const totalArchived = appState.dashboards.filter(d => appState.userState[d.id]?.is_archived).length;
+            ui.archiveBtn.innerHTML = appState.showingArchive
+                ? "⬅ Back to Inbox"
+                : `📦 View Archive (${totalArchived})`;
+        }
+
+        function renderList(items, container) {
+            container.innerHTML = "";
+            items.forEach(item => {
+                const state = appState.userState[item.id] || {};
+                const isRead = state.is_read;
+                const isArchived = state.is_archived;
+
+                const li = document.createElement("li");
+                li.className = "file-item" + (isRead ? " read" : "");
+                li.setAttribute('data-id', item.id);
+
+                li.innerHTML = `
+                    <div class="file-item-header">
+                        <p class="file-item-title">${item.title}</p>
+                    </div>
+                    <div class="file-item-meta">
+                        <span class="file-filename">${item.id}</span>
+                        <span class="file-date">${new Date(item.updated_at).toLocaleDateString()}</span>
+                    </div>
+                    <div class="archive-checkbox-container">
+                        <input type="checkbox" class="archive-checkbox" ${isArchived ? "checked" : ""}>
+                        <label class="archive-label">Archived</label>
+                    </div>
+                `;
+
+                const checkbox = li.querySelector('.archive-checkbox');
+                checkbox.addEventListener('change', (e) => {
+                    e.stopPropagation();
+                    markAsArchived(item.id, e.target.checked);
+                });
+
+                li.querySelector('.archive-label').addEventListener('click', (e) => e.stopPropagation());
+
+                li.addEventListener('click', (e) => {
+                    if (e.target !== checkbox && e.target.tagName !== 'LABEL') {
+                        loadDashboardContent(item.id);
+                    }
+                });
+
+                container.appendChild(li);
+            });
+        }
+
+        async function loadDashboardContent(id) {
+            if (!supabaseClient) return;
+            console.log("Loading content for", id);
+            const { data } = await supabaseClient.from('dashboards').select('content, title').eq('id', id).single();
+
+            if (data) {
+                ui.contentTitle.textContent = data.title;
+                const doc = ui.contentIframe.contentWindow.document;
+                doc.open();
+                doc.write(data.content);
+                doc.close();
+
+                ui.contentIframe.style.display = "block";
+                ui.emptyStateMain.style.display = "none";
+                ui.archiveView.style.display = "none";
+
+                document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+                const activeEl = document.querySelector(`[data-id="${id}"]`);
+                if (activeEl) activeEl.classList.add('active');
+
+                if (appState.user) markAsRead(id);
+            }
+        }
+
+        async function markAsArchived(id, isArchived) {
+            if (!appState.user) {
+                alert("Please sign in to sync archives.");
+                render();
+                return;
+            }
+            await supabaseClient.from('user_states').upsert({
+                user_id: appState.user.id,
+                dashboard_id: id,
+                is_archived: isArchived
+            });
+            // Optimistic update
+            fetchUserStates().then(render);
+        }
+
+        async function markAsRead(id) {
+            if (!supabaseClient || !appState.user) return;
+            await supabaseClient.from('user_states').upsert({
+                user_id: appState.user.id,
+                dashboard_id: id,
+                is_read: true
+            });
+            // Silent update
+            fetchUserStates();
+        }
+    </script>
 </body>
 
 </html>
