@@ -651,7 +651,12 @@
             }
 
             ui.loginStatus.textContent = "Sending link...";
-            const { error } = await supabaseClient.auth.signInWithOtp({ email });
+            const { error } = await supabaseClient.auth.signInWithOtp({
+                email,
+                options: {
+                    emailRedirectTo: 'https://meggatrax.github.io/qnectra-notebook/'
+                }
+            });
 
             if (error) {
                 console.error("Login error", error);
