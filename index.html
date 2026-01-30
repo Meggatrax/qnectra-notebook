@@ -303,6 +303,42 @@
             background: white;
             display: block;
             /* Default to block, hidden by JS logic */
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+            display: block;
+            /* Default to block, hidden by JS logic */
+        }
+
+        .archive-checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .pin-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            opacity: 0.4;
+            transition: all 0.2s;
+            padding: 4px;
+        }
+
+        .pin-btn:hover {
+            opacity: 1;
+            color: var(--text-main);
+            transform: scale(1.1);
+        }
+
+        .pin-btn.pinned {
+            opacity: 1;
+            color: var(--accent);
         }
 
         .empty-state {
@@ -702,7 +738,7 @@
             if (!appState.user || !supabaseClient) return;
             const { data: states } = await supabaseClient
                 .from('user_states')
-                .select('dashboard_id, is_read, is_archived')
+                .select('dashboard_id, is_read, is_archived, is_pinned')
                 .eq('user_id', appState.user.id);
 
             if (states) {
@@ -729,6 +765,13 @@
                 const state = appState.userState[d.id];
                 const isArchived = state?.is_archived || false;
                 return appState.showingArchive ? isArchived : !isArchived;
+            }).sort((a, b) => {
+                const pinA = appState.userState[a.id]?.is_pinned ? 1 : 0;
+                const pinB = appState.userState[b.id]?.is_pinned ? 1 : 0;
+                // pinned first
+                if (pinB !== pinA) return pinB - pinA;
+                // then by date
+                return new Date(b.updated_at) - new Date(a.updated_at);
             });
 
             renderList(list, ui.fileList);
@@ -762,6 +805,19 @@
                 li.innerHTML = `
                     <div class="file-item-header">
                         <p class="file-item-title">${item.title}</p>
+                        <button class="pin-btn ${state.is_pinned ? 'pinned' : ''}" title="${state.is_pinned ? 'Unpin' : 'Pin to top'}">
+                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L12 12M12 12L19 22H5L12 12" transform="rotate(45 12 12)"/> 
+                                <path d="M16 2l-2 5l3 3l5-2l-6-6z" fill="currentColor" stroke="none"/> <!-- Simple Pushpin style -->
+                                <line x1="12" y1="17" x2="12" y2="22"></line>
+                                <path d="M5 12H19M12 5V19" stroke-linecap="round"/>
+                             </svg>
+                             <!-- Simple Pin Icon SVG -->
+                             <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="${state.is_pinned ? 'currentColor' : 'none'}" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="17" x2="12" y2="22"></line>
+                                <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path>
+                            </svg>
+                        </button>
                     </div>
                     <div class="file-item-meta">
                         <span class="file-filename">${item.id}</span>
@@ -772,6 +828,12 @@
                         <label class="archive-label">Archived</label>
                     </div>
                 `;
+
+                const pinBtn = li.querySelector('.pin-btn');
+                pinBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    togglePin(item.id, state.is_pinned);
+                });
 
                 const checkbox = li.querySelector('.archive-checkbox');
                 checkbox.addEventListener('change', (e) => {
@@ -821,6 +883,7 @@
                 render();
                 return;
             }
+            // unpin if archiving? Optional, but safer to keep separate unless requested
             await supabaseClient.from('user_states').upsert({
                 user_id: appState.user.id,
                 dashboard_id: id,
@@ -828,6 +891,35 @@
             });
             // Optimistic update
             fetchUserStates().then(render);
+        }
+
+        async function togglePin(id, currentStatus) {
+            if (!appState.user) {
+                alert("Please sign in to pin items.");
+                return;
+            }
+            console.log("Toggling pin for", id, !currentStatus);
+
+            // Optimistic UI update (optional, but faster feeling)
+            if (!appState.userState[id]) appState.userState[id] = {};
+            appState.userState[id].is_pinned = !currentStatus;
+            render();
+
+            const { error } = await supabaseClient.from('user_states').upsert({
+                user_id: appState.user.id,
+                dashboard_id: id,
+                is_pinned: !currentStatus
+            });
+
+            if (error) {
+                console.error("Error toggling pin", error);
+                // Revert on error
+                appState.userState[id].is_pinned = currentStatus;
+                render();
+            } else {
+                // Ensure state matches DB eventually
+                fetchUserStates().then(render);
+            }
         }
 
         async function markAsRead(id) {
