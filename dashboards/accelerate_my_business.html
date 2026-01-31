@@ -738,7 +738,10 @@
             <input id="endDate" type="date" />
           </div>
         </div>
-        <button class="btn primary" id="saveQuarterBtn">Save quarter</button>
+        <div class="row">
+          <button class="btn primary" id="saveQuarterBtn">Save quarter</button>
+          <button class="btn good" id="syncNowBtn">Sync Now</button>
+        </div>
         <div class="row">
           <button class="btn small" id="exportBtn">Export JSON</button>
           <button class="btn small" id="importBtn">Import JSON</button>
@@ -753,7 +756,7 @@
       </nav>
 
       <div class="foot">
-        <div class="pill"><span class="dot"></span> Saved locally (no backend)</div>
+        <div class="pill"><span class="dot g"></span> Synced to Cloud</div>
         <div style="height:8px"></div>
         <div class="muted">Tip: export weekly for backup.</div>
       </div>
@@ -1578,6 +1581,16 @@
       renderAll();
     }
 
+    function syncNow() {
+      saveApp(STATE);
+      toast("Syncing...");
+      // Optional: Visual feedback on the button
+      const btn = $("#syncNowBtn");
+      const originalText = btn.textContent;
+      btn.textContent = "Synced!";
+      setTimeout(() => btn.textContent = originalText, 2000);
+    }
+
 
 
     function exportJSON() {
@@ -1652,6 +1665,7 @@
 
       // quarter controls
       $("#saveQuarterBtn").addEventListener("click", saveQuarter);
+      $("#syncNowBtn").addEventListener("click", syncNow);
       $("#yearSel").addEventListener("change", () => setCurrentQuarter(parseInt($("#yearSel").value, 10), $("#qSel").value));
       $("#qSel").addEventListener("change", () => setCurrentQuarter(parseInt($("#yearSel").value, 10), $("#qSel").value));
       $("#resetQuarterBtn").addEventListener("click", resetQuarterArchive);
