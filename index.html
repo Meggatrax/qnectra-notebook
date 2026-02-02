@@ -739,7 +739,8 @@
             const { error } = await supabaseClient.from('user_states').upsert({
                 user_id: appState.user.id,
                 dashboard_id: dashboardId,
-                state: stateObj
+                state: stateObj,
+                updated_at: new Date().toISOString()
             });
 
             if (error) {
@@ -914,13 +915,14 @@
                 const userSt = appState.userState[id];
                 if (userSt && userSt.state) {
                     console.log("💉 Injecting saved state...");
-                    // Give the iframe a moment to initialize its listener
-                    setTimeout(() => {
+                    // Use onload to ensure iframe is ready
+                    ui.contentIframe.onload = () => {
+                        console.log("🚀 Iframe loaded, sending INIT_STATE");
                         ui.contentIframe.contentWindow.postMessage({
                             type: 'INIT_STATE',
                             payload: userSt.state
                         }, '*');
-                    }, 500);
+                    };
                 }
             }
         }
