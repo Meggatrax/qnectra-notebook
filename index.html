@@ -595,6 +595,8 @@
 
             // 4. Init Supabase
             initSupabase();
+            // 5. Listen for Child Messages
+            window.addEventListener('message', handleChildMessage);
         });
 
 
@@ -714,6 +716,39 @@
             render();
         }
 
+        async function handleChildMessage(event) {
+            // Check if it's our save event
+            if (event.data && event.data.type === 'SAVE_STATE') {
+                const { dashboardId, state } = event.data.payload;
+                console.log("💾 Received SAVE_STATE for", dashboardId);
+                await saveDashboardState(dashboardId, state);
+            }
+        }
+
+        async function saveDashboardState(dashboardId, stateObj) {
+            if (!appState.user) {
+                console.warn("Cannot save state: User not logged in");
+                return;
+            }
+
+            // Update local state immediately
+            if (!appState.userState[dashboardId]) appState.userState[dashboardId] = {};
+            appState.userState[dashboardId].state = stateObj;
+
+            // Upsert to Supabase
+            const { error } = await supabaseClient.from('user_states').upsert({
+                user_id: appState.user.id,
+                dashboard_id: dashboardId,
+                state: stateObj
+            });
+
+            if (error) {
+                console.error("Failed to save state:", error);
+            } else {
+                console.log("✅ State saved to cloud");
+            }
+        }
+
         async function fetchDashboards() {
             if (!supabaseClient) return;
             ui.fileCount.innerHTML = "Loading...";
@@ -738,7 +773,7 @@
             if (!appState.user || !supabaseClient) return;
             const { data: states } = await supabaseClient
                 .from('user_states')
-                .select('dashboard_id, is_read, is_archived, is_pinned')
+                .select('dashboard_id, is_read, is_archived, is_pinned, state')
                 .eq('user_id', appState.user.id);
 
             if (states) {
@@ -874,6 +909,19 @@
                 if (activeEl) activeEl.classList.add('active');
 
                 if (appState.user) markAsRead(id);
+
+                // Inject saved state if exists
+                const userSt = appState.userState[id];
+                if (userSt && userSt.state) {
+                    console.log("💉 Injecting saved state...");
+                    // Give the iframe a moment to initialize its listener
+                    setTimeout(() => {
+                        ui.contentIframe.contentWindow.postMessage({
+                            type: 'INIT_STATE',
+                            payload: userSt.state
+                        }, '*');
+                    }, 500);
+                }
             }
         }
 
