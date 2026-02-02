@@ -735,18 +735,23 @@
             if (!appState.userState[dashboardId]) appState.userState[dashboardId] = {};
             appState.userState[dashboardId].state = stateObj;
 
+            // Verify User ID matches
+            console.log("👤 Saving for User ID:", appState.user.id);
+
             // Upsert to Supabase
-            const { error } = await supabaseClient.from('user_states').upsert({
+            const { data, error } = await supabaseClient.from('user_states').upsert({
                 user_id: appState.user.id,
                 dashboard_id: dashboardId,
                 state: stateObj,
                 updated_at: new Date().toISOString()
-            });
+            }).select();
 
             if (error) {
-                console.error("Failed to save state:", error);
+                console.error("❌ Failed to save state:", error);
+            } else if (!data || data.length === 0) {
+                console.warn("⚠️ State saved returned NO DATA. This implies the write failed silently (RLS blocking?).");
             } else {
-                console.log("✅ State saved to cloud");
+                console.log("✅ State saved to cloud. Updated Row:", data[0]);
             }
         }
 
